@@ -1,13 +1,13 @@
 <script lang="ts">
-  let { file, isDir } = $props();
+  let { file, isVdo } = $props();
 </script>
 
 <main>
-  <p class:is-dir={isDir}>{file}</p>
+  <p class:is-vdo={isVdo}>{file}</p>
 </main>
 
 <style>
-  .is-dir {
+  .is-vdo {
     color: red;
   }
 </style>
