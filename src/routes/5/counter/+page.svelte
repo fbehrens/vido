@@ -3,6 +3,6 @@
   const counter = createCounter();
 </script>
 
-<button on:click={counter.increment}>
+<button onclick={counter.increment}>
   clicks: {counter.count}
 </button>
