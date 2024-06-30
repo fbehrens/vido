@@ -1,0 +1,3 @@
+class Vod {
+  constructor() {}
+}
