@@ -1,15 +1,9 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-  const src = "/" + $page.params.src;
-  function handleError(event: Event) {
-    console.error(
-      "Error loading video:",
-      (event.target as HTMLVideoElement).error,
-    );
-  }
+  export let data;
+  let { src } = data;
 </script>
 
-the file: {src}
+<br />the file: {src}
 <form method="POST" action="?/foo">
   <input type="hidden" name="id" value={src} />
   <button
@@ -18,13 +12,8 @@ the file: {src}
   >
 </form>
 
-<!-- svelte-ignore a11y_media_has_caption -->
-<video
-  poster="https://sveltejs.github.io/assets/caminandes-llamigos.jpg"
-  {src}
-  controls
->
-</video>
+<!-- svelte-ignore a11y-media-has-caption -->
+<video {src} controls> </video>
 
 <style>
   video {

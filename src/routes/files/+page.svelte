@@ -1,7 +1,7 @@
 <script lang="ts">
-  let { data } = $props();
-  let fltr = $state("");
-  let filtrd = $derived(data.files.filter((e) => e.name.includes(fltr)));
+  export let data;
+  let fltr = "";
+  $: filtrd = data.files.filter((e) => e.name.includes(fltr));
   //   console.log(data)
 </script>
 
