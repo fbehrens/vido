@@ -1,4 +1,5 @@
 export interface Movie {
-  id: number;
-  name: string;
+  filename: string;
+  id?: number;
+  duration?: number;
 }

@@ -10,15 +10,27 @@ export function select<T>(db: Database, table: string): T[] {
   return stmt.all() as T[];
 }
 
-export function createMovie(db: Database, filename: string): number {
+export function updateMovie(db: Database, m: Movie): void {
+  const stmt = db.prepare(`
+    UPDATE movies
+    SET duration = @duration
+    WHERE id = @id
+  `);
+
+  stmt.run({
+    id: m.id,
+    duration: m.duration,
+  });
+}
+
+export function getMovie(db: Database, { filename }: Movie): Movie {
   const transaction = db.transaction(() => {
     db.prepare("INSERT OR IGNORE INTO movies (filename) VALUES (?)").run(
       filename,
     );
-    const row = db
+    return db
       .prepare("SELECT * FROM movies WHERE filename = ?")
       .get(filename) as Movie;
-    return row.id;
   });
-  return transaction();
+  return transaction()!;
 }

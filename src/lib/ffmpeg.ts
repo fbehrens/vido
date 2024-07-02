@@ -1,7 +1,7 @@
 import ffmpeg from "fluent-ffmpeg";
 import { json } from "@sveltejs/kit";
 
-export function duration(videoPath: string): Promise<number> {
+export function getDuration(videoPath: string): Promise<number> {
   return new Promise((resolve, reject) => {
     ffmpeg.ffprobe(videoPath, (err, metadata) => {
       if (err) {

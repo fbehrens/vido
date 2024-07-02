@@ -2,6 +2,7 @@
   export let data;
   import { enhance } from "$app/forms";
   import type { ActionResult, SubmitFunction } from "@sveltejs/kit";
+  import type { Movie } from "$lib/types.js";
 
   let result: ActionResult;
 
@@ -16,7 +17,9 @@
 </script>
 
 <form method="POST" use:enhance={handleSubmit}>
+  id:<input readonly name="id" value={movie.id} /><br />
   filename:<input readonly name="filename" value={movie.filename} /><br />
+  duration:<input readonly name="duration" value={movie.duration} /><br />
   description:<input name="description" /><br />
   <button
     formaction="?/foo"

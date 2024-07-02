@@ -1,6 +1,18 @@
-export function load({ params }) {
+import { db } from "$lib/db";
+import type { Movie } from "$lib/types.js";
+import { getMovie, updateMovie } from "$lib/sqlite.js";
+import { getDuration } from "$lib/ffmpeg.js";
+
+export async function load({ params }) {
   console.log({ serverload: params });
-  return { movie: { filename: "/" + params.src } };
+  const filename = "/" + params.src;
+  let movie: Movie = { filename };
+  movie = getMovie(db, movie);
+  if (!movie.duration) {
+    movie.duration = await getDuration(`static${filename}`);
+    updateMovie(db, movie);
+  }
+  return { movie };
 }
 
 function sleep(ms: number) {
