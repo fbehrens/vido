@@ -1,6 +1,6 @@
 export function load({ params }) {
-  console.log({ server: params });
-  return { src: "/" + params.src };
+  console.log({ serverload: params });
+  return { movie: { filename: "/" + params.src } };
 }
 
 function sleep(ms: number) {
@@ -8,9 +8,22 @@ function sleep(ms: number) {
 }
 
 export const actions = {
-  foo: async ({ cookies, request }) => {
-    const data = await request.formData();
-    console.log(data);
-    await sleep(100);
+  foo: async ({ request }) => {
+    const formData = await request.formData();
+    const entries = Object.fromEntries(formData);
+    console.log(entries);
+    return {
+      success: true,
+      data: { description: `${entries.description}_foo` },
+    };
+  },
+  foo1: async ({ request }) => {
+    const formData = await request.formData();
+    const entries = Object.fromEntries(formData);
+    console.log(entries);
+    return {
+      success: true,
+      data: { description: `${entries.description}_foo1` },
+    };
   },
 };
