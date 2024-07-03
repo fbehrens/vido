@@ -21,7 +21,7 @@
     <div>
       id:<br />
       filename:<br />
-      duration:<br />
+      duration [s]:<br />
       start [s]:<br />
     </div>
     <div class="px-2">
@@ -61,7 +61,7 @@
 </form>
 
 <!-- svelte-ignore a11y-media-has-caption -->
-<video src={movie.filename} controls> </video>
+<video src={"/" + movie.filename} controls> </video>
 
 <style>
   video {

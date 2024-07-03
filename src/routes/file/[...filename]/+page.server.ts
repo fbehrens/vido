@@ -7,11 +7,11 @@ import { transcribe } from "$lib/whisper";
 
 export async function load({ params }) {
   console.log({ serverload: params });
-  const filename = "/" + params.src;
+  const { filename } = params;
   let movie: Movie = { filename };
   movie = getMovie(db, movie);
   if (!movie.duration) {
-    movie.duration = await getDuration(`static${filename}`);
+    movie.duration = await getDuration(`static/${filename}`);
     updateMovie(db, movie);
   }
   return { movie };
