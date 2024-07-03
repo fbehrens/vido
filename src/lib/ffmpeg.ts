@@ -1,5 +1,6 @@
 import ffmpeg from "fluent-ffmpeg";
 import { json } from "@sveltejs/kit";
+import { makeDirFor } from "$lib/util";
 
 export function getDuration(videoPath: string): Promise<number> {
   return new Promise((resolve, reject) => {
@@ -20,6 +21,7 @@ export function extractMp3(
   to: number,
   out: string,
 ) {
+  makeDirFor(out);
   return new Promise((resolve, reject) => {
     try {
       ffmpeg(filename)
