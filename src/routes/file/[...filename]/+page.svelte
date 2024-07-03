@@ -2,7 +2,7 @@
   export let data;
   import { enhance } from "$app/forms";
   import type { ActionResult, SubmitFunction } from "@sveltejs/kit";
-  import type { Movie } from "$lib/types.js";
+  import type { Movie, Segment } from "$lib/types.js";
 
   let result: ActionResult;
 
@@ -14,62 +14,77 @@
     };
   };
   let { movie, segments } = data;
+  segments = segments.sort((a, b) => a.start - b.start);
+
+  segments = segments.map((s, index) => {
+    const next: Segment | undefined = segments[index + 1];
+
+    if (next && s.end > next.start) {
+      s.dublicate = true;
+    }
+
+    return s;
+  });
   segments = segments.map((s) => {
     s.start = Number(s.start.toFixed(2));
     s.end = Number(s.end.toFixed(2));
     return s;
   });
+  let start =
+    segments.length > 1 ? Math.trunc(segments[segments.length - 2].start) : 0;
+  let length = 20;
+  $: end = Number(start) + Number(length);
 </script>
 
 <form method="POST" use:enhance={handleSubmit}>
   <div class="flex">
+    <div class="w-[10ch]">id</div>
+    <input
+      class=" text-gray-400 bg-gray-200"
+      readonly
+      name="id"
+      value={movie.id}
+    />
+  </div>
+  <div class="flex">
+    <div class="w-[10ch]">filename</div>
+    <input
+      class="text-gray-400 bg-gray-200"
+      readonly
+      name="filename"
+      value={movie.filename}
+    />
+  </div>
+  <div class="flex">
+    <div class="w-[10ch]">duration</div>
+    <p class="text-gray-400 bg-gray-200">{movie.duration + " s"}</p>
+  </div>
+  <div class="flex">
+    <div class="w-[10ch]"></div>
     <div>
-      id:<br />
-      filename:<br />
-      duration [s]:<br />
-      start [s]:<br />
-    </div>
-    <div class="px-2">
-      <input
-        class="text-gray-400 bg-gray-200"
-        readonly
-        name="id"
-        value={movie.id}
-      /><br />
-      <input
-        class="text-gray-400 bg-gray-200"
-        readonly
-        name="filename"
-        value={movie.filename}
-      /><br />
-      <input
-        class="text-gray-400 bg-gray-200"
-        readonly
-        name="duration"
-        value={movie.duration}
-      /><br />
-
-      <input name="start" /><br />
+      <input class="w-[4ch]" name="start" bind:value={start} />
+      s - {end}s (length=
+      <input class="w-[4ch]" name="length" bind:value={length} />
+      s)
       <button
         formaction="?/whisper"
         class="p-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300 ease-in-out"
         >whisper</button
       >
-      <button
-        formaction="?/foo1"
-        class="p-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300 ease-in-out"
-        >foo1</button
-      >
     </div>
   </div>
+
+  <button
+    formaction="?/foo1"
+    class=" bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300 ease-in-out"
+    >foo1</button
+  >
 </form>
 {#each segments as s}
   <div class="flex">
-    <div class="w-[5ch]">{s.start}</div>
-    <div class="w-[5ch]">{s.end}</div>
+    <div class="w-[7ch]">{s.start}</div>
+    <div class:red={s.dublicate} class="w-[7ch]">{s.end}</div>
     <div class="flex-1">{s.text}</div>
-
-    <!--    -->
   </div>
 {/each}
 
@@ -80,5 +95,9 @@
   video {
     max-width: 100%;
     height: auto;
+  }
+
+  .red {
+    color: red;
   }
 </style>

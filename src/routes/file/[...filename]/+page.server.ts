@@ -27,12 +27,12 @@ export const actions = {
   whisper: async ({ request }) => {
     const formData = await request.formData();
     const start = Number(formData.get("start")!);
+    const length = Number(formData.get("length")!);
     const filename = `static/${String(formData.get("filename")!)}`;
     console.log({ start });
-    const length = 12;
     const mp3Path = artefactSave(filename, "mp3", start);
     await extractMp3(filename, start, length, mp3Path);
-    console.log(`${mp3Path}: ${fs.statSync(mp3Path).size} bytes`);
+    console.log(`${mp3Path}: ${length}s => ${fs.statSync(mp3Path).size} bytes`);
 
     const t = await transcribe(mp3Path);
     artefactSave(filename, "text", start, t.text);

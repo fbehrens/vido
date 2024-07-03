@@ -2,6 +2,7 @@ node_modules
 play
 db
 *.mov
+static/mov/test
 
 # Output
 .output

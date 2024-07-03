@@ -10,6 +10,7 @@ export interface Word {
   start: number;
   end: number;
   text: string;
+  dublicate?: boolean;
 }
 
 export interface Segment extends Word {
