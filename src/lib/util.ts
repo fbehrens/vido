@@ -40,22 +40,24 @@ export function artefactLoad<T>(filePath: string, a: Artefact): T[] {
     .readdirSync(dir)
     .filter((file) => path.extname(file).toLowerCase() === ".json")
     .map((f) => {
-      const start = Number(path.parse(f).name);
+      const clip = Number(path.parse(f).name);
       const content = fs.readFileSync(`${dir}/${f}`, "utf8");
       const artefacts = JSON.parse(content);
       if (a === "words") {
         return artefacts.map((ar: any) => {
           return {
-            start: ar.start + start,
-            end: ar.end + start,
+            clip: clip,
+            start: ar.start + clip,
+            end: ar.end + clip,
             text: ar.word,
           } as Word;
         });
       }
 
       return artefacts.map((ar: any) => {
-        ar.start += start;
-        ar.end += start;
+        ar.clip = clip;
+        ar.start += clip;
+        ar.end += clip;
         return ar as Segment;
       });
     });

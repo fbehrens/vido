@@ -26,18 +26,20 @@ function sleep(ms: number) {
 export const actions = {
   whisper: async ({ request }) => {
     const formData = await request.formData();
-    const start = Number(formData.get("start")!);
-    const length = Number(formData.get("length")!);
+    const clip = Number(formData.get("clip")!);
+    const clip_length = Number(formData.get("clip_length")!);
     const filename = `static/${String(formData.get("filename")!)}`;
-    console.log({ start });
-    const mp3Path = artefactSave(filename, "mp3", start);
-    await extractMp3(filename, start, length, mp3Path);
-    console.log(`${mp3Path}: ${length}s => ${fs.statSync(mp3Path).size} bytes`);
+    console.log({ start: clip });
+    const mp3Path = artefactSave(filename, "mp3", clip);
+    await extractMp3(filename, clip, clip_length, mp3Path);
+    console.log(
+      `${mp3Path}: ${clip_length}s => ${fs.statSync(mp3Path).size} bytes`,
+    );
 
     const t = await transcribe(mp3Path);
-    artefactSave(filename, "text", start, t.text);
-    artefactSave(filename, "words", start, t.words);
-    artefactSave(filename, "segments", start, t.segments);
+    artefactSave(filename, "text", clip, t.text);
+    artefactSave(filename, "words", clip, t.words);
+    artefactSave(filename, "segments", clip, t.segments);
     return {
       success: true,
       data: { description: `done` },

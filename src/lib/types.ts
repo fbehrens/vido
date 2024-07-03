@@ -7,6 +7,7 @@ export interface Movie {
 export type Artefact = "mp3" | "text" | "words" | "segments";
 
 export interface Word {
+  clip: number;
   start: number;
   end: number;
   text: string;

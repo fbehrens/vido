@@ -14,26 +14,26 @@
     };
   };
   let { movie, segments } = data;
-  segments = segments.sort((a, b) => a.start - b.start);
-
-  segments = segments.map((s, index) => {
-    const next: Segment | undefined = segments[index + 1];
-
-    if (next && s.end > next.start) {
-      s.dublicate = true;
-    }
-
-    return s;
-  });
-  segments = segments.map((s) => {
-    s.start = Number(s.start.toFixed(2));
-    s.end = Number(s.end.toFixed(2));
-    return s;
-  });
-  let start =
+  segments = segments
+    .sort((a, b) => a.start - b.start)
+    .map((s, index) => {
+      const next: Segment | undefined = segments[index + 1];
+      if (next && s.end > next.start) {
+        s.dublicate = true;
+      }
+      return s;
+    });
+  segments = segments
+    .sort((a, b) => (a.clip == b.clip ? a.start - b.start : a.clip - b.clip))
+    .map((s) => {
+      s.start = Number(s.start.toFixed(2));
+      s.end = Number(s.end.toFixed(2));
+      return s;
+    });
+  let clip =
     segments.length > 1 ? Math.trunc(segments[segments.length - 2].start) : 0;
-  let length = 20;
-  $: end = Number(start) + Number(length);
+  let clip_length = 20;
+  $: end = Number(clip) + Number(clip_length);
 </script>
 
 <form method="POST" use:enhance={handleSubmit}>
@@ -62,9 +62,9 @@
   <div class="flex">
     <div class="w-[10ch]"></div>
     <div>
-      <input class="w-[4ch]" name="start" bind:value={start} />
+      <input class="w-[4ch]" name="clip" bind:value={clip} />
       s - {end}s (length=
-      <input class="w-[4ch]" name="length" bind:value={length} />
+      <input class="w-[4ch]" name="clip_length" bind:value={clip_length} />
       s)
       <button
         formaction="?/whisper"
@@ -82,6 +82,7 @@
 </form>
 {#each segments as s}
   <div class="flex">
+    <div class="w-[7ch]">{s.clip}</div>
     <div class="w-[7ch]">{s.start}</div>
     <div class:red={s.dublicate} class="w-[7ch]">{s.end}</div>
     <div class="flex-1">{s.text}</div>
