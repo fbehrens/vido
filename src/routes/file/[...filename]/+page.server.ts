@@ -1,9 +1,10 @@
 import { db } from "$lib/db";
-import type { Movie } from "$lib/types.js";
-import { artefactSave } from "$lib/util";
+import type { Movie, Segment } from "$lib/types.js";
+import { artefactSave, artefactLoad } from "$lib/util";
 import { getMovie, updateMovie } from "$lib/sqlite.js";
 import { getDuration, extractMp3 } from "$lib/ffmpeg.js";
 import { transcribe } from "$lib/whisper";
+import * as fs from "fs";
 
 export async function load({ params }) {
   console.log({ serverload: params });
@@ -14,7 +15,8 @@ export async function load({ params }) {
     movie.duration = await getDuration(`static/${filename}`);
     updateMovie(db, movie);
   }
-  return { movie };
+  let segments = artefactLoad<Segment>(`static/${filename}`, "segments");
+  return { movie, segments };
 }
 
 function sleep(ms: number) {
@@ -30,7 +32,8 @@ export const actions = {
     const length = 12;
     const mp3Path = artefactSave(filename, "mp3", start);
     await extractMp3(filename, start, length, mp3Path);
-    console.log({ mp3Path });
+    console.log(`${mp3Path}: ${fs.statSync(mp3Path).size} bytes`);
+
     const t = await transcribe(mp3Path);
     artefactSave(filename, "text", start, t.text);
     artefactSave(filename, "words", start, t.words);

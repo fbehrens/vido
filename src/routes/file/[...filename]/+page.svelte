@@ -13,7 +13,12 @@
       }
     };
   };
-  let { movie } = data;
+  let { movie, segments } = data;
+  segments = segments.map((s) => {
+    s.start = Number(s.start.toFixed(2));
+    s.end = Number(s.end.toFixed(2));
+    return s;
+  });
 </script>
 
 <form method="POST" use:enhance={handleSubmit}>
@@ -57,8 +62,16 @@
       >
     </div>
   </div>
-  >
 </form>
+{#each segments as s}
+  <div class="flex">
+    <div class="w-[5ch]">{s.start}</div>
+    <div class="w-[5ch]">{s.end}</div>
+    <div class="flex-1">{s.text}</div>
+
+    <!--    -->
+  </div>
+{/each}
 
 <!-- svelte-ignore a11y-media-has-caption -->
 <video src={"/" + movie.filename} controls> </video>
