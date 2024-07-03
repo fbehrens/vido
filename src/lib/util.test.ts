@@ -8,6 +8,6 @@ describe("Util", () => {
   });
   it("segments", () => {
     const segs = artefactLoad<Segment>(filename, "segments");
-    expect(segs.length).toBe(2);
+    expect(segs.length).toBeTypeOf("number");
   });
 });

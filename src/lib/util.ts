@@ -18,15 +18,15 @@ const flatten = <T>(arr: T[][]): T[] =>
 export function artefactSave(
   filePath: string,
   a: Artefact,
-  start: number,
+  clip: number,
   objects: any[] | string = [],
 ): string {
   // Get the directory name and base name
   const extension = a === "words" || a === "segments" ? "json" : a;
-  const aPath = `${fileDir(filePath)}/${a}/${start}.${extension}`;
+  const aPath = `${fileDir(filePath)}/${a}/${clip}.${extension}`;
   if (a !== "mp3") {
     const s = typeof objects === "string" ? objects : JSON.stringify(objects);
-    console.log({ action: "writeFileSync", aPath, s });
+    // console.log({ action: "writeFileSync", aPath, s });
     makeDirFor(aPath);
     fs.writeFileSync(aPath, s);
   }

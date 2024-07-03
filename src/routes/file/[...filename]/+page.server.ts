@@ -1,7 +1,7 @@
 import { db } from "$lib/db";
 import type { Movie, Segment } from "$lib/types.js";
 import { artefactSave, artefactLoad } from "$lib/util";
-import { getMovie, updateMovie } from "$lib/sqlite.js";
+import { getMovie, insertSegment, updateMovie } from "$lib/sqlite.js";
 import { getDuration, extractMp3 } from "$lib/ffmpeg.js";
 import { transcribe } from "$lib/whisper";
 import * as fs from "fs";
@@ -26,6 +26,7 @@ function sleep(ms: number) {
 export const actions = {
   whisper: async ({ request }) => {
     const formData = await request.formData();
+    const movie_id = Number(formData.get("id")!);
     const clip = Number(formData.get("clip")!);
     const clip_length = Number(formData.get("clip_length")!);
     const filename = `static/${String(formData.get("filename")!)}`;
@@ -40,6 +41,10 @@ export const actions = {
     artefactSave(filename, "text", clip, t.text);
     artefactSave(filename, "words", clip, t.words);
     artefactSave(filename, "segments", clip, t.segments);
+    t.segments.forEach((s) => {
+      s.clip = clip;
+      insertSegment(db, movie_id, s);
+    });
     return {
       success: true,
       data: { description: `done` },
