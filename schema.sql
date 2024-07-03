@@ -24,11 +24,19 @@ CREATE TABLE IF NOT EXISTS words (
   clip INTEGER,
   start REAL,
   end REAL,
-  text TEXT
+  word TEXT
 );
 
 /*
 read -r -d '' SQL << EOV
+DROP table words;
+CREATE TABLE IF NOT EXISTS words (
+  movie_id INTEGER,
+  clip INTEGER,
+  start REAL,
+  end REAL,
+  word TEXT
+);
 EOV
 
 

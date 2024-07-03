@@ -1,6 +1,6 @@
 import { db } from "$lib/db";
 import type { Movie, Segment } from "$lib/types.js";
-import { artefactSave, artefactLoad } from "$lib/util";
+import { getFileDir, makeDirFor } from "$lib/util";
 import {
   getMovie,
   insertSegment,
@@ -39,16 +39,20 @@ export const actions = {
     const clip_length = Number(formData.get("clip_length")!);
     const filename = `static/${String(formData.get("filename")!)}`;
     console.log({ start: clip });
-    const mp3Path = artefactSave(filename, "mp3", clip);
+    const fileDir = getFileDir(filename);
+    const mp3Path = `${fileDir}/mp3/${clip}.mp3`;
     await extractMp3(filename, clip, clip_length, mp3Path);
     console.log(
       `${mp3Path}: ${clip_length}s => ${fs.statSync(mp3Path).size} bytes`,
     );
 
     const t = await transcribe(mp3Path);
-    artefactSave(filename, "text", clip, t.text);
-    // artefactSave(filename, "words", clip, t.words);
-    // artefactSave(filename, "segments", clip, t.segments);
+
+    const txtPath = `${fileDir}/text/${clip}.txt`;
+    makeDirFor(txtPath);
+    fs.writeFileSync(txtPath, t.text);
+    console.log({ txtPath });
+
     t.segments.forEach((s) => insertSegment(db, movie_id, clip, s));
     t.words.forEach((w) => insertWord(db, movie_id, clip, w));
     return {
