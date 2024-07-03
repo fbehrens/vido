@@ -1,7 +1,14 @@
 import { db } from "$lib/db";
 import type { Movie, Segment } from "$lib/types.js";
 import { artefactSave, artefactLoad } from "$lib/util";
-import { getMovie, insertSegment, updateMovie } from "$lib/sqlite.js";
+import {
+  getMovie,
+  insertSegment,
+  updateMovie,
+  selectSegments,
+  insertWord,
+  selectWords,
+} from "$lib/sqlite.js";
 import { getDuration, extractMp3 } from "$lib/ffmpeg.js";
 import { transcribe } from "$lib/whisper";
 import * as fs from "fs";
@@ -15,7 +22,8 @@ export async function load({ params }) {
     movie.duration = await getDuration(`static/${filename}`);
     updateMovie(db, movie);
   }
-  let segments = artefactLoad<Segment>(`static/${filename}`, "segments");
+  //   let segments = artefactLoad<Segment>(`static/${filename}`, "segments");
+  let segments = selectSegments(db, movie.id!);
   return { movie, segments };
 }
 
@@ -39,24 +47,22 @@ export const actions = {
 
     const t = await transcribe(mp3Path);
     artefactSave(filename, "text", clip, t.text);
-    artefactSave(filename, "words", clip, t.words);
-    artefactSave(filename, "segments", clip, t.segments);
-    t.segments.forEach((s) => {
-      s.clip = clip;
-      insertSegment(db, movie_id, s);
-    });
+    // artefactSave(filename, "words", clip, t.words);
+    // artefactSave(filename, "segments", clip, t.segments);
+    t.segments.forEach((s) => insertSegment(db, movie_id, clip, s));
+    t.words.forEach((w) => insertWord(db, movie_id, clip, w));
     return {
       success: true,
       data: { description: `done` },
     };
   },
-  foo1: async ({ request }) => {
+  delete: async ({ request }) => {
     const formData = await request.formData();
-    const entries = Object.fromEntries(formData);
-    console.log(entries);
+    const movie_id = Number(formData.get("id")!);
+    db.prepare(`delete from segments where movie_id=${movie_id}`).run();
+    db.prepare(`delete from words  where movie_id=${movie_id}`).run();
     return {
       success: true,
-      data: { description: `${entries.description}_foo1` },
     };
   },
 };

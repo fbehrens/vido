@@ -10,11 +10,16 @@ export interface Word {
   clip: number;
   start: number;
   end: number;
-  text: string;
+  word: string;
   dublicate?: boolean;
 }
 
-export interface Segment extends Word {
+export interface Segment {
+  clip: number;
+  start: number;
+  end: number;
+  text: string;
+  dublicate?: boolean;
   id: number;
   seek: number;
   tokens: number[];

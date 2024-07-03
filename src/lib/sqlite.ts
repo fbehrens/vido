@@ -1,4 +1,4 @@
-import type { Movie, Segment } from "$lib/types";
+import type { Movie, Segment, Word } from "$lib/types";
 import type { Database } from "better-sqlite3";
 
 export function moviesCount(db: Database): number {
@@ -37,19 +37,19 @@ export function getMovie(db: Database, { filename }: Movie): Movie {
 export function insertSegment(
   db: Database,
   movie_id: number,
+  clip: number,
   s: Segment,
 ): void {
+  s.clip = clip;
   const stmt = db.prepare(`
     INSERT INTO segments (movie_id, clip, id, start, end, text, seek, tokens, temperature, avg_logprob, compression_ratio, no_speech_prob)
-    VALUES (@movie_id, @clip, @id, @start, @end, @text, @seek, @tokens, @temperature, @avg_logprob, @compression_ratio, @no_speech_prob)
+    VALUES (@movie_id, @clip, @id, @start+@clip, @end+@clip, @text, @seek, @tokens, @temperature, @avg_logprob, @compression_ratio, @no_speech_prob)
   `);
-  const o = {
+  stmt.run({
     movie_id,
     ...s,
     tokens: JSON.stringify(s.tokens),
-  };
-  console.log(o);
-  stmt.run(o);
+  });
 }
 
 export function updateSegmentText(
@@ -79,4 +79,22 @@ export function deleteSegment(
 export function selectSegments(db: Database, movie_id: number): Segment[] {
   const stmt = db.prepare("SELECT * FROM segments WHERE movie_id = ?");
   return stmt.all(movie_id) as Segment[];
+}
+
+export function insertWord(
+  db: Database,
+  movie_id: number,
+  clip: number,
+  w: Word,
+): void {
+  w.clip = clip;
+  db.prepare(
+    "INSERT INTO words (movie_id, clip, start, end, word) VALUES (?, ?, ?, ?, ?)",
+  ).run(movie_id, w.clip, w.start, w.end, w.word);
+}
+
+export function selectWords(db: Database, movie_id: number): Word[] {
+  return db
+    .prepare("SELECT * FROM words WHERE movie_id = ?")
+    .all(movie_id) as Word[];
 }

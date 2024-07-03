@@ -13,6 +13,13 @@
       }
     };
   };
+  const handleDelete: SubmitFunction = () => {
+    return async ({ result }) => {
+      if (result.type === "success") {
+        segments = [];
+      }
+    };
+  };
   let { movie, segments } = data;
   segments = segments
     .sort((a, b) => a.start - b.start)
@@ -73,13 +80,16 @@
       >
     </div>
   </div>
-
+</form>
+<form method="POST" use:enhance={handleDelete}>
+  <input hidden name="id" value={movie.id} />
   <button
-    formaction="?/foo1"
+    formaction="?/delete"
     class=" bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300 ease-in-out"
-    >foo1</button
+    >delete transcript</button
   >
 </form>
+
 {#each segments as s}
   <div class="flex">
     <div class="w-[7ch]">{s.clip}</div>
