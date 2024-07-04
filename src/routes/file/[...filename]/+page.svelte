@@ -42,11 +42,6 @@
     segments.length > 1 ? Math.trunc(segments[segments.length - 2].start) : 0;
   let clip_length = 20;
   $: end = Number(clip) + Number(clip_length);
-  function deleteSegment(event: CustomEvent) {
-    const d = event.detail;
-    console.log({ deleteSegment: d });
-    segments = segments.filter((s) => s.clip != d.clip || s.id != d.id);
-  }
 </script>
 
 <form method="POST" use:enhance={handleSubmit}>
@@ -104,7 +99,11 @@
     end={s.end}
     text={s.text}
     dublicate={s.dublicate}
-    on:delete={deleteSegment}
+    on:delete={(e) => {
+      const d = e.detail;
+      console.log({ deleteSegment: d });
+      segments = segments.filter((s) => s.clip != d.clip || s.id != d.id);
+    }}
   ></SegmentRow>
 {/each}
 
