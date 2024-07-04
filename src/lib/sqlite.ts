@@ -76,11 +76,15 @@ export function deleteSegment(
   stmt.run(movie_id, clip, id);
 }
 
-export function selectSegments(db: Database, movie_id: number): Segment[] {
-  const stmt = db.prepare(
-    "SELECT clip, start, end, text, id,  seek, tokens, temperature, avg_logprob, compression_ratio, no_speech_prob FROM segments WHERE movie_id = ?",
-  );
-  return stmt.all(movie_id) as Segment[];
+export function selectSegments(
+  db: Database,
+  movie_id: number,
+  clip?: number,
+): Segment[] {
+  let sql =
+    "SELECT clip, start, end, text, id,  seek, tokens, temperature, avg_logprob, compression_ratio, no_speech_prob FROM segments WHERE movie_id = ?";
+  if (clip) sql += ` AND clip=${clip}`;
+  return db.prepare(sql).all(movie_id) as Segment[];
 }
 
 export function insertWord(

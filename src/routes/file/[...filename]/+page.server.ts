@@ -22,7 +22,6 @@ export async function load({ params }) {
     movie.duration = await getDuration(`static/${filename}`);
     updateMovie(db, movie);
   }
-  //   let segments = artefactLoad<Segment>(`static/${filename}`, "segments");
   let segments = selectSegments(db, movie.id!);
   return { movie, segments };
 }
@@ -47,7 +46,6 @@ export const actions = {
     );
 
     const t = await transcribe(mp3Path);
-
     const txtPath = `${fileDir}/text/${clip}.txt`;
     makeDirFor(txtPath);
     fs.writeFileSync(txtPath, t.text);
@@ -57,7 +55,7 @@ export const actions = {
     t.words.forEach((w) => insertWord(db, movie_id, clip, w));
     return {
       success: true,
-      data: { description: `done` },
+      segments: selectSegments(db, movie_id, clip),
     };
   },
   delete: async ({ request }) => {

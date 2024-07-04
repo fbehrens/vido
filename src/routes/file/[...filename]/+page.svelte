@@ -1,50 +1,52 @@
 <script lang="ts">
-  export let data;
   import { enhance } from "$app/forms";
-  //   import type { CustomEvent } from "svelte/elements";
-  //Module '"svelte/elements"' has no exported member 'CustomEvent'.
-
-  import type { ActionResult, SubmitFunction } from "@sveltejs/kit";
-  import type { Movie, Segment } from "$lib/types.js";
+  import type { Segment } from "$lib/types.js";
   import SegmentRow from "./SegmentRow.svelte";
-  let result: ActionResult;
 
-  const handleSubmit: SubmitFunction = () => {
+  import type { SubmitFunction } from "@sveltejs/kit";
+  const handleWhisper: SubmitFunction = () => {
     return async ({ result }) => {
       if (result.type === "success") {
-        console.log(result.data!.data);
+        const s = result.data!.segments as Segment[];
+        segments = [...segments, ...s];
+        refreshSegments();
       }
     };
   };
-  const handleDelete: SubmitFunction = () => {
+  const handleDeleteAll: SubmitFunction = () => {
     return async ({ result }) => {
       if (result.type === "success") {
         segments = [];
       }
     };
   };
+  export let data;
   let { movie, segments } = data;
-  segments = segments
-    .sort((a, b) => a.start - b.start)
-    .map((s, index) => {
-      const next: Segment | undefined = segments[index + 1];
-      s.dublicate = next && s.end > next.start;
-      return s;
-    });
-  segments = segments
-    .sort((a, b) => (a.clip == b.clip ? a.start - b.start : a.clip - b.clip))
-    .map((s) => {
-      s.start = Number(s.start.toFixed(2));
-      s.end = Number(s.end.toFixed(2));
-      return s;
-    });
+  const refreshSegments = () => {
+    segments = segments
+      .sort((a, b) => a.start - b.start)
+      .map((s, index) => {
+        const next: Segment | undefined = segments[index + 1];
+        s.dublicate = next && s.end > next.start;
+        return s;
+      });
+    segments = segments
+      .sort((a, b) => (a.clip == b.clip ? a.start - b.start : a.clip - b.clip))
+      .map((s) => {
+        s.start = Number(s.start.toFixed(2));
+        s.end = Number(s.end.toFixed(2));
+        return s;
+      });
+  };
+  refreshSegments();
+
   let clip =
     segments.length > 1 ? Math.trunc(segments[segments.length - 2].start) : 0;
   let clip_length = 20;
   $: end = Number(clip) + Number(clip_length);
 </script>
 
-<form method="POST" use:enhance={handleSubmit}>
+<form method="POST" use:enhance={handleWhisper}>
   <div class="flex">
     <div class="w-[10ch]">id</div>
     <input
@@ -82,7 +84,7 @@
     </div>
   </div>
 </form>
-<form method="POST" use:enhance={handleDelete}>
+<form method="POST" use:enhance={handleDeleteAll}>
   <input hidden name="id" value={movie.id} />
   <button
     formaction="?/delete"
