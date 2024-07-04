@@ -5,12 +5,14 @@
 
   import type { SubmitFunction } from "@sveltejs/kit";
   const handleWhisper: SubmitFunction = () => {
+    isSubmitting = true;
     return async ({ result }) => {
       if (result.type === "success") {
         const s = result.data!.segments as Segment[];
         segments = [...segments, ...s];
         refreshSegments();
       }
+      isSubmitting = false;
     };
   };
   const handleDeleteAll: SubmitFunction = () => {
@@ -22,6 +24,7 @@
   };
   export let data;
   let { movie, segments } = data;
+  let isSubmitting: boolean;
   const refreshSegments = () => {
     segments = segments
       .sort((a, b) => a.start - b.start)
@@ -79,7 +82,7 @@
       <button
         formaction="?/whisper"
         class="p-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300 ease-in-out"
-        >whisper</button
+        >{isSubmitting ? "Submitting..." : "Whisper"}</button
       >
     </div>
   </div>
