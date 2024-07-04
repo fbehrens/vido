@@ -99,10 +99,18 @@
     end={s.end}
     text={s.text}
     dublicate={s.dublicate}
-    on:delete={(e) => {
+    on:delete={async (e) => {
       const d = e.detail;
-      console.log({ deleteSegment: d });
       segments = segments.filter((s) => s.clip != d.clip || s.id != d.id);
+      const response = await fetch("/api/deleteSegment", {
+        method: "POST",
+        body: JSON.stringify(d),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log({ body: await response.json() });
     }}
   ></SegmentRow>
 {/each}
