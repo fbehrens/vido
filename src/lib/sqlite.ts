@@ -77,7 +77,9 @@ export function deleteSegment(
 }
 
 export function selectSegments(db: Database, movie_id: number): Segment[] {
-  const stmt = db.prepare("SELECT * FROM segments WHERE movie_id = ?");
+  const stmt = db.prepare(
+    "SELECT clip, start, end, text, id,  seek, tokens, temperature, avg_logprob, compression_ratio, no_speech_prob FROM segments WHERE movie_id = ?",
+  );
   return stmt.all(movie_id) as Segment[];
 }
 

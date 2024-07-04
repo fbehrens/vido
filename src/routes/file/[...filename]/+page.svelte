@@ -1,9 +1,12 @@
 <script lang="ts">
   export let data;
   import { enhance } from "$app/forms";
+  //   import type { CustomEvent } from "svelte/elements";
+  //Module '"svelte/elements"' has no exported member 'CustomEvent'.
+
   import type { ActionResult, SubmitFunction } from "@sveltejs/kit";
   import type { Movie, Segment } from "$lib/types.js";
-
+  import SegmentRow from "./SegmentRow.svelte";
   let result: ActionResult;
 
   const handleSubmit: SubmitFunction = () => {
@@ -25,9 +28,7 @@
     .sort((a, b) => a.start - b.start)
     .map((s, index) => {
       const next: Segment | undefined = segments[index + 1];
-      if (next && s.end > next.start) {
-        s.dublicate = true;
-      }
+      s.dublicate = next && s.end > next.start;
       return s;
     });
   segments = segments
@@ -41,6 +42,11 @@
     segments.length > 1 ? Math.trunc(segments[segments.length - 2].start) : 0;
   let clip_length = 20;
   $: end = Number(clip) + Number(clip_length);
+  function deleteSegment(event: CustomEvent) {
+    const d = event.detail;
+    console.log({ deleteSegment: d });
+    segments = segments.filter((s) => s.clip != d.clip || s.id != d.id);
+  }
 </script>
 
 <form method="POST" use:enhance={handleSubmit}>
@@ -91,12 +97,15 @@
 </form>
 
 {#each segments as s}
-  <div class="flex">
-    <div class="w-[7ch]">{s.clip}</div>
-    <div class="w-[7ch]">{s.start}</div>
-    <div class:red={s.dublicate} class="w-[7ch]">{s.end}</div>
-    <div class="flex-1">{s.text}</div>
-  </div>
+  <SegmentRow
+    clip={s.clip}
+    id={s.id}
+    start={s.start}
+    end={s.end}
+    text={s.text}
+    dublicate={s.dublicate}
+    on:delete={deleteSegment}
+  ></SegmentRow>
 {/each}
 
 <!-- svelte-ignore a11y-media-has-caption -->
@@ -106,9 +115,5 @@
   video {
     max-width: 100%;
     height: auto;
-  }
-
-  .red {
-    color: red;
   }
 </style>

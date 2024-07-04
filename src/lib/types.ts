@@ -19,7 +19,7 @@ export interface Segment {
   start: number;
   end: number;
   text: string;
-  dublicate?: boolean;
+  dublicate: boolean;
   id: number;
   seek: number;
   tokens: number[];
