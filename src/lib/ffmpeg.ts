@@ -17,15 +17,15 @@ export function getDuration(videoPath: string): Promise<number> {
 
 export function extractMp3(
   filename: string,
-  from: number,
-  to: number,
+  start: number,
+  end: number,
   out: string,
 ) {
   makeDirFor(out);
   return new Promise((resolve, reject) => {
     try {
       ffmpeg(filename)
-        .inputOptions([`-ss ${from}`, `-t ${to}`])
+        .inputOptions([`-ss ${start}`, `-t ${end}`])
         .audioCodec("libmp3lame")
         .withNoVideo()
         .output(out)
