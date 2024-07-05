@@ -1,2 +1,4 @@
 import Database from "better-sqlite3";
-export const db = new Database("db/vod.db");
+import { ENVIRONMENT } from "$env/static/private";
+
+export const db = new Database(`db/${ENVIRONMENT}.db`);
