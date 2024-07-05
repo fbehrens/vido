@@ -4,9 +4,9 @@ CREATE TABLE movies (
 , duration REAL);
 -- CREATE TABLE sqlite_sequence(name,seq);
 CREATE TABLE segments (
-  id INTEGER,
   movie_id INTEGER,
-  clip INTEGER,
+  clip_id INTEGER,
+  id INTEGER,
   start REAL,
   end REAL,
   text TEXT,
@@ -19,14 +19,14 @@ CREATE TABLE segments (
 );
 CREATE TABLE words (
   movie_id INTEGER,
-  clip INTEGER,
+  clip_id INTEGER,
   start REAL,
   end REAL,
   word TEXT
 );
 CREATE TABLE clips (
-  id INTEGER,
   movie_id INTEGER,
+  id INTEGER,
   start REAL,
   end REAL
 );

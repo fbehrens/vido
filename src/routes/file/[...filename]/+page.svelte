@@ -34,7 +34,9 @@
         return s;
       });
     segments = segments
-      .sort((a, b) => (a.clip == b.clip ? a.start - b.start : a.clip - b.clip))
+      .sort((a, b) =>
+        a.clip_id == b.clip_id ? a.start - b.start : a.clip_id - b.clip_id,
+      )
       .map((s) => {
         s.start = Number(s.start.toFixed(2));
         s.end = Number(s.end.toFixed(2));
@@ -98,7 +100,7 @@
 
 {#each segments as s}
   <SegmentRow
-    clip={s.clip}
+    clip_id={s.clip_id}
     id={s.id}
     start={s.start}
     end={s.end}
@@ -106,7 +108,7 @@
     dublicate={s.dublicate}
     on:delete={async (e) => {
       const d = e.detail;
-      segments = segments.filter((s) => s.clip != d.clip || s.id != d.id);
+      segments = segments.filter((s) => s.clip_id != d.clip_id || s.id != d.id);
       const response = await fetch("/api/deleteSegment", {
         method: "POST",
         body: JSON.stringify(d),

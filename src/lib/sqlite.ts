@@ -42,7 +42,7 @@ export function insertSegment(
 ): void {
   s.clip = clip;
   const stmt = db.prepare(`
-    INSERT INTO segments (movie_id, clip, id, start, end, text, seek, tokens, temperature, avg_logprob, compression_ratio, no_speech_prob)
+    INSERT INTO segments (movie_id, clip_id, id, start, end, text, seek, tokens, temperature, avg_logprob, compression_ratio, no_speech_prob)
     VALUES (@movie_id, @clip, @id, @start+@clip, @end+@clip, @text, @seek, @tokens, @temperature, @avg_logprob, @compression_ratio, @no_speech_prob)
   `);
   stmt.run({
@@ -79,24 +79,24 @@ export function deleteSegment(
 export function selectSegments(
   db: Database,
   movie_id: number,
-  clip?: number,
+  clip_id?: number,
 ): Segment[] {
   let sql =
-    "SELECT clip, start, end, text, id,  seek, tokens, temperature, avg_logprob, compression_ratio, no_speech_prob FROM segments WHERE movie_id = ?";
-  if (clip) sql += ` AND clip=${clip}`;
+    "SELECT clip_id, start, end, text, id,  seek, tokens, temperature, avg_logprob, compression_ratio, no_speech_prob FROM segments WHERE movie_id = ?";
+  if (clip_id) sql += ` AND clip_id=${clip_id}`;
   return db.prepare(sql).all(movie_id) as Segment[];
 }
 
 export function insertWord(
   db: Database,
   movie_id: number,
-  clip: number,
+  clip_id: number,
   w: Word,
 ): void {
-  w.clip = clip;
+  w.clip_id = clip_id;
   db.prepare(
-    "INSERT INTO words (movie_id, clip, start, end, word) VALUES (?, ?, ?, ?, ?)",
-  ).run(movie_id, w.clip, w.start, w.end, w.word);
+    "INSERT INTO words (movie_id, clip_id, start, end, word) VALUES (?, ?, ?, ?, ?)",
+  ).run(movie_id, w.clip_id, w.start, w.end, w.word);
 }
 
 export function selectWords(db: Database, movie_id: number): Word[] {
