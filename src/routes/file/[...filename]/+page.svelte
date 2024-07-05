@@ -75,7 +75,7 @@
   <div class="flex">
     <div class="w-[10ch]"></div>
     <div>
-      <input class="w-[4ch]" name="clip" bind:value={clip} />
+      <input class="w-[4ch]" name="clip_start" bind:value={clip} />
       s - {end}s (length=
       <input class="w-[4ch]" name="clip_length" bind:value={clip_length} />
       s)

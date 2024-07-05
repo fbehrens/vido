@@ -31,38 +31,51 @@ function sleep(ms: number) {
 }
 
 export const actions = {
+  // clip: id,start,end -> db + mp3 -> whisper -> segments+ words
   whisper: async ({ request }) => {
     const formData = await request.formData();
     const movie_id = Number(formData.get("id")!);
-    const clip = Number(formData.get("clip")!);
-    const clip_length = Number(formData.get("clip_length")!);
+    const start = Number(formData.get("clip_start")!);
+    const length = Number(formData.get("clip_length")!);
+    const end = start + length;
+
+    const id =
+      Number(
+        db
+          .prepare("select COALESCE(MAX(id), 0)  from clips where movie_id =?")
+          .pluck(true)
+          .get(movie_id),
+      ) + 1;
+    console.log(id);
+    db.prepare(
+      "INSERT INTO clips (id, movie_id, start, end) VALUES (?, ?, ?, ?)",
+    ).run(id, movie_id, start, end);
+
     const filename = `static/${String(formData.get("filename")!)}`;
-    console.log({ start: clip });
     const fileDir = getFileDir(filename);
-    const mp3Path = `${fileDir}/mp3/${clip}.mp3`;
-    await extractMp3(filename, clip, clip_length, mp3Path);
-    console.log(
-      `${mp3Path}: ${clip_length}s => ${fs.statSync(mp3Path).size} bytes`,
-    );
+    const mp3Path = `${fileDir}/mp3/${id}.mp3`;
+    await extractMp3(filename, start, length, mp3Path);
+    console.log(`${mp3Path}: ${length}s => ${fs.statSync(mp3Path).size} bytes`);
 
     const t = await transcribe(mp3Path);
-    const txtPath = `${fileDir}/text/${clip}.txt`;
+    const txtPath = `${fileDir}/text/${id}.txt`;
     makeDirFor(txtPath);
     fs.writeFileSync(txtPath, t.text);
     console.log({ txtPath });
 
-    t.segments.forEach((s) => insertSegment(db, movie_id, clip, s));
-    t.words.forEach((w) => insertWord(db, movie_id, clip, w));
+    t.segments.forEach((s) => insertSegment(db, movie_id, id, s));
+    t.words.forEach((w) => insertWord(db, movie_id, id, w));
     return {
       success: true,
-      segments: selectSegments(db, movie_id, clip),
+      segments: selectSegments(db, movie_id, id),
     };
   },
   delete: async ({ request }) => {
     const formData = await request.formData();
     const movie_id = Number(formData.get("id")!);
     db.prepare(`delete from segments where movie_id=${movie_id}`).run();
-    db.prepare(`delete from words  where movie_id=${movie_id}`).run();
+    db.prepare(`delete from words where movie_id=${movie_id}`).run();
+    db.prepare(`delete from clips where movie_id=${movie_id}`).run();
     return {
       success: true,
     };

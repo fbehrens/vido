@@ -1,11 +1,10 @@
-CREATE TABLE IF NOT EXISTS movies (
+CREATE TABLE movies (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    filename TEXT UNIQUE NOT NULL,
-    duration REAL,
-);
-
-CREATE TABLE IF NOT EXISTS segments (
-  id INTEGER PRIMARY KEY,
+    filename TEXT UNIQUE NOT NULL
+, duration REAL);
+-- CREATE TABLE sqlite_sequence(name,seq);
+CREATE TABLE segments (
+  id INTEGER,
   movie_id INTEGER,
   clip INTEGER,
   start REAL,
@@ -18,31 +17,16 @@ CREATE TABLE IF NOT EXISTS segments (
   compression_ratio REAL,
   no_speech_prob REAL
 );
-
-CREATE TABLE IF NOT EXISTS words (
+CREATE TABLE words (
   movie_id INTEGER,
   clip INTEGER,
   start REAL,
   end REAL,
   word TEXT
 );
-
-/*
-read -r -d '' SQL << EOV
-DROP table words;
-CREATE TABLE IF NOT EXISTS words (
+CREATE TABLE clips (
+  id INTEGER,
   movie_id INTEGER,
-  clip INTEGER,
   start REAL,
-  end REAL,
-  word TEXT
+  end REAL
 );
-EOV
-
-
-sqlite3 db/test.db $SQL
-sqlite3 db/vod.db $SQL
-
-sqlite3 db/test.db .schema
-*/
-
