@@ -62,3 +62,17 @@ FROM
   segments s
 JOIN
   clips c ON s.movie_id = c.movie_id AND s.clip_id = c.id;
+
+-- drop view if exists words_v;
+CREATE VIEW words_v AS
+SELECT
+  w.movie_id,
+  w.id ,
+  w.clip_id ,
+  w.start + c.start "start",
+  w.end + c.start "end",
+  w.word
+FROM
+  words w
+JOIN
+  clips c ON w.movie_id = c.movie_id AND w.clip_id = c.id;

@@ -2,6 +2,7 @@
   import { enhance } from "$app/forms";
   import type { Segment } from "$lib/types.js";
   import SegmentRow from "./SegmentRow.svelte";
+  import WordsTable from "$lib/components/WordsTable.svelte";
 
   import type { SubmitFunction } from "@sveltejs/kit";
   const handleWhisper: SubmitFunction = () => {
@@ -23,7 +24,7 @@
     };
   };
   export let data;
-  let { movie, segments } = data;
+  let { movie, segments, words } = data;
   let isSubmitting: boolean;
   const refreshSegments = () => {
     segments = segments
@@ -97,9 +98,10 @@
     >delete transcript</button
   >
 </form>
-
+<br />
 {#each segments as s}
   <SegmentRow
+    words={words.filter((w) => w.start > s.start && w.end <= s.end)}
     clip_id={s.clip_id}
     id={s.id}
     start={s.start}

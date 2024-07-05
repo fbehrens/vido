@@ -23,7 +23,8 @@ export async function load({ params }) {
     updateMovie(db, movie);
   }
   let segments = selectSegments(db, movie.id!);
-  return { movie, segments };
+  let words = selectWords(db, movie.id!);
+  return { movie, segments, words };
 }
 
 function sleep(ms: number) {
@@ -76,7 +77,7 @@ export const actions = {
     db.prepare(`delete from segments where movie_id=${movie_id}`).run();
     db.prepare(`delete from words where movie_id=${movie_id}`).run();
     db.prepare(`delete from clips where movie_id=${movie_id}`).run();
-    console.log(`Delete Clips for movie_id=${movie_id}`);
+    console.log(`Delete segments,words and clips for movie_id=${movie_id}`);
     return {
       success: true,
     };

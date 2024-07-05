@@ -11,7 +11,10 @@ export interface Word {
   start: number;
   end: number;
   word: string;
-  dublicate?: boolean;
+}
+
+export interface WordDb extends Word {
+  id: number; // primary key
 }
 
 export interface Segment {
