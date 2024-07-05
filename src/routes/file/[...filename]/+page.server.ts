@@ -76,6 +76,7 @@ export const actions = {
     db.prepare(`delete from segments where movie_id=${movie_id}`).run();
     db.prepare(`delete from words where movie_id=${movie_id}`).run();
     db.prepare(`delete from clips where movie_id=${movie_id}`).run();
+    console.log(`Delete Clips for movie_id=${movie_id}`);
     return {
       success: true,
     };

@@ -37,13 +37,13 @@ export function getMovie(db: Database, { filename }: Movie): Movie {
 export function insertSegment(
   db: Database,
   movie_id: number,
-  clip: number,
+  clip_id: number,
   s: Segment,
 ): void {
-  s.clip = clip;
+  s.clip_id = clip_id;
   const stmt = db.prepare(`
     INSERT INTO segments (movie_id, clip_id, id, start, end, text, seek, tokens, temperature, avg_logprob, compression_ratio, no_speech_prob)
-    VALUES (@movie_id, @clip, @id, @start+@clip, @end+@clip, @text, @seek, @tokens, @temperature, @avg_logprob, @compression_ratio, @no_speech_prob)
+    VALUES (@movie_id, @clip_id, @id, @start, @end, @text, @seek, @tokens, @temperature, @avg_logprob, @compression_ratio, @no_speech_prob)
   `);
   stmt.run({
     movie_id,
@@ -82,7 +82,7 @@ export function selectSegments(
   clip_id?: number,
 ): Segment[] {
   let sql =
-    "SELECT clip_id, start, end, text, id,  seek, tokens, temperature, avg_logprob, compression_ratio, no_speech_prob FROM segments WHERE movie_id = ?";
+    "SELECT clip_id, start, end, text, id,  seek, tokens, temperature, avg_logprob, compression_ratio, no_speech_prob FROM segments_v WHERE movie_id = ?";
   if (clip_id) sql += ` AND clip_id=${clip_id}`;
   return db.prepare(sql).all(movie_id) as Segment[];
 }

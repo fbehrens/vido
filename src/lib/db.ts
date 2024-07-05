@@ -1,4 +1,6 @@
 import Database from "better-sqlite3";
 import { ENVIRONMENT } from "$env/static/private";
 
-export const db = new Database(`db/${ENVIRONMENT}.db`);
+const dbPath = `db/${ENVIRONMENT}.db`;
+console.log({ dbPath });
+export const db = new Database(dbPath);
