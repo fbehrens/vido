@@ -15,11 +15,13 @@
 
 <div class="flex">
   <div class="w-[7ch]">{clip_id}</div>
-  <div class="w-[7ch]">{start}</div>
-  <div class="w-[7ch]">{end}</div>
+  <div class="w-[7ch]">{start.toFixed(2)}</div>
+  <div class="w-[7ch]">{end.toFixed(2)}</div>
   <div class:red={dublicate} class="flex-1">
-    {text}
+    {text}<br />
+    {start}<br />
     <WordsTable {words}></WordsTable>
+    {end}
     <wo> </wo>
   </div>
   <button on:click={() => dispatch("delete", { clip_id, id })}>delete</button>

@@ -9,6 +9,7 @@ CREATE TABLE clips (
   id INTEGER,
   start REAL,
   end REAL,
+  text TEXT,
   PRIMARY KEY ( movie_id, id )
   FOREIGN KEY (movie_id) REFERENCES movies(id)
 );

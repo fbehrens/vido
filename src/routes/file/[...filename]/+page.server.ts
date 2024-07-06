@@ -47,10 +47,6 @@ export const actions = {
           .pluck(true)
           .get(movie_id),
       ) + 1;
-    console.log(id);
-    db.prepare(
-      "INSERT INTO clips (id, movie_id, start, end) VALUES (?, ?, ?, ?)",
-    ).run(id, movie_id, start, end);
 
     const filename = `static/${String(formData.get("filename")!)}`;
     const fileDir = getFileDir(filename);
@@ -59,10 +55,9 @@ export const actions = {
     console.log(`${mp3Path}: ${length}s => ${fs.statSync(mp3Path).size} bytes`);
 
     const t = await transcribe(mp3Path);
-    const txtPath = `${fileDir}/text/${id}.txt`;
-    makeDirFor(txtPath);
-    fs.writeFileSync(txtPath, t.text);
-    console.log({ txtPath });
+    db.prepare(
+      "INSERT INTO clips (id, movie_id, start, end, text) VALUES (?, ?, ?, ?, ?)",
+    ).run(id, movie_id, start, end, t.text);
 
     t.segments.forEach((s) => insertSegment(db, movie_id, id, s));
     t.words.forEach((w) => insertWord(db, movie_id, id, w));

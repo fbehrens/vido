@@ -34,15 +34,9 @@
         s.dublicate = next && s.end > next.start;
         return s;
       });
-    segments = segments
-      .sort((a, b) =>
-        a.clip_id == b.clip_id ? a.start - b.start : a.clip_id - b.clip_id,
-      )
-      .map((s) => {
-        s.start = Number(s.start.toFixed(2));
-        s.end = Number(s.end.toFixed(2));
-        return s;
-      });
+    segments = segments.sort((a, b) =>
+      a.clip_id == b.clip_id ? a.start - b.start : a.clip_id - b.clip_id,
+    );
   };
   refreshSegments();
 
