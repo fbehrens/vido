@@ -3,10 +3,8 @@ import type { Movie, Segment } from "$lib/types.js";
 import { getFileDir, makeDirFor } from "$lib/util";
 import {
   getMovie,
-  insertSegment,
   updateMovie,
   selectSegments,
-  insertWord,
   selectWords,
 } from "$lib/sqlite.js";
 import { getDuration, extractMp3 } from "$lib/ffmpeg.js";
@@ -59,8 +57,28 @@ export const actions = {
       "INSERT INTO clips (id, movie_id, start, end, text) VALUES (?, ?, ?, ?, ?)",
     ).run(id, movie_id, start, end, t.text);
 
-    t.segments.forEach((s) => insertSegment(db, movie_id, id, s));
-    t.words.forEach((w) => insertWord(db, movie_id, id, w));
+    t.segments.forEach((s) =>
+      db
+        .prepare(
+          ` INSERT INTO segments (movie_id, clip_id, start, end, text, seek, tokens, temperature, avg_logprob, compression_ratio, no_speech_prob)
+          VALUES (@movie_id, @clip_id, @start, @end, @text, @seek, @tokens, @temperature, @avg_logprob, @compression_ratio, @no_speech_prob)`,
+        )
+        .run({
+          movie_id,
+          clip_id: id,
+          ...s,
+          tokens: JSON.stringify(s.tokens),
+        }),
+    );
+
+    t.words.forEach((w) =>
+      db
+        .prepare(
+          "INSERT INTO words (movie_id, clip_id, start, end, word) VALUES (?, ?, ?, ?, ?)",
+        )
+        .run(movie_id, id, w.start, w.end, w.word),
+    );
+
     return {
       success: true,
       segments: selectSegments(db, movie_id, id),

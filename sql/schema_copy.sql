@@ -19,7 +19,7 @@ CREATE TABLE clips (
 CREATE TABLE segments (
   movie_id INTEGER,
   clip_id INTEGER,
-  id INTEGER,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   start REAL,
   end REAL,
   text TEXT,
@@ -29,7 +29,7 @@ CREATE TABLE segments (
   avg_logprob REAL,
   compression_ratio REAL,
   no_speech_prob REAL,
-  PRIMARY KEY ( movie_id, clip_id, id )
+--   PRIMARY KEY ( movie_id, clip_id, id )
   FOREIGN KEY (movie_id, clip_id) REFERENCES clips(movie_id, id)
 );
 

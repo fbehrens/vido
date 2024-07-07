@@ -18,11 +18,11 @@
   <div class="w-[7ch]">{start.toFixed(2)}</div>
   <div class="w-[7ch]">{end.toFixed(2)}</div>
   <div class:red={dublicate} class="flex-1">
-    {text}<br />
-    {start}<br />
-    <WordsTable {words}></WordsTable>
-    {end}
-    <wo> </wo>
+    {text}
+    <!-- <WordsTable {words}></WordsTable> -->
+    {#each words as w}
+      {w.word}
+    {/each}
   </div>
   <button on:click={() => dispatch("delete", { clip_id, id })}>delete</button>
 </div>
