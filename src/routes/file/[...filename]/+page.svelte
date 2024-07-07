@@ -25,19 +25,19 @@
       }
     };
   };
-  const handleDelete = async (
-    e: CustomEvent<{ clip_id: number; id: number }>,
-  ) => {
-    const d = e.detail;
-    segments = segments.filter((s) => s.clip_id != d.clip_id || s.id != d.id);
+  const handleDelete = async ({
+    detail,
+  }: CustomEvent<{ clip_id: number; id: number }>) => {
+    segments = segments.filter(
+      (s) => s.clip_id != detail.clip_id || s.id != detail.id,
+    );
     const response = await fetch("/api/deleteSegment", {
       method: "POST",
-      body: JSON.stringify(d),
+      body: JSON.stringify(detail),
       headers: {
         "Content-Type": "application/json",
       },
     });
-
     console.log({ body: await response.json() });
   };
   export let data;
