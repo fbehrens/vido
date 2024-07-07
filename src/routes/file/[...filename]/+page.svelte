@@ -25,6 +25,21 @@
       }
     };
   };
+  const handleDelete = async (
+    e: CustomEvent<{ clip_id: number; id: number }>,
+  ) => {
+    const d = e.detail;
+    segments = segments.filter((s) => s.clip_id != d.clip_id || s.id != d.id);
+    const response = await fetch("/api/deleteSegment", {
+      method: "POST",
+      body: JSON.stringify(d),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log({ body: await response.json() });
+  };
   export let data;
   let { movie, segments, words } = data;
   let isSubmitting: boolean;
@@ -122,19 +137,7 @@
     text={s.text}
     dublicate={s.dublicate}
     bind:time
-    on:delete={async (e) => {
-      const d = e.detail;
-      segments = segments.filter((s) => s.clip_id != d.clip_id || s.id != d.id);
-      const response = await fetch("/api/deleteSegment", {
-        method: "POST",
-        body: JSON.stringify(d),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      console.log({ body: await response.json() });
-    }}
+    on:delete={handleDelete}
   ></SegmentRow>
 {/each}
 
