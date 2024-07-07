@@ -40,6 +40,12 @@
     });
     console.log({ body: await response.json() });
   };
+
+  const handleSetTime = async ({ detail }: CustomEvent<{ time: number }>) => {
+    console.log(`setTime ${detail.time}`);
+    time = detail.time;
+  };
+
   export let data;
   let { movie, segments, words } = data;
   let isSubmitting: boolean;
@@ -138,6 +144,7 @@
     dublicate={s.dublicate}
     bind:time
     on:delete={handleDelete}
+    on:setTime={handleSetTime}
   ></SegmentRow>
 {/each}
 

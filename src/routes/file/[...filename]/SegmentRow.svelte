@@ -16,8 +16,11 @@
 </script>
 
 <div class="flex">
-  <div class="w-[7ch]">{time}</div>
-  <div class="w-[7ch]">{start.toFixed(2)}</div>
+  <div class="w-[7ch]">{clip_id}</div>
+  <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+  <div class="w-[7ch]" on:click={() => dispatch("setTime", { time: start })}>
+    {start.toFixed(2)}
+  </div>
   <div class="w-[7ch]">{end.toFixed(2)}</div>
   <div class:red={dublicate} class="flex-1 {isCurrent ? 'bg-green-200' : ''}">
     {text}
