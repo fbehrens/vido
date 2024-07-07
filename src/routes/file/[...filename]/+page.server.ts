@@ -10,6 +10,11 @@ import {
 import { getDuration, extractMp3 } from "$lib/ffmpeg.js";
 import { transcribe } from "$lib/whisper";
 import * as fs from "fs";
+import {
+  alignArrays,
+  arraysEqual,
+  updateWordsSegmentId,
+} from "$lib/util/alignArrays";
 
 export async function load({ params }) {
   console.log({ serverload: params });
@@ -20,8 +25,22 @@ export async function load({ params }) {
     movie.duration = await getDuration(`static/${filename}`);
     updateMovie(db, movie);
   }
-  let segments = selectSegments(db, movie.id!);
-  let words = selectWords(db, movie.id!);
+
+  const segments = selectSegments(db, movie.id!);
+  new Set(segments.map(({ clip_id }) => clip_id)).forEach((clip_id) =>
+    updateWordsSegmentId({ movie_id: movie.id!, clip_id }),
+  );
+
+  const words = selectWords(db, movie.id!);
+  const swords =
+    segments
+      .map(({ text }) => text)
+      .join(" ")
+      .match(/\b[\w']+\b/g) || [];
+  const wwords = words.map(({ word }) => word);
+  if (!arraysEqual(swords, wwords)) {
+    console.log(alignArrays(swords, wwords));
+  }
   return { movie, segments, words };
 }
 
@@ -70,7 +89,6 @@ export const actions = {
           tokens: JSON.stringify(s.tokens),
         }),
     );
-
     t.words.forEach((w) =>
       db
         .prepare(

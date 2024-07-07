@@ -22,31 +22,6 @@ FROM
 JOIN
   clips c ON s.movie_id = c.movie_id AND s.clip_id = c.id
 /* segments_v(movie_id,clip_id,id,start,"end",text,seek,tokens,temperature,avg_logprob,compression_ratio,no_speech_prob) */;
-CREATE TABLE segments (
-  movie_id INTEGER,
-  clip_id INTEGER,
-  id INTEGER,
-  start REAL,
-  end REAL,
-  text TEXT,
-  seek REAL,
-  tokens TEXT,
-  temperature REAL,
-  avg_logprob REAL,
-  compression_ratio REAL,
-  no_speech_prob REAL,
-  PRIMARY KEY ( movie_id, clip_id, id )
-  FOREIGN KEY (movie_id, clip_id) REFERENCES clips(movie_id, id)
-);
-CREATE TABLE words (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  movie_id INTEGER,
-  clip_id INTEGER,
-  start REAL,
-  end REAL,
-  word TEXT,
-  FOREIGN KEY (movie_id, clip_id) REFERENCES clips(movie_id, id)
-);
 CREATE VIEW words_v AS
 SELECT
   w.movie_id,
@@ -68,4 +43,31 @@ CREATE TABLE clips (
   text TEXT,
   PRIMARY KEY ( movie_id, id )
   FOREIGN KEY (movie_id) REFERENCES movies(id)
+);
+CREATE TABLE segments (
+  movie_id INTEGER,
+  clip_id INTEGER,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  start REAL,
+  end REAL,
+  text TEXT,
+  seek REAL,
+  tokens TEXT,
+  temperature REAL,
+  avg_logprob REAL,
+  compression_ratio REAL,
+  no_speech_prob REAL,
+--   PRIMARY KEY ( movie_id, clip_id, id )
+  FOREIGN KEY (movie_id, clip_id) REFERENCES clips(movie_id, id)
+);
+CREATE TABLE words (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  movie_id INTEGER,
+  clip_id INTEGER,
+  segment_id INTEGER,
+  start REAL,
+  end REAL,
+  word TEXT,
+  FOREIGN KEY (movie_id, clip_id) REFERENCES clips(movie_id, id)
+  FOREIGN KEY (segment_id) REFERENCES segments(id)
 );

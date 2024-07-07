@@ -38,10 +38,12 @@ CREATE TABLE words (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   movie_id INTEGER,
   clip_id INTEGER,
+  segment_id INTEGER,
   start REAL,
   end REAL,
   word TEXT,
   FOREIGN KEY (movie_id, clip_id) REFERENCES clips(movie_id, id)
+  FOREIGN KEY (segment_id) REFERENCES segments(id)
 );
 
 DROP view segments_v;
