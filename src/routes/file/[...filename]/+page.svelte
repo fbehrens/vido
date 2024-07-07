@@ -3,6 +3,8 @@
   import type { Segment } from "$lib/types.js";
   import SegmentRow from "./SegmentRow.svelte";
   import WordsTable from "$lib/components/WordsTable.svelte";
+  let time = 0;
+  let duration: number;
 
   import type { SubmitFunction } from "@sveltejs/kit";
   const handleWhisper: SubmitFunction = () => {
@@ -26,6 +28,7 @@
   export let data;
   let { movie, segments, words } = data;
   let isSubmitting: boolean;
+
   const refreshSegments = () => {
     segments = segments
       .sort((a, b) => a.start - b.start)
@@ -88,11 +91,27 @@
   <input hidden name="id" value={movie.id} />
   <button
     formaction="?/delete"
-    class=" bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300 ease-in-out"
+    class=" bg-blue-200 text-white rounded-lg shadow-md hover:bg-blue-400 focus:outlinenone focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300 ease-in-out"
     >delete transcript</button
   >
 </form>
-<br />
+<div class="grid grid-cols-[30%,1fr]">
+  <div>
+    <!-- svelte-ignore a11y-media-has-caption -->
+    <video
+      src={"/" + movie.filename}
+      controls
+      bind:duration
+      bind:currentTime={time}
+    >
+    </video>
+  </div>
+  <div>
+    <p>duration={duration}</p>
+    <p>time={time}</p>
+  </div>
+</div>
+
 {#each segments as s}
   <SegmentRow
     words={words.filter((w) => w.start > s.start && w.end <= s.end)}
@@ -102,6 +121,7 @@
     end={s.end}
     text={s.text}
     dublicate={s.dublicate}
+    bind:time
     on:delete={async (e) => {
       const d = e.detail;
       segments = segments.filter((s) => s.clip_id != d.clip_id || s.id != d.id);
@@ -117,9 +137,6 @@
     }}
   ></SegmentRow>
 {/each}
-
-<!-- svelte-ignore a11y-media-has-caption -->
-<video src={"/" + movie.filename} controls> </video>
 
 <style>
   video {
