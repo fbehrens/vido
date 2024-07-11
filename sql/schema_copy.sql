@@ -11,7 +11,7 @@ CREATE TABLE clips (
   end REAL,
   text TEXT,
   PRIMARY KEY ( movie_id, id )
-  FOREIGN KEY (movie_id) REFERENCES movies(id)
+  FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE
 );
 
 -- CREATE TABLE sqlite_sequence(name,seq);
@@ -29,8 +29,7 @@ CREATE TABLE segments (
   avg_logprob REAL,
   compression_ratio REAL,
   no_speech_prob REAL,
---   PRIMARY KEY ( movie_id, clip_id, id )
-  FOREIGN KEY (movie_id, clip_id) REFERENCES clips(movie_id, id)
+  FOREIGN KEY (movie_id, clip_id) REFERENCES clips(movie_id, id) ON DELETE CASCADE
 );
 
 -- drop table words;
@@ -42,8 +41,8 @@ CREATE TABLE words (
   start REAL,
   end REAL,
   word TEXT,
-  FOREIGN KEY (movie_id, clip_id) REFERENCES clips(movie_id, id)
-  FOREIGN KEY (segment_id) REFERENCES segments(id)
+  FOREIGN KEY (movie_id, clip_id) REFERENCES clips(movie_id, id) ON DELETE CASCADE
+  FOREIGN KEY (segment_id) REFERENCES segments(id) ON DELETE CASCADE
 );
 
 DROP view segments_v;

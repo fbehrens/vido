@@ -25,12 +25,8 @@
       }
     };
   };
-  const handleDelete = async ({
-    detail,
-  }: CustomEvent<{ clip_id: number; id: number }>) => {
-    segments = segments.filter(
-      (s) => s.clip_id != detail.clip_id || s.id != detail.id,
-    );
+  const handleDelete = async ({ detail }: CustomEvent<{ id: number }>) => {
+    segments = segments.filter((s) => s.id != detail.id);
     const response = await fetch("/api/deleteSegment", {
       method: "POST",
       body: JSON.stringify(detail),
@@ -47,7 +43,7 @@
   };
 
   export let data;
-  let { movie, segments, words } = data;
+  let { movie, segments } = data;
   let isSubmitting: boolean;
 
   const refreshSegments = () => {
@@ -135,7 +131,6 @@
 
 {#each segments as s}
   <SegmentRow
-    words={words.filter((w) => w.start > s.start && w.end <= s.end)}
     clip_id={s.clip_id}
     id={s.id}
     start={s.start}
