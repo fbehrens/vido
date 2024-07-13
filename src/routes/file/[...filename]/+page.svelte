@@ -1,7 +1,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import type { Segment } from "$lib/types.js";
-  import SegmentRow from "./SegmentRow.svelte";
+  import Segments from "./Segments.svelte";
   import WordsTable from "$lib/components/WordsTable.svelte";
   let time = 0;
   let duration: number;
@@ -129,19 +129,12 @@
   </div>
 </div>
 
-{#each segments as s}
-  <SegmentRow
-    clip_id={s.clip_id}
-    id={s.id}
-    start={s.start}
-    end={s.end}
-    text={s.text}
-    dublicate={s.dublicate}
-    bind:time
-    on:delete={handleDelete}
-    on:setTime={handleSetTime}
-  ></SegmentRow>
-{/each}
+<Segments
+  bind:time
+  {segments}
+  on:delete={handleDelete}
+  on:setTime={handleSetTime}
+></Segments>
 
 <style>
   video {
