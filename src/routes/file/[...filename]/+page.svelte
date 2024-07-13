@@ -4,6 +4,8 @@
   import Segments from "./Segments.svelte";
   import WordsTable from "$lib/components/WordsTable.svelte";
   let time = 0;
+  let tabs = ["Segments", "Timeline"];
+  let activeTab = tabs[0];
   let duration: number;
 
   import type { SubmitFunction } from "@sveltejs/kit";
@@ -113,7 +115,7 @@
   >
 </form>
 <div class="grid grid-cols-[30%,1fr]">
-  <div>
+  <div class="p-1">
     <!-- svelte-ignore a11y-media-has-caption -->
     <video
       src={"/" + movie.filename}
@@ -128,13 +130,24 @@
     <p>time={time}</p>
   </div>
 </div>
+<div class="flex">
+  {#each tabs as t}
+    <div class="p-1 border border-black {t == activeTab ? 'bg-green-200' : ''}">
+      <button on:click={() => (activeTab = t)}>{t}</button>
+    </div>
+  {/each}
+</div>
 
-<Segments
-  bind:time
-  {segments}
-  on:delete={handleDelete}
-  on:setTime={handleSetTime}
-></Segments>
+{#if activeTab == "Segments"}
+  <Segments
+    bind:time
+    {segments}
+    on:delete={handleDelete}
+    on:setTime={handleSetTime}
+  ></Segments>
+{:else if activeTab == "Timeline"}
+  TIMELINE
+{/if}
 
 <style>
   video {

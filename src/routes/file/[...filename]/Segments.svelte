@@ -5,6 +5,8 @@
   export let time: number;
 </script>
 
-{#each segments as s}
-  <SegmentRow {...s} bind:time on:delete on:setTime></SegmentRow>
-{/each}
+<div class="border border-green-300">
+  {#each segments as s}
+    <SegmentRow {...s} bind:time on:delete on:setTime></SegmentRow>
+  {/each}
+</div>
