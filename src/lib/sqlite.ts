@@ -59,6 +59,18 @@ export function deleteSegment(
   stmt.run(movie_id, clip, id);
 }
 
+export function selectSegmentsByClip(
+  db: Database,
+  movie_id: number,
+  clip_id: number,
+): Segment[] {
+  return db
+    .prepare(
+      "SELECT clip_id, start, end, text, id, FROM segments_v WHERE movie_id = ? AND clip_id = ?",
+    )
+    .all(movie_id, clip_id) as Segment[];
+}
+
 export function selectWords(db: Database, movie_id: number): WordDb[] {
   return db
     .prepare(
