@@ -59,17 +59,6 @@ export function deleteSegment(
   stmt.run(movie_id, clip, id);
 }
 
-export function selectSegments(
-  db: Database,
-  movie_id: number,
-  clip_id?: number,
-): Segment[] {
-  let sql =
-    "SELECT clip_id, start, end, text, id,  seek, tokens, temperature, avg_logprob, compression_ratio, no_speech_prob FROM segments_v WHERE movie_id = ?";
-  if (clip_id) sql += ` AND clip_id=${clip_id}`;
-  return db.prepare(sql).all(movie_id) as Segment[];
-}
-
 export function selectWords(db: Database, movie_id: number): WordDb[] {
   return db
     .prepare(

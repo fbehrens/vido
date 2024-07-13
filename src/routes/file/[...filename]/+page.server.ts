@@ -1,12 +1,7 @@
 import { db } from "$lib/db";
 import type { Movie, Segment } from "$lib/types.js";
 import { getFileDir, makeDirFor } from "$lib/util";
-import {
-  getMovie,
-  updateMovie,
-  selectSegments,
-  selectWords,
-} from "$lib/sqlite.js";
+import { getMovie, updateMovie, selectWords } from "$lib/sqlite.js";
 import { getDuration, extractMp3 } from "$lib/ffmpeg.js";
 import { transcribe } from "$lib/whisper";
 import * as fs from "fs";
@@ -22,7 +17,11 @@ export async function load({ params }) {
     updateMovie(db, movie);
   }
 
-  const segments = selectSegments(db, movie.id!);
+  const segments = db
+    .prepare(
+      "SELECT clip_id, start, end, text, id FROM segments_v WHERE movie_id = ?",
+    )
+    .all(movie.id!) as Segment[];
 
   //   new Set(segments.map(({ clip_id }) => clip_id)).forEach((clip_id) =>
   //     updateWordsSegmentId({ movie_id: movie.id!, clip_id }),

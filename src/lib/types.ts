@@ -24,6 +24,9 @@ export interface Segment {
   text: string;
   dublicate: boolean;
   id: number;
+}
+
+export interface SegmentAll extends Segment {
   seek: number;
   tokens: number[];
   temperature: number;

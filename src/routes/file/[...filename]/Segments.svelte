@@ -6,15 +6,5 @@
 </script>
 
 {#each segments as s}
-  <SegmentRow
-    clip_id={s.clip_id}
-    id={s.id}
-    start={s.start}
-    end={s.end}
-    text={s.text}
-    dublicate={s.dublicate}
-    bind:time
-    on:delete
-    on:setTime
-  ></SegmentRow>
+  <SegmentRow {...s} bind:time on:delete on:setTime></SegmentRow>
 {/each}
