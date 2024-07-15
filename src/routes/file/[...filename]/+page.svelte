@@ -1,10 +1,11 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import type { Segment } from "$lib/types.js";
+  import type { Segment, WordDb } from "$lib/types.js";
   import Segments from "./Segments.svelte";
+  import Timeline from "./Timeline.svelte";
   import WordsTable from "$lib/components/WordsTable.svelte";
   let time = 0;
-  let tabs = ["Segments", "Timeline"];
+  let tabs = ["Timeline", "Segments"];
   let activeTab = tabs[0];
   let duration: number;
 
@@ -45,7 +46,7 @@
   };
 
   export let data;
-  let { movie, segments } = data;
+  let { movie, segments, words } = data;
   let isSubmitting: boolean;
 
   const refreshSegments = () => {
@@ -146,7 +147,7 @@
     on:setTime={handleSetTime}
   ></Segments>
 {:else if activeTab == "Timeline"}
-  TIMELINE
+  <Timeline {segments} {words} duration={movie.duration} bind:time></Timeline>
 {/if}
 
 <style>

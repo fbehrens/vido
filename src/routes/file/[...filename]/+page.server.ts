@@ -33,7 +33,7 @@ export async function load({ params }) {
   //   );
 
   const words = selectWords(db, movie.id!);
-  return { movie, segments };
+  return { movie, segments, words };
 }
 
 function sleep(ms: number) {
