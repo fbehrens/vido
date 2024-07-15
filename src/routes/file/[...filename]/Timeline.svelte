@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { Tooltip } from "flowbite-svelte";
   import type { Segment, WordDb } from "$lib/types";
   export let words: WordDb[];
   export let segments: Segment[];
@@ -51,5 +52,11 @@
     >
       {w.word}
     </div>
+    <Tooltip
+      placement="right"
+      type="dark"
+      class="text-green-200 bg-black text-xs"
+      >start:{w.start}<br />end:{w.end}</Tooltip
+    >
   {/each}
 </div>
