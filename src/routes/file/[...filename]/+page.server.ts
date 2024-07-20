@@ -61,7 +61,15 @@ export const actions = {
     const fileDir = getFileDir(filename);
     const mp3Path = `${fileDir}/mp3/${clip_id}.mp3`;
     await extractMp3(filename, start, length, mp3Path);
-    console.log(`${mp3Path}: ${length}s => ${fs.statSync(mp3Path).size} bytes`);
+
+    const fileSize = fs.statSync(mp3Path).size;
+    console.log(`${mp3Path}: ${length}s => ${fileSize} bytes`);
+    if (fileSize > 25000000) {
+      return {
+        success: true,
+        segments: [],
+      };
+    }
 
     const t = await transcribe(mp3Path);
     db.prepare(

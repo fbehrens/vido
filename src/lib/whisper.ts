@@ -9,6 +9,7 @@ interface ExtendedTranscription extends OpenAI.Audio.Transcription {
 
 export async function transcribe(filename: string) {
   const transcription = await openai.audio.transcriptions.create({
+    // language: 'de', https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes
     file: fs.createReadStream(filename),
     model: "whisper-1",
     response_format: "verbose_json",
