@@ -6,22 +6,26 @@ export interface Movie {
 
 export type Artefact = "mp3" | "text" | "words" | "segments";
 
-export interface Word {
+export interface Duration {
   id: number; // primary key
-  clip_id: number;
-  segment_id: number;
   start: number;
   end: number;
+}
+
+export interface Clip extends Duration {
+  text: string;
+}
+
+export interface Word extends Duration {
+  clip_id: number;
+  segment_id: number;
   word: string;
 }
 
-export interface Segment {
+export interface Segment extends Duration {
   clip_id: number;
-  start: number;
-  end: number;
   text: string;
   dublicate: boolean;
-  id: number;
 }
 
 export interface SegmentAll extends Segment {

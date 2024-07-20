@@ -1,5 +1,5 @@
 import { db } from "$lib/db";
-import type { Movie, Segment, Word } from "$lib/types.js";
+import type { Clip, Movie, Segment, Word } from "$lib/types.js";
 import { getFileDir, makeDirFor } from "$lib/util";
 import { createMovie, selectSegmentsByClip } from "$lib/sqlite.js";
 import { getDuration, extractMp3 } from "$lib/ffmpeg.js";
@@ -18,6 +18,10 @@ export async function load({ params }) {
       .get(filename) as Movie) || createMovie(db, { filename, duration });
   console.log(movie);
 
+  const clips = db
+    .prepare("SELECT id, start, end, text FROM clips WHERE movie_id = ?")
+    .all(movie.id) as Clip[];
+
   const segments = db
     .prepare(
       "SELECT clip_id, start, end, text, id FROM segments_v WHERE movie_id = ?",
@@ -29,7 +33,7 @@ export async function load({ params }) {
       "SELECT id, clip_id, segment_id, start, end, word FROM words_v WHERE movie_id = ?",
     )
     .all(movie.id) as Word[];
-  return { movie, segments, words };
+  return { movie, segments, words, clips };
 }
 
 function sleep(ms: number) {

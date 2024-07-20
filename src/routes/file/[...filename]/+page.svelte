@@ -3,6 +3,7 @@
   import type { Segment } from "$lib/types.js";
   import Segments from "./Segments.svelte";
   import Timeline from "./Timeline.svelte";
+  import Clips from "./Clips.svelte";
   import WordsTable from "$lib/components/WordsTable.svelte";
   let time = 0;
   let tabs = ["Timeline", "Segments"];
@@ -45,7 +46,7 @@
   };
 
   export let data;
-  let { movie, segments, words } = data;
+  let { movie, segments, words, clips } = data;
   let isSubmitting: boolean;
 
   const refreshSegments = () => {
@@ -69,41 +70,18 @@
 </script>
 
 <form method="POST" use:enhance={handleWhisper}>
-  <div class="flex">
-    <div class="w-[10ch]">id</div>
-    <input
-      class=" text-gray-400 bg-gray-200"
-      readonly
-      name="id"
-      value={movie.id}
-    />
-  </div>
-  <div class="flex">
-    <div class="w-[10ch]">filename</div>
-    <input
-      class="text-gray-400 bg-gray-200"
-      readonly
-      name="filename"
-      value={movie.filename}
-    />
-  </div>
-  <div class="flex">
-    <div class="w-[10ch]">duration</div>
-    <p class="text-gray-400 bg-gray-200">{movie.duration + " s"}</p>
-  </div>
-  <div class="flex">
-    <div class="w-[10ch]"></div>
-    <div>
-      <input class="w-[4ch]" name="clip_start" bind:value={clip} />
-      s - {end}s (length=
-      <input class="w-[4ch]" name="clip_length" bind:value={clip_length} />
-      s)
-      <button
-        formaction="?/whisper"
-        class="p-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300 ease-in-out"
-        >{isSubmitting ? "Submitting..." : "Whisper"}</button
-      >
-    </div>
+  <input hidden name="id" value={movie.id} />
+  <input class="bg-gray-200" readonly name="filename" value={movie.filename} />
+  <div>
+    <input class="w-[4ch]" name="clip_start" bind:value={clip} />
+    s - {end}s (length=
+    <input class="w-[4ch]" name="clip_length" bind:value={clip_length} />
+    s)
+    <button
+      formaction="?/whisper"
+      class="p-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300 ease-in-out"
+      >{isSubmitting ? "Submitting..." : "Whisper"}</button
+    >
   </div>
 </form>
 <form method="POST" use:enhance={handleDeleteAll}>
@@ -123,6 +101,9 @@
     <p>time={time}</p>
   </div>
 </div>
+
+<Clips {clips} duration={movie.duration} />
+
 <div class="flex">
   {#each tabs as t}
     <div class="p-1 border border-black {t == activeTab ? 'bg-green-200' : ''}">

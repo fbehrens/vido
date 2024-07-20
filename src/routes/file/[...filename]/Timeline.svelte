@@ -24,7 +24,7 @@
     Math.ceil(((t - o.min) / (o.max - o.min)) * o.height);
 
   function word(w: Word): string {
-    const left: number = w.clip_id % 2 == 1 ? 30 : 40;
+    const left: number = w.clip_id % 2 == 1 ? 30 : 130;
     const start = getHeight(w.start);
     const wHeigth = getHeight(w.end) - start + 1;
     return `top:${start}px; left:${left}px; width:${w.word.length}ch; height:${wHeigth}px`;
