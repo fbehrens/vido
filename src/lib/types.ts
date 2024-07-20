@@ -1,7 +1,7 @@
 export interface Movie {
   filename: string;
-  id?: number;
-  duration?: number;
+  duration: number;
+  id: number;
 }
 
 export type Artefact = "mp3" | "text" | "words" | "segments";

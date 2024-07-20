@@ -6,8 +6,7 @@
   import WordsTable from "$lib/components/WordsTable.svelte";
   let time = 0;
   let tabs = ["Timeline", "Segments"];
-  let activeTab = tabs[0];
-  let duration: number;
+  let activeTab = tabs[1];
 
   import type { SubmitFunction } from "@sveltejs/kit";
   const handleWhisper: SubmitFunction = () => {
@@ -118,16 +117,9 @@
 <div class="grid grid-cols-[30%,1fr]">
   <div class="p-1">
     <!-- svelte-ignore a11y-media-has-caption -->
-    <video
-      src={"/" + movie.filename}
-      controls
-      bind:duration
-      bind:currentTime={time}
-    >
-    </video>
+    <video src={"/" + movie.filename} controls bind:currentTime={time}> </video>
   </div>
   <div>
-    <p>duration={duration}</p>
     <p>time={time}</p>
   </div>
 </div>

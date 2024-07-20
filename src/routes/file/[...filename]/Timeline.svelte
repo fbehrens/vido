@@ -4,7 +4,7 @@
   export let words: WordDb[];
   export let segments: Segment[];
   export let time: number;
-  export let duration: number | undefined;
+  export let duration: number;
   let range1: number = 4;
   const o = {
     max:

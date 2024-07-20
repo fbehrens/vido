@@ -10,27 +10,18 @@ export function select<T>(db: Database, table: string): T[] {
   return stmt.all() as T[];
 }
 
-export function updateMovie(db: Database, m: Movie): void {
-  const stmt = db.prepare(`
-    UPDATE movies
-    SET duration = @duration
-    WHERE id = @id
-  `);
-
-  stmt.run({
-    id: m.id,
-    duration: m.duration,
-  });
-}
-
-export function getMovie(db: Database, { filename }: Movie): Movie {
+export function createMovie(
+  db: Database,
+  o: { filename: string; duration: number },
+): Movie {
   const transaction = db.transaction(() => {
-    db.prepare("INSERT OR IGNORE INTO movies (filename) VALUES (?)").run(
-      filename,
-    );
-    return db
-      .prepare("SELECT * FROM movies WHERE filename = ?")
-      .get(filename) as Movie;
+    db.prepare(
+      "INSERT OR IGNORE INTO movies (filename,duration) VALUES (@filename,@duration)",
+    ).run(o);
+    return {
+      ...o,
+      id: db.prepare("SELECT * FROM movies WHERE filename = @filename").get(o),
+    } as Movie;
   });
   return transaction()!;
 }
@@ -66,7 +57,7 @@ export function selectSegmentsByClip(
 ): Segment[] {
   return db
     .prepare(
-      "SELECT clip_id, start, end, text, id, FROM segments_v WHERE movie_id = ? AND clip_id = ?",
+      "SELECT clip_id, start, end, text, id FROM segments_v WHERE movie_id = ? AND clip_id = ?",
     )
     .all(movie_id, clip_id) as Segment[];
 }
