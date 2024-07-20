@@ -4,12 +4,8 @@
   import Segments from "./Segments.svelte";
   import Timeline from "./Timeline.svelte";
   import Clips from "./Clips.svelte";
-  import WordsTable from "$lib/components/WordsTable.svelte";
-  let time = 0;
-  let tabs = ["Timeline", "Segments"];
-  let activeTab = tabs[0];
-
   import type { SubmitFunction } from "@sveltejs/kit";
+
   const handleWhisper: SubmitFunction = () => {
     isSubmitting = true;
     return async ({ result }) => {
@@ -45,10 +41,6 @@
     time = detail.time;
   };
 
-  export let data;
-  let { movie, segments, words, clips } = data;
-  let isSubmitting: boolean;
-
   const refreshSegments = () => {
     segments = segments
       .sort((a, b) => a.start - b.start)
@@ -61,19 +53,27 @@
       a.clip_id == b.clip_id ? a.start - b.start : a.clip_id - b.clip_id,
     );
   };
+
+  export let data;
+  let { movie, segments, words, clips } = data;
+  let time = 0;
+  let tabs = ["Timeline", "Segments"];
+  let activeTab = tabs[0];
+  let isSubmitting: boolean;
+
   refreshSegments();
 
-  let clip =
+  let clip_start =
     segments.length > 1 ? Math.trunc(segments[segments.length - 2].start) : 0;
   let clip_length = 20;
-  $: end = Number(clip) + Number(clip_length);
+  $: end = Number(clip_start) + Number(clip_length);
 </script>
 
 <form method="POST" use:enhance={handleWhisper}>
   <input hidden name="id" value={movie.id} />
   <input class="bg-gray-200" readonly name="filename" value={movie.filename} />
   <div>
-    <input class="w-[4ch]" name="clip_start" bind:value={clip} />
+    <input class="w-[4ch]" name="clip_start" bind:value={clip_start} />
     s - {end}s (length=
     <input class="w-[4ch]" name="clip_length" bind:value={clip_length} />
     s)

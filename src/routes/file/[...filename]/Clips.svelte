@@ -14,6 +14,6 @@
 
 <div class="flex flex-row w-full bg-gray-300">
   {#each overlay(clips) as part}
-    <div {...style(part)}>{part.ids}</div>
+    <div {...style(part)}><button>{part.ids}</button></div>
   {/each}
 </div>
