@@ -44,7 +44,7 @@
   </div>
 </div>
 
-<div class="relative w-[800px] bg-gray-300" style="min-height: {o.height}px">
+<div class="relative w-full bg-gray-300" style="min-height: {o.height}px">
   {#each words as w}
     <div
       class="absolute text-xs bg-green-200 border border-green-300"
