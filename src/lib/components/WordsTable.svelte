@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { WordDb } from "$lib/types";
-  export let words: WordDb[];
+  import type { Word } from "$lib/types";
+  export let words: Word[];
 </script>
 
 <table class="border-collapse text-xs">

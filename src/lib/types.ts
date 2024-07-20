@@ -11,9 +11,6 @@ export interface Word {
   start: number;
   end: number;
   word: string;
-}
-
-export interface WordDb extends Word {
   id: number; // primary key
 }
 

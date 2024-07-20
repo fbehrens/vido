@@ -1,6 +1,5 @@
 import path from "path";
 import * as fs from "fs";
-import type { Artefact, Segment, Word } from "$lib/types";
 export function makeDirFor(filepath: string): void {
   const dir = path.dirname(filepath);
   fs.mkdirSync(dir, { recursive: true });

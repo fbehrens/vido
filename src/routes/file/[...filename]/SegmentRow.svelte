@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import type { WordDb } from "$lib/types";
+  import type { Word } from "$lib/types";
   //   import WordsTable from "$lib/components/WordsTable.svelte";
   import Icon from "$lib/components/Icon.svelte";
 

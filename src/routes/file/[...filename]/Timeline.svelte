@@ -1,8 +1,10 @@
 <script lang="ts">
   import { Tooltip } from "flowbite-svelte";
-  import type { Segment, WordDb } from "$lib/types";
-  export let words: WordDb[];
+  import type { Segment, Word } from "$lib/types";
+  export let words: Word[];
+  console.log(words[0]);
   export let segments: Segment[];
+  console.log(segments[0]);
   export let time: number;
   export let duration: number;
   let range1: number = 4;
@@ -23,7 +25,7 @@
   const getHeight = (t: number) =>
     Math.ceil(((t - o.min) / (o.max - o.min)) * o.height);
 
-  function word(w: WordDb): string {
+  function word(w: Word): string {
     const left: number = w.clip_id % 2 == 1 ? 30 : 40;
     const start = getHeight(w.start);
     const wHeigth = getHeight(w.end) - start + 1;

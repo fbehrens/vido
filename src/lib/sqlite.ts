@@ -1,4 +1,4 @@
-import type { Movie, Segment, WordDb, Word } from "$lib/types";
+import type { Movie, Segment, Word } from "$lib/types";
 import type { Database } from "better-sqlite3";
 
 export function moviesCount(db: Database): number {
@@ -62,10 +62,10 @@ export function selectSegmentsByClip(
     .all(movie_id, clip_id) as Segment[];
 }
 
-export function selectWords(db: Database, movie_id: number): WordDb[] {
+export function selectWords(db: Database, movie_id: number): Word[] {
   return db
     .prepare(
       "SELECT id, clip_id, start, end, word FROM words_v WHERE movie_id = ?",
     )
-    .all(movie_id) as WordDb[];
+    .all(movie_id) as Word[];
 }

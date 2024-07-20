@@ -1,6 +1,6 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import type { Segment, WordDb } from "$lib/types.js";
+  import type { Segment } from "$lib/types.js";
   import Segments from "./Segments.svelte";
   import Timeline from "./Timeline.svelte";
   import WordsTable from "$lib/components/WordsTable.svelte";
