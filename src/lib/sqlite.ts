@@ -61,11 +61,3 @@ export function selectSegmentsByClip(
     )
     .all(movie_id, clip_id) as Segment[];
 }
-
-export function selectWords(db: Database, movie_id: number): Word[] {
-  return db
-    .prepare(
-      "SELECT id, clip_id, start, end, word FROM words_v WHERE movie_id = ?",
-    )
-    .all(movie_id) as Word[];
-}

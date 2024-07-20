@@ -6,7 +6,7 @@
   import WordsTable from "$lib/components/WordsTable.svelte";
   let time = 0;
   let tabs = ["Timeline", "Segments"];
-  let activeTab = tabs[1];
+  let activeTab = tabs[0];
 
   import type { SubmitFunction } from "@sveltejs/kit";
   const handleWhisper: SubmitFunction = () => {

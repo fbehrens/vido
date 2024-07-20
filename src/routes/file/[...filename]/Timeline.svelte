@@ -2,9 +2,7 @@
   import { Tooltip } from "flowbite-svelte";
   import type { Segment, Word } from "$lib/types";
   export let words: Word[];
-  console.log(words[0]);
   export let segments: Segment[];
-  console.log(segments[0]);
   export let time: number;
   export let duration: number;
   let range1: number = 4;

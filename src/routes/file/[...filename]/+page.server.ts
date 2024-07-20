@@ -1,7 +1,7 @@
 import { db } from "$lib/db";
-import type { Movie, Segment } from "$lib/types.js";
+import type { Movie, Segment, Word } from "$lib/types.js";
 import { getFileDir, makeDirFor } from "$lib/util";
-import { createMovie, selectWords, selectSegmentsByClip } from "$lib/sqlite.js";
+import { createMovie, selectSegmentsByClip } from "$lib/sqlite.js";
 import { getDuration, extractMp3 } from "$lib/ffmpeg.js";
 import { transcribe } from "$lib/whisper";
 import * as fs from "fs";
@@ -24,11 +24,11 @@ export async function load({ params }) {
     )
     .all(movie.id) as Segment[];
 
-  //   new Set(segments.map(({ clip_id }) => clip_id)).forEach((clip_id) =>
-  //     updateWordsSegmentId({ movie_id: movie.id!, clip_id }),
-  //   );
-
-  const words = selectWords(db, movie.id);
+  const words = db
+    .prepare(
+      "SELECT id, clip_id, segment_id, start, end, word FROM words_v WHERE movie_id = ?",
+    )
+    .all(movie.id) as Word[];
   return { movie, segments, words };
 }
 

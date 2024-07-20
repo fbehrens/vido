@@ -71,6 +71,7 @@ SELECT
   w.movie_id,
   w.id ,
   w.clip_id ,
+  w.segment_id ,
   w.start + c.start "start",
   w.end + c.start "end",
   w.word

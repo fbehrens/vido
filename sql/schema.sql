@@ -22,19 +22,6 @@ FROM
 JOIN
   clips c ON s.movie_id = c.movie_id AND s.clip_id = c.id
 /* segments_v(movie_id,clip_id,id,start,"end",text,seek,tokens,temperature,avg_logprob,compression_ratio,no_speech_prob) */;
-CREATE VIEW words_v AS
-SELECT
-  w.movie_id,
-  w.id ,
-  w.clip_id ,
-  w.start + c.start "start",
-  w.end + c.start "end",
-  w.word
-FROM
-  words w
-JOIN
-  clips c ON w.movie_id = c.movie_id AND w.clip_id = c.id
-/* words_v(movie_id,id,clip_id,start,"end",word) */;
 CREATE TABLE clips (
   movie_id INTEGER,
   id INTEGER,
@@ -70,3 +57,17 @@ CREATE TABLE words (
   FOREIGN KEY (movie_id, clip_id) REFERENCES clips(movie_id, id) ON DELETE CASCADE
   FOREIGN KEY (segment_id) REFERENCES segments(id) ON DELETE CASCADE
 );
+CREATE VIEW words_v AS
+SELECT
+  w.movie_id,
+  w.id ,
+  w.clip_id ,
+  w.segment_id ,
+  w.start + c.start "start",
+  w.end + c.start "end",
+  w.word
+FROM
+  words w
+JOIN
+  clips c ON w.movie_id = c.movie_id AND w.clip_id = c.id
+/* words_v(movie_id,id,clip_id,segment_id,start,"end",word) */;
