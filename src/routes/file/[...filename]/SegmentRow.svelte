@@ -6,12 +6,10 @@
 
   export let clip_id: number;
   export let time;
-  //   export let words: WordDb[];
   export let id: number;
   export let start: number;
   export let end: number;
   export let text: string;
-  export let dublicate: boolean;
   const dispatch = createEventDispatcher();
   $: isCurrent = time >= start && time <= end;
 </script>
@@ -28,7 +26,7 @@
     {start.toFixed(2)}
   </div>
   <div class="w-[7ch]">{end.toFixed(2)}</div>
-  <div class:red={dublicate} class="flex-1 {isCurrent ? 'bg-green-200' : ''}">
+  <div class="flex-1 {isCurrent ? 'bg-green-200' : ''}">
     {text}
   </div>
 </div>

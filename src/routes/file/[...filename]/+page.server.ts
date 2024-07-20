@@ -24,7 +24,7 @@ export async function load({ params }) {
 
   const segments = db
     .prepare(
-      "SELECT clip_id, start, end, text, id FROM segments_v WHERE movie_id = ?",
+      "SELECT clip_id, start, end, text, id FROM segments_v WHERE movie_id = ? ORDER BY start",
     )
     .all(movie.id) as Segment[];
 

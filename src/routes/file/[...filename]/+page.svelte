@@ -12,7 +12,6 @@
       if (result.type === "success") {
         const s = result.data!.segments as Segment[];
         segments = [...segments, ...s];
-        refreshSegments();
       }
       isSubmitting = false;
     };
@@ -41,27 +40,12 @@
     time = detail.time;
   };
 
-  const refreshSegments = () => {
-    segments = segments
-      .sort((a, b) => a.start - b.start)
-      .map((s, index) => {
-        const next: Segment | undefined = segments[index + 1];
-        s.dublicate = next && s.end > next.start;
-        return s;
-      });
-    segments = segments.sort((a, b) =>
-      a.clip_id == b.clip_id ? a.start - b.start : a.clip_id - b.clip_id,
-    );
-  };
-
   export let data;
   let { movie, segments, words, clips } = data;
   let time = 0;
   let tabs = ["Timeline", "Segments"];
   let activeTab = tabs[0];
   let isSubmitting: boolean;
-
-  refreshSegments();
 
   let clip_start =
     segments.length > 1 ? Math.trunc(segments[segments.length - 2].start) : 0;

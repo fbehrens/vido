@@ -25,7 +25,6 @@ export interface Word extends Duration {
 export interface Segment extends Duration {
   clip_id: number;
   text: string;
-  dublicate: boolean;
 }
 
 export interface SegmentAll extends Segment {
