@@ -30,9 +30,3 @@
     {text}
   </div>
 </div>
-
-<style>
-  .red {
-    color: red;
-  }
-</style>
