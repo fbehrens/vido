@@ -50,7 +50,7 @@
   let clip_start =
     segments.length > 1 ? Math.trunc(segments[segments.length - 2].start) : 0;
   let clip_length = 20;
-  $: end = Number(clip_start) + Number(clip_length);
+  let end = Number(clip_start) + Number(clip_length);
 </script>
 
 <form method="POST" use:enhance={handleWhisper}>
@@ -58,9 +58,21 @@
   <input class="bg-gray-200" readonly name="filename" value={movie.filename} />
   <div>
     <input class="w-[4ch]" name="clip_start" bind:value={clip_start} />
-    s - {end}s (length=
-    <input class="w-[4ch]" name="clip_length" bind:value={clip_length} />
-    s)
+    s...(
+    <input
+      class="w-[4ch]"
+      name="clip_length"
+      bind:value={clip_length}
+      on:change={() => (end = Number(clip_length) + Number(clip_start))}
+    />
+    s)...
+    <input
+      class="w-[4ch]"
+      name="end"
+      bind:value={end}
+      on:change={() => (clip_length = Number(end) - Number(clip_start))}
+    />
+    s
     <button
       formaction="?/whisper"
       class="p-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300 ease-in-out"
