@@ -28,12 +28,14 @@ function getTranscript({ id }: { id: number }) {
 export async function load({ params }) {
   console.log({ serverload: params });
   const { filename } = params;
-
-  const duration = await getDuration(`static/${filename}`);
   const movie =
     (db
       .prepare("Select * FROM movies where filename = ?")
-      .get(filename) as Movie) || createMovie(db, { filename, duration });
+      .get(filename) as Movie) ||
+    createMovie(db, {
+      filename,
+      duration: await getDuration(`static/${filename}`),
+    });
   console.log(movie);
   return { movie, ...getTranscript(movie) };
 }
