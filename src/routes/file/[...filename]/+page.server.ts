@@ -7,6 +7,24 @@ import { transcribe } from "$lib/whisper";
 import * as fs from "fs";
 import { alignArrays, updateWordsSegmentId } from "$lib/util/alignArrays";
 
+function getTranscript({ id }: { id: number }) {
+  return {
+    clips: db
+      .prepare("SELECT id, start, end, text FROM clips WHERE movie_id = ?")
+      .all(id) as Clip[],
+    segments: db
+      .prepare(
+        "SELECT clip_id, start, end, text, id FROM segments_v WHERE movie_id = ? ORDER BY start",
+      )
+      .all(id) as Segment[],
+    words: db
+      .prepare(
+        "SELECT id, clip_id, segment_id, start, end, word FROM words_v WHERE movie_id = ?",
+      )
+      .all(id) as Word[],
+  };
+}
+
 export async function load({ params }) {
   console.log({ serverload: params });
   const { filename } = params;
@@ -17,23 +35,7 @@ export async function load({ params }) {
       .prepare("Select * FROM movies where filename = ?")
       .get(filename) as Movie) || createMovie(db, { filename, duration });
   console.log(movie);
-
-  const clips = db
-    .prepare("SELECT id, start, end, text FROM clips WHERE movie_id = ?")
-    .all(movie.id) as Clip[];
-
-  const segments = db
-    .prepare(
-      "SELECT clip_id, start, end, text, id FROM segments_v WHERE movie_id = ? ORDER BY start",
-    )
-    .all(movie.id) as Segment[];
-
-  const words = db
-    .prepare(
-      "SELECT id, clip_id, segment_id, start, end, word FROM words_v WHERE movie_id = ?",
-    )
-    .all(movie.id) as Word[];
-  return { movie, segments, words, clips };
+  return { movie, ...getTranscript(movie) };
 }
 
 function sleep(ms: number) {
@@ -101,17 +103,6 @@ export const actions = {
     return {
       success: true,
       segments: selectSegmentsByClip(db, movie_id, clip_id),
-    };
-  },
-  delete: async ({ request }) => {
-    const formData = await request.formData();
-    const movie_id = Number(formData.get("id")!);
-    db.prepare(`delete from words where movie_id=${movie_id}`).run();
-    db.prepare(`delete from segments where movie_id=${movie_id}`).run();
-    db.prepare(`delete from clips where movie_id=${movie_id}`).run();
-    console.log(`Delete segments,words and clips for movie_id=${movie_id}`);
-    return {
-      success: true,
     };
   },
 };

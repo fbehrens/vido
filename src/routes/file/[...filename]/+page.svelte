@@ -5,6 +5,7 @@
   import Timeline from "./Timeline.svelte";
   import Clips from "./Clips.svelte";
   import type { SubmitFunction } from "@sveltejs/kit";
+  import Icon from "$lib/components/Icon.svelte";
 
   const handleWhisper: SubmitFunction = () => {
     isSubmitting = true;
@@ -16,15 +17,7 @@
       isSubmitting = false;
     };
   };
-  const handleDeleteAll: SubmitFunction = () => {
-    return async ({ result }) => {
-      if (result.type === "success") {
-        segments = [];
-      }
-    };
-  };
   const callDeleteSegment = async ({ detail }: CustomEvent<{ id: number }>) => {
-    segments = segments.filter((s) => s.id != detail.id);
     const response = await fetch("/api/deleteSegment", {
       method: "POST",
       body: JSON.stringify(detail),
@@ -33,6 +26,7 @@
       },
     });
     if (response.ok) {
+      segments = segments.filter((s) => s.id != detail.id);
       console.log({ responseJson: await response.json() });
     }
   };
@@ -56,7 +50,23 @@
 </script>
 
 <form method="POST" use:enhance={handleWhisper}>
+  <button
+    on:click={async () => {
+      const response = await fetch("/api/deleteMovie", {
+        method: "POST",
+        body: JSON.stringify({ id: movie.id }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        [clips, segments, words] = [[], [], []];
+        console.log({ responseDeleteMovie: await response.json() });
+      }
+    }}><Icon name="delete" /></button
+  >
   <input hidden name="id" value={movie.id} />
+
   <input class="bg-gray-200" readonly name="filename" value={movie.filename} />
   <div>
     <input class="w-[4ch]" name="clip_start" bind:value={clip_start} />
@@ -81,14 +91,6 @@
       >{isSubmitting ? "Submitting..." : "Whisper"}</button
     >
   </div>
-</form>
-<form method="POST" use:enhance={handleDeleteAll}>
-  <input hidden name="id" value={movie.id} />
-  <button
-    formaction="?/delete"
-    class=" bg-blue-200 text-white rounded-lg shadow-md hover:bg-blue-400 focus:outlinenone focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300 ease-in-out"
-    >delete transcript</button
-  >
 </form>
 <div class="grid grid-cols-[30%,1fr]">
   <div class="p-1">
