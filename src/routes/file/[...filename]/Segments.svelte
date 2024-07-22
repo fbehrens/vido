@@ -7,6 +7,6 @@
 
 <div class="border border-green-300">
   {#each segments as s}
-    <SegmentRow {...s} bind:time on:delete on:setTime></SegmentRow>
+    <SegmentRow {...s} bind:time on:deleteSegment on:setTime></SegmentRow>
   {/each}
 </div>

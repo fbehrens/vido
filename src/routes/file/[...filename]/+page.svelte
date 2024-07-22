@@ -23,7 +23,7 @@
       }
     };
   };
-  const handleDelete = async ({ detail }: CustomEvent<{ id: number }>) => {
+  const callDeleteSegment = async ({ detail }: CustomEvent<{ id: number }>) => {
     segments = segments.filter((s) => s.id != detail.id);
     const response = await fetch("/api/deleteSegment", {
       method: "POST",
@@ -32,7 +32,9 @@
         "Content-Type": "application/json",
       },
     });
-    console.log({ body: await response.json() });
+    if (response.ok) {
+      console.log({ responseJson: await response.json() });
+    }
   };
 
   const handleSetTime = async ({ detail }: CustomEvent<{ time: number }>) => {
@@ -112,7 +114,7 @@
   <Segments
     bind:time
     {segments}
-    on:delete={handleDelete}
+    on:deleteSegment={callDeleteSegment}
     on:setTime={handleSetTime}
   ></Segments>
 {:else if activeTab == "Timeline"}

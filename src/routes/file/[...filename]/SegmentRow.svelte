@@ -16,7 +16,7 @@
 
 <div class="flex">
   <div class="w-[10ch]">
-    <button on:click={() => dispatch("delete", { id })}>
+    <button on:click={() => dispatch("deleteSegment", { id })}>
       <Icon name="delete" />
     </button>
     {clip_id}
