@@ -10,7 +10,7 @@
     start,
     end,
     text,
-    handleSetTime,
+    setTime,
     apiDeleteSegment,
   }: {
     clip_id: number;
@@ -19,7 +19,7 @@
     start: number;
     end: number;
     text: string;
-    handleSetTime: any;
+    setTime: any;
     apiDeleteSegment: any;
   } = $props();
 
@@ -34,7 +34,7 @@
     {clip_id}
   </div>
   <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
-  <button class="w-[7ch]" onclick={() => handleSetTime({ time: start })}>
+  <button class="w-[7ch]" onclick={() => setTime({ time: start })}>
     {start.toFixed(2)}
   </button>
   <div class="w-[7ch]">{end.toFixed(2)}</div>

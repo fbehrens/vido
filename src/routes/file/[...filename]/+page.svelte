@@ -30,9 +30,9 @@
     }
   };
 
-  const handleSetTime = async ({ detail }: CustomEvent<{ time: number }>) => {
-    console.log(`setTime ${detail.time}`);
-    time = detail.time;
+  const setTime = async (o: { time: number }) => {
+    console.log(`setTime ${o.time}`);
+    time = o.time;
   };
 
   const { data } = $props();
@@ -117,7 +117,7 @@
 </div>
 
 {#if activeTab == "Segments"}
-  <Segments bind:time {segments} {handleSetTime} {apiDeleteSegment}></Segments>
+  <Segments bind:time {segments} {setTime} {apiDeleteSegment}></Segments>
 {:else if activeTab == "Timeline"}
   <Timeline {segments} {words} duration={movie.duration} {time}></Timeline>
 {/if}
