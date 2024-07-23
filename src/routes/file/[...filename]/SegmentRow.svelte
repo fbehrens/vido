@@ -4,14 +4,24 @@
   //   import WordsTable from "$lib/components/WordsTable.svelte";
   import Icon from "$lib/components/Icon.svelte";
 
-  export let clip_id: number;
-  export let time;
-  export let id: number;
-  export let start: number;
-  export let end: number;
-  export let text: string;
+  let {
+    clip_id,
+    time,
+    id,
+    start,
+    end,
+    text,
+  }: {
+    clip_id: number;
+    time: number;
+    id: number;
+    start: number;
+    end: number;
+    text: string;
+  } = $props();
+
   const dispatch = createEventDispatcher();
-  $: isCurrent = time >= start && time <= end;
+  let isCurrent = $derived(time >= start && time <= end);
 </script>
 
 <div class="flex">
