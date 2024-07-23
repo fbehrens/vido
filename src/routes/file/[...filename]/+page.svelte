@@ -30,11 +30,6 @@
     }
   };
 
-  const setTime = async (o: { time: number }) => {
-    console.log(`setTime ${o.time}`);
-    time = o.time;
-  };
-
   const { data } = $props();
   let movie: Movie;
   let clips: Clip[] = $state([]);
@@ -117,9 +112,9 @@
 </div>
 
 {#if activeTab == "Segments"}
-  <Segments bind:time {segments} {setTime} {apiDeleteSegment}></Segments>
+  <Segments bind:time {segments} {apiDeleteSegment}></Segments>
 {:else if activeTab == "Timeline"}
-  <Timeline {segments} {words} duration={movie.duration} {time}></Timeline>
+  <Timeline {segments} {words} duration={movie.duration} bind:time></Timeline>
 {/if}
 
 <style>

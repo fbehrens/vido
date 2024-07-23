@@ -4,10 +4,14 @@
   let {
     words,
     segments,
-    time,
+    time = $bindable(),
     duration,
-  }: { words: Word[]; segments: Segment[]; time: number; duration: number } =
-    $props();
+  }: {
+    words: Word[];
+    segments: Segment[];
+    time: number;
+    duration: number;
+  } = $props();
   let range1: number = $state(4);
   let o = $derived({
     max: words.reduce((max, current) => Math.max(max, current.start), 16) + 1,
