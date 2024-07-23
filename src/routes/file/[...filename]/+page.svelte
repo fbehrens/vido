@@ -42,9 +42,9 @@
   let activeTab = $state(tabs[0]);
   let isSubmitting: boolean = $state(false);
 
-  let clip_start = $state(10);
-  let clip_length = $state(10);
-  let end = $state(20);
+  let start: number = $state(10);
+  let length: number = $state(10);
+  let end: number = $state(20);
 </script>
 
 <form method="POST" use:enhance={handleWhisper}>
@@ -67,13 +67,18 @@
 
   <input class="bg-gray-200" readonly name="filename" value={movie.filename} />
   <div>
-    <input class="w-[4ch]" name="clip_start" bind:value={clip_start} />
+    <input
+      class="w-[4ch]"
+      name="start"
+      bind:value={start}
+      onchange={() => (end = Number(length) + Number(start))}
+    />
     s...(
     <input
       class="w-[4ch]"
-      name="clip_length"
-      bind:value={clip_length}
-      onchange={() => (end = Number(clip_length) + Number(clip_start))}
+      name="length"
+      bind:value={length}
+      onchange={() => (end = Number(length) + Number(start))}
     />
 
     s)...
@@ -81,7 +86,7 @@
       class="w-[4ch]"
       name="end"
       bind:value={end}
-      onchange={() => (clip_length = Number(end) - Number(clip_start))}
+      onchange={() => (length = end - start)}
     />
     s
     <button

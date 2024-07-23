@@ -49,9 +49,9 @@ export const actions = {
   whisper: async ({ request }) => {
     const formData = await request.formData();
     const movie_id = Number(formData.get("id")!);
-    const start = Number(formData.get("clip_start")!);
-    const length = Number(formData.get("clip_length")!);
-    const end = start + length;
+    const start = Number(formData.get("start")!);
+    const length = Number(formData.get("length")!);
+    const end = Number(formData.get("end")!);
 
     const clip_id =
       Number(
@@ -77,8 +77,8 @@ export const actions = {
 
     const t = await transcribe(mp3Path);
     db.prepare(
-      "INSERT INTO clips (id, movie_id, start, end, text) VALUES (?, ?, ?, ?, ?)",
-    ).run(clip_id, movie_id, start, end, t.text);
+      "INSERT INTO clips (id, movie_id, start, end, text, filesize) VALUES (?, ?, ?, ?, ?, ?)",
+    ).run(clip_id, movie_id, start, end, t.text, fileSize);
 
     t.segments.forEach((s) =>
       db

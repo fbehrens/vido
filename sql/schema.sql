@@ -27,7 +27,7 @@ CREATE TABLE clips (
   id INTEGER,
   start REAL,
   end REAL,
-  text TEXT,
+  text TEXT, filesize REAL,
   PRIMARY KEY ( movie_id, id )
   FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE
 );
