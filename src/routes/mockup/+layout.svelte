@@ -1,6 +1,6 @@
 <script lang="ts">
   let { children } = $props();
-  let mockups = ["position"];
+  let mockups = ["position", "data"];
 </script>
 
 <div class="flex">

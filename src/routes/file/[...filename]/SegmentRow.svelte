@@ -1,16 +1,17 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
   import type { Word } from "$lib/types";
   //   import WordsTable from "$lib/components/WordsTable.svelte";
   import Icon from "$lib/components/Icon.svelte";
 
   let {
     clip_id,
-    time,
+    time = $bindable(),
     id,
     start,
     end,
     text,
+    handleSetTime,
+    apiDeleteSegment,
   }: {
     clip_id: number;
     time: number;
@@ -18,23 +19,24 @@
     start: number;
     end: number;
     text: string;
+    handleSetTime: any;
+    apiDeleteSegment: any;
   } = $props();
 
-  const dispatch = createEventDispatcher();
   let isCurrent = $derived(time >= start && time <= end);
 </script>
 
 <div class="flex">
   <div class="w-[10ch]">
-    <button on:click={() => dispatch("deleteSegment", { id })}>
+    <button onclick={() => apiDeleteSegment({ id })}>
       <Icon name="delete" />
     </button>
     {clip_id}
   </div>
-  <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-  <div class="w-[7ch]" on:click={() => dispatch("setTime", { time: start })}>
+  <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
+  <button class="w-[7ch]" onclick={() => handleSetTime({ time: start })}>
     {start.toFixed(2)}
-  </div>
+  </button>
   <div class="w-[7ch]">{end.toFixed(2)}</div>
   <div class="flex-1 {isCurrent ? 'bg-green-200' : ''}">
     {text}
