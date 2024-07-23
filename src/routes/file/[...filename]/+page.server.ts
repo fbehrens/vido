@@ -100,7 +100,7 @@ export const actions = {
         )
         .run(movie_id, clip_id, w.start, w.end, w.word),
     );
-    updateWordsSegmentId({ movie_id, clip_id });
+    // updateWordsSegmentId({ movie_id, clip_id });
 
     return {
       success: true,
