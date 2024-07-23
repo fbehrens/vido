@@ -5,8 +5,9 @@
   export let duration: number;
   function style(part: { ids: number[]; start: number; end: number }) {
     const width = ((part.end - part.start) / duration) * 100;
+    const color = ["bg-gray-200", "bg-blue-300", "bg-blue-400"];
     return {
-      class: `${part.ids.length == 1 ? "bg-blue-300" : "bg-blue-400"} text-center`,
+      class: `${color[part.ids.length]} text-center`,
       style: `flex-basis: ${width}%;`,
     };
   }

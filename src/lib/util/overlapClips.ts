@@ -4,6 +4,13 @@ export function* overlay(clips: Duration[]) {
     const c = clips[i];
     const next = clips[i + 1];
     const prev = clips[i - 1];
+    if (!prev && c.start > 0) {
+      yield {
+        ids: [],
+        start: 0,
+        end: c.start,
+      };
+    }
     if (next) {
       yield {
         ids: [c.id],
