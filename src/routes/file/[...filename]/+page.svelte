@@ -106,7 +106,7 @@
   </div>
 </div>
 
-<Clips {clips} duration={movie.duration} />
+<Clips {clips} duration={movie.duration} bind:start bind:end />
 
 <div class="flex">
   {#each tabs as t}
