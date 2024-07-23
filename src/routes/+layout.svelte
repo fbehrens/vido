@@ -1,5 +1,6 @@
 <script>
   import "../app.css";
+  let { children } = $props();
 </script>
 
 <header class="bg-blue-500 p-4 text-white">
@@ -8,5 +9,5 @@
 </header>
 
 <main class="container mx-auto p-1">
-  <slot />
+  {@render children()}
 </main>

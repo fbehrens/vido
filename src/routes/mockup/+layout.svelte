@@ -1,4 +1,5 @@
 <script lang="ts">
+  let { children } = $props();
   let mockups = ["position"];
 </script>
 
@@ -8,4 +9,4 @@
     <div class="p-1"><a href={`mockup/${m}`}>{m}</a></div>
   {/each}
 </div>
-<slot />
+{@render children()}
