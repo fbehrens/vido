@@ -119,7 +119,7 @@
     on:setTime={handleSetTime}
   ></Segments>
 {:else if activeTab == "Timeline"}
-  <Timeline {segments} {words} duration={movie.duration} bind:time></Timeline>
+  <Timeline {segments} {words} duration={movie.duration} {time}></Timeline>
 {/if}
 
 <style>

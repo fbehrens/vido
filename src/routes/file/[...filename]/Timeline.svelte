@@ -1,16 +1,19 @@
 <script lang="ts">
   import { Tooltip } from "flowbite-svelte";
   import type { Segment, Word } from "$lib/types";
-  export let words: Word[];
-  export let segments: Segment[];
-  export let time: number;
-  export let duration: number;
+  let {
+    words,
+    segments,
+    time,
+    duration,
+  }: { words: Word[]; segments: Segment[]; time: number; duration: number } =
+    $props();
   let range1: number = 4;
-  $: o = {
+  let o = $derived({
     max: words.reduce((max, current) => Math.max(max, current.start), 16) + 1,
     min: words.reduce((min, current) => Math.min(min, current.start), 15) - 1,
     height: 1000,
-  };
+  });
   // absolute top-[89px] left-[20px] w-[20px] h-[-998px] border-red-500
   const getHeight = (t: number) =>
     Math.ceil(((t - o.min) / (o.max - o.min)) * o.height);
