@@ -70,8 +70,8 @@ export const actions = {
     console.log(`${mp3Path}: ${length}s => ${fileSize} bytes`);
     if (fileSize > 25000000) {
       return {
+        ...getTranscript({ id: movie_id }),
         success: true,
-        segments: [],
       };
     }
 
@@ -104,7 +104,7 @@ export const actions = {
 
     return {
       success: true,
-      segments: selectSegmentsByClip(db, movie_id, clip_id),
+      ...getTranscript({ id: movie_id }),
     };
   },
 };

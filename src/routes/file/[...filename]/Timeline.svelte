@@ -6,7 +6,7 @@
   export let time: number;
   export let duration: number;
   let range1: number = 4;
-  const o = {
+  $: o = {
     max: words.reduce((max, current) => Math.max(max, current.start), 16) + 1,
     min: words.reduce((min, current) => Math.min(min, current.start), 15) - 1,
     height: 1000,

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import type { Segment } from "$lib/types.js";
+  import type { Segment, Clip, Word } from "$lib/types.js";
   import Segments from "./Segments.svelte";
   import Timeline from "./Timeline.svelte";
   import Clips from "./Clips.svelte";
@@ -11,8 +11,7 @@
     isSubmitting = true;
     return async ({ result }) => {
       if (result.type === "success") {
-        const s = result.data!.segments as Segment[];
-        segments = [...segments, ...s];
+        ({ clips, segments, words } = result.data!);
       }
       isSubmitting = false;
     };
