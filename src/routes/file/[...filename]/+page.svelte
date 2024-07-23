@@ -55,7 +55,6 @@
   let end = $state(20);
 </script>
 
-<!-- svelte-ignore non_reactive_update -->
 <form method="POST" use:enhance={handleWhisper}>
   <button
     onclick={async () => {
@@ -78,12 +77,20 @@
   <div>
     <input class="w-[4ch]" name="clip_start" bind:value={clip_start} />
     s...(
-    <input class="w-[4ch]" name="clip_length" bind:value={clip_length} />
-    <!-- onchange={() => (end = Number(clip_length) + Number(clip_start))} -->
+    <input
+      class="w-[4ch]"
+      name="clip_length"
+      bind:value={clip_length}
+      onchange={() => (end = Number(clip_length) + Number(clip_start))}
+    />
 
     s)...
-    <input class="w-[4ch]" name="end" bind:value={end} />
-    <!-- onchange={() => (clip_length = Number(end) - Number(clip_start))} -->
+    <input
+      class="w-[4ch]"
+      name="end"
+      bind:value={end}
+      onchange={() => (clip_length = Number(end) - Number(clip_start))}
+    />
     s
     <button
       formaction="?/whisper"
@@ -94,8 +101,8 @@
 </form>
 <div class="grid grid-cols-[30%,1fr]">
   <div class="p-1">
-    <!-- svelte-ignore a11y-media-has-caption -->
-    <!-- <video src={"/" + movie.filename} controls bind:currentTime={time}> </video> -->
+    <!-- svelte-ignore a11y_media_has_caption -->
+    <video src={"/" + movie.filename} controls bind:currentTime={time}> </video>
   </div>
   <div>
     <p>time={time}</p>
