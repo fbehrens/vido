@@ -16,16 +16,16 @@
       isSubmitting = false;
     };
   };
-  const apiDeleteSegment = async ({ detail }: CustomEvent<{ id: number }>) => {
+  const apiDeleteSegment = async (o: { id: number }) => {
     const response = await fetch("/api/deleteSegment", {
       method: "POST",
-      body: JSON.stringify(detail),
+      body: JSON.stringify(o),
       headers: {
         "Content-Type": "application/json",
       },
     });
     if (response.ok) {
-      segments = segments.filter((s) => s.id != detail.id);
+      segments = segments.filter((s) => s.id != o.id);
       console.log({ responseJson: await response.json() });
     }
   };
@@ -35,9 +35,6 @@
     time = detail.time;
   };
 
-  //   let { data } = $props();
-  //   let data = $props();
-  //   console.log(data);
   const { data } = $props();
   let movie: Movie;
   let clips: Clip[] = $state([]);
