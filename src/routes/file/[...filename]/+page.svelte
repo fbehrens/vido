@@ -31,11 +31,11 @@
   };
 
   const { data } = $props();
-  let movie: Movie;
-  let clips: Clip[] = $state([]);
-  let segments: Segment[] = $state([]);
-  let words: Word[] = $state([]);
-  ({ movie, segments, words, clips } = data);
+  let movie: Movie = data.movie;
+  let clips: Clip[] = $state(data.clips);
+  let clip_id = $state(1);
+  let segments: Segment[] = $state(data.segments);
+  let words: Word[] = $state(data.words);
 
   let time = $state(0);
   let tabs = ["Timeline", "Segments"];
