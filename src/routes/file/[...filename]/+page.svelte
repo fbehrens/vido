@@ -3,7 +3,7 @@
   import type { Segment, Clip, Word, Movie } from "$lib/types.js";
   import Segments from "./Segments.svelte";
   import Timeline from "./Timeline.svelte";
-  import Clips from "./Clips.svelte";
+  import ClipsRow from "./ClipsRow.svelte";
   import type { SubmitFunction } from "@sveltejs/kit";
   import Icon from "$lib/components/Icon.svelte";
 
@@ -106,7 +106,7 @@
   </div>
 </div>
 
-<Clips {clips} duration={movie.duration} bind:start bind:end />
+<ClipsRow {clips} duration={movie.duration} bind:start bind:end bind:clip_id />
 
 <div class="flex">
   {#each tabs as t}

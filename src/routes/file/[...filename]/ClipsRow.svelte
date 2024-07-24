@@ -4,9 +4,16 @@
   let {
     clips,
     duration,
+    clip_id = $bindable(),
     start = $bindable(),
     end = $bindable(),
-  }: { clips: Clip[]; duration: number; start: number; end: number } = $props();
+  }: {
+    clips: Clip[];
+    duration: number;
+    clip_id: Number;
+    start: number;
+    end: number;
+  } = $props();
   function style(part: { ids: number[]; start: number; end: number }) {
     const width = ((part.end - part.start) / duration) * 100;
     const color = ["bg-gray-200", "bg-blue-300", "bg-blue-400"];
@@ -24,6 +31,7 @@
         onclick={() => {
           start = part.start;
           end = part.end;
+          clip_id = part.ids[0];
         }}>{part.ids}</button
       >
     </div>
