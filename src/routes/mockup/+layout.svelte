@@ -1,12 +1,12 @@
 <script lang="ts">
-  let { children } = $props();
-  let mockups = ["position", "data"];
+  let { children, data } = $props();
+  const { pages } = data;
 </script>
 
 <div class="flex">
   <div class="p-1">Mockup:</div>
-  {#each mockups as m}
-    <div class="p-1"><a href={`mockup/${m}`}>{m}</a></div>
+  {#each pages as p}
+    <div class="p-1"><a href={`mockup/${p}`}>{p}</a></div>
   {/each}
 </div>
 {@render children()}
