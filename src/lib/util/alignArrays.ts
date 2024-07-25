@@ -1,7 +1,30 @@
 import { db } from "$lib/db";
-interface WordItem {
+export interface WordItem {
   word: string;
   id: number;
+}
+
+interface WordSep {
+  word: string;
+  sep: string;
+}
+
+export function getWordWhitspace(s: string): [WordSep, string] {
+  const regex = /^([\w']+)(\W+)?(.*)/;
+  const match = s.match(regex);
+  if (match) {
+    return [{ word: match[1], sep: match[2] || " " }, match[3]];
+  } else {
+    throw "segment must begin with a word";
+  }
+}
+
+export function* wordSep(s: string) {
+  let ws: WordSep;
+  while (s != "") {
+    [ws, s] = getWordWhitspace(s);
+    yield ws;
+  }
 }
 
 export function updateWordsSegmentId(o: { movie_id: number; clip_id: number }) {

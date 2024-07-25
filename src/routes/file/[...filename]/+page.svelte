@@ -6,6 +6,7 @@
   import ClipsRow from "./ClipsRow.svelte";
   import type { SubmitFunction } from "@sveltejs/kit";
   import Icon from "$lib/components/Icon.svelte";
+  import ClipCo from "./ClipCo.svelte";
 
   const handleWhisper: SubmitFunction = () => {
     isSubmitting = true;
@@ -38,7 +39,7 @@
   let words: Word[] = $state(data.words);
 
   let time = $state(0);
-  let tabs = ["Timeline", "Segments"];
+  let tabs = ["Timeline", "Segments", "Clip"];
   let activeTab = $state(tabs[0]);
   let isSubmitting: boolean = $state(false);
 
@@ -120,6 +121,12 @@
   <Segments bind:time {segments} {apiDeleteSegment}></Segments>
 {:else if activeTab == "Timeline"}
   <Timeline {segments} {words} duration={movie.duration} bind:time></Timeline>
+{:else if activeTab == "Clip"}
+  <ClipCo
+    {clip_id}
+    words={words.filter((w) => w.clip_id == clip_id)}
+    segments={segments.filter((s) => s.clip_id == clip_id)}
+  />
 {/if}
 
 <style>
