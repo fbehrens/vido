@@ -1,4 +1,4 @@
-import { db } from "$lib/db";
+// import { db } from "$lib/db";
 
 export interface WordItem {
   word: string;
@@ -71,20 +71,12 @@ export function wordItemsEqual(ss: WordItem[], ws: WordItem[]): boolean {
   return ss.every((s, index) => s.word === ws[index].word);
 }
 
-export function alignArrays(
-  ss: HasWord[],
-  ws: HasWord[],
-): [HasWord[], HasWord[]] {
+export function alignArrays(ss: HasWord[], ws: HasWord[]): HasWord[] {
   const lcs = longestCommonSubsequence(ss, ws);
-  console.log(lcs);
   return alignWithLCS(ss, ws, lcs);
 }
 
-export function mergeWords(o: HasWord, p: HasWord): HasWord {
-  return { ...o, ...p };
-}
-
-function longestCommonSubsequence(arr1: HasWord[], arr2: HasWord[]): HasWord[] {
+function longestCommonSubsequence(arr1: HasWord[], arr2: HasWord[]): string[] {
   const dp: number[][] = Array(arr1.length + 1)
     .fill(null)
     .map(() => Array(arr2.length + 1).fill(0));
@@ -97,12 +89,12 @@ function longestCommonSubsequence(arr1: HasWord[], arr2: HasWord[]): HasWord[] {
       }
     }
   }
-  const lcs: HasWord[] = [];
+  const lcs: string[] = [];
   let i = arr1.length,
     j = arr2.length;
   while (i > 0 && j > 0) {
     if (arr1[i - 1].word === arr2[j - 1].word) {
-      lcs.unshift({ ...arr1[i - 1], ...arr2[j - 1] });
+      lcs.unshift(arr1[i - 1].word);
       i--;
       j--;
     } else if (dp[i - 1][j] > dp[i][j - 1]) {
@@ -117,32 +109,24 @@ function longestCommonSubsequence(arr1: HasWord[], arr2: HasWord[]): HasWord[] {
 function alignWithLCS(
   arr1: HasWord[],
   arr2: HasWord[],
-  lcs: HasWord[],
-): [HasWord[], HasWord[]] {
-  const aligned1: HasWord[] = [];
-  const aligned2: HasWord[] = [];
+  lcs: string[],
+): HasWord[] {
+  const aligned: HasWord[] = [];
   let i = 0,
     j = 0,
     k = 0;
   while (i < arr1.length || j < arr2.length) {
-    if (
-      k < lcs.length &&
-      arr1[i].word === lcs[k].word &&
-      arr2[j].word === lcs[k].word
-    ) {
-      aligned1.push(arr1[i++]);
-      aligned2.push(arr2[j++]);
+    if (k < lcs.length && arr1[i].word === lcs[k] && arr2[j].word === lcs[k]) {
+      aligned.push({ ...arr1[i++], ...arr2[j++] });
       k++;
     } else if (
       i < arr1.length &&
-      (k === lcs.length || arr1[i].word !== lcs[k].word)
+      (k === lcs.length || arr1[i].word !== lcs[k])
     ) {
-      aligned1.push(arr1[i++]);
-      aligned2.push({ word: "", id: 0 });
+      aligned.push(arr1[i++]);
     } else {
-      aligned1.push({ word: "", id: 0 });
-      aligned2.push(arr2[j++]);
+      aligned.push(arr2[j++]);
     }
   }
-  return [aligned1, aligned2];
+  return aligned;
 }

@@ -1,5 +1,7 @@
 <script lang="ts">
   import type { Segment, Word } from "$lib/types";
+  import { wordSep } from "$lib/util/alignArrays";
+  //   import { wordSep } from "$lib/util/alignArrays";
   let {
     clip_id,
     words,
@@ -11,19 +13,11 @@
   } = $props();
   const sgmtss = segments.map((s) => ({
     ...s,
-    words: s.text.match(/\b[\w']+\b/g),
+    words: [...wordSep(s.text)],
   }));
 
-  console.log(words[0], segments[0]);
+  console.log(sgmtss[0]);
+  //   console.log(words[0]);
 </script>
 
-<div>
-  {#each segments as s}
-    {s.text}<br />
-  {/each}
-</div>
-<div>
-  {#each words as w}
-    {w.word}&nbsp;
-  {/each}
-</div>
+Clip:{clip_id}

@@ -4,8 +4,11 @@
 </script>
 
 <header class="bg-blue-500 p-4 text-white">
-  <h1 class="text-2xl font-bold">video transcripting</h1>
-  <a href="/mockup"><p class="text-xs">mockup</p></a>
+  <div class="flex-container">
+    <div class="flex"><p class="text-xl">video transcripting</p></div>
+    <a class="text-xs" href="/">home</a>
+    <a class="text-xs" href="/mockup">mockup</a>
+  </div>
 </header>
 
 <main class="container mx-auto p-1">

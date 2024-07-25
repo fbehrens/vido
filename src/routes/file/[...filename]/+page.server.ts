@@ -5,7 +5,6 @@ import { createMovie, selectSegmentsByClip } from "$lib/sqlite.js";
 import { getDuration, extractMp3 } from "$lib/ffmpeg.js";
 import { transcribe } from "$lib/whisper";
 import * as fs from "fs";
-import { alignArrays, updateWordsSegmentId } from "$lib/util/alignArrays";
 
 function getTranscript({ id }: { id: number }) {
   return {

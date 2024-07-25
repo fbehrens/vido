@@ -22,13 +22,6 @@ describe("alignArrays", () => {
   it("wordSep", () => {
     expect([...wordSep("a.")]).toStrictEqual([{ word: "a", sep: "." }]);
   });
-  it("mergeWords", () => {
-    expect(mergeWords({ word: "a", a: 1 }, { word: "a", b: 2 })).toStrictEqual({
-      word: "a",
-      a: 1,
-      b: 2,
-    });
-  });
   it("works", () => {
     const s: WordItem[] = [
       {
@@ -56,6 +49,10 @@ describe("alignArrays", () => {
     ];
     // expect(1).toBe(2);
     // expect(alignArrays(s, w)).toStrictEqual([s, w]);
-    alignArrays(s, w);
+    expect(alignArrays(s, w)).toStrictEqual([
+      { word: "a", id: 1, id1: 1 },
+      { word: "b", id: 2 },
+      { word: "c", id: 3, id1: 3 },
+    ]);
   });
 });
