@@ -1,7 +1,12 @@
 import { db } from "$lib/db";
+
 export interface WordItem {
   word: string;
   id: number;
+}
+
+export interface HasWord {
+  word: string;
 }
 
 interface WordSep {
@@ -67,17 +72,19 @@ export function wordItemsEqual(ss: WordItem[], ws: WordItem[]): boolean {
 }
 
 export function alignArrays(
-  ss: WordItem[],
-  ws: WordItem[],
-): [WordItem[], WordItem[]] {
+  ss: HasWord[],
+  ws: HasWord[],
+): [HasWord[], HasWord[]] {
   const lcs = longestCommonSubsequence(ss, ws);
+  console.log(lcs);
   return alignWithLCS(ss, ws, lcs);
 }
 
-function longestCommonSubsequence(
-  arr1: WordItem[],
-  arr2: WordItem[],
-): WordItem[] {
+export function mergeWords(o: HasWord, p: HasWord): HasWord {
+  return { ...o, ...p };
+}
+
+function longestCommonSubsequence(arr1: HasWord[], arr2: HasWord[]): HasWord[] {
   const dp: number[][] = Array(arr1.length + 1)
     .fill(null)
     .map(() => Array(arr2.length + 1).fill(0));
@@ -90,12 +97,12 @@ function longestCommonSubsequence(
       }
     }
   }
-  const lcs: WordItem[] = [];
+  const lcs: HasWord[] = [];
   let i = arr1.length,
     j = arr2.length;
   while (i > 0 && j > 0) {
     if (arr1[i - 1].word === arr2[j - 1].word) {
-      lcs.unshift(arr1[i - 1]);
+      lcs.unshift({ ...arr1[i - 1], ...arr2[j - 1] });
       i--;
       j--;
     } else if (dp[i - 1][j] > dp[i][j - 1]) {
@@ -108,12 +115,12 @@ function longestCommonSubsequence(
 }
 
 function alignWithLCS(
-  arr1: WordItem[],
-  arr2: WordItem[],
-  lcs: WordItem[],
-): [WordItem[], WordItem[]] {
-  const aligned1: WordItem[] = [];
-  const aligned2: WordItem[] = [];
+  arr1: HasWord[],
+  arr2: HasWord[],
+  lcs: HasWord[],
+): [HasWord[], HasWord[]] {
+  const aligned1: HasWord[] = [];
+  const aligned2: HasWord[] = [];
   let i = 0,
     j = 0,
     k = 0;
