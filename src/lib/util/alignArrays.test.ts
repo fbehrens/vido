@@ -1,13 +1,12 @@
-import { describe, it, expect } from "vitest";
+import { describe, test, expect } from "vitest";
 import {
   alignArrays,
   getWordWhitspace,
-  mergeWords,
   wordSep,
   type WordItem,
 } from "./alignArrays";
 describe("alignArrays", () => {
-  it("wordWhitespace", () => {
+  test("wordWhitespace", () => {
     expect(getWordWhitspace("a.")).toStrictEqual([{ word: "a", sep: "." }, ""]);
     expect(getWordWhitspace("a.b")).toStrictEqual([
       { word: "a", sep: "." },
@@ -19,10 +18,10 @@ describe("alignArrays", () => {
     ]);
     expect(getWordWhitspace("a")).toStrictEqual([{ word: "a", sep: " " }, ""]);
   });
-  it("wordSep", () => {
-    expect([...wordSep("a.")]).toStrictEqual([{ word: "a", sep: "." }]);
+  test("wordSep", () => {
+    expect([...wordSep(" a.")]).toStrictEqual([{ word: "a", sep: "." }]);
   });
-  it("works", () => {
+  test("works", () => {
     const s: WordItem[] = [
       {
         word: "a",

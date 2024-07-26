@@ -26,6 +26,7 @@ export function getWordWhitspace(s: string): [WordSep, string] {
 
 export function* wordSep(s: string) {
   let ws: WordSep;
+  s = s.trim();
   while (s != "") {
     [ws, s] = getWordWhitspace(s);
     yield ws;
