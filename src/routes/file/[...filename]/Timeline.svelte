@@ -23,7 +23,10 @@
   const getHeight = (t: number) =>
     Math.ceil(((t - start) / (end - start)) * height);
 
-  function word(w: Word): string {
+  function playing(w: { start: number; end: number }): boolean {
+    return w.start < time && time < w.end;
+  }
+  function style(w: Word): string {
     const left: number = w.clip_id % 2 == 1 ? 30 : 130;
     const start = getHeight(w.start);
     const wHeigth = getHeight(w.end) - start + 1;
@@ -50,8 +53,10 @@
 <div class="relative w-full bg-gray-300" style="min-height: {height}px">
   {#each selWords as w}
     <div
-      class="absolute text-xs bg-green-200 border border-green-300"
-      style={word(w)}
+      class="absolute text-xs bg-green-200 border border-green-300 {playing(w)
+        ? 'font-bold'
+        : ''}"
+      style={style(w)}
     >
       <button onclick={() => (time = w.start)}>{w.word}</button>
     </div>

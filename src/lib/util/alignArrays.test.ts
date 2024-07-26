@@ -1,13 +1,8 @@
 import { describe, test, expect } from "vitest";
-import {
-  alignArrays,
-  getWordWhitspace,
-  wordSep,
-  type WordItem,
-} from "./alignArrays";
+import { alignArrays, wordSep, type WordItem } from "./alignArrays";
 describe("alignArrays", () => {
   test("wordSep", () => {
-    expect([...wordSep(" a.")]).toStrictEqual([{ word: "a", sep: "." }]);
+    expect(wordSep(" a.")).toStrictEqual([{ word: "a", sep: "." }]);
   });
   test("works", () => {
     const s: WordItem[] = [
@@ -34,8 +29,6 @@ describe("alignArrays", () => {
         id1: 3,
       },
     ];
-    // expect(1).toBe(2);
-    // expect(alignArrays(s, w)).toStrictEqual([s, w]);
     expect(alignArrays(s, w)).toStrictEqual([
       { word: "a", id: 1, id1: 1 },
       { word: "b", id: 2 },
