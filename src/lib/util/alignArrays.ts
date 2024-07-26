@@ -14,23 +14,18 @@ interface WordSep {
   sep: string;
 }
 
-export function getWordWhitspace(s: string): [WordSep, string] {
-  const regex = /^([\w']+)(\W+)?(.*)/;
-  const match = s.match(regex);
-  if (match) {
-    return [{ word: match[1], sep: match[2] || " " }, match[3]];
-  } else {
-    throw "segment must begin with a word";
-  }
-}
-
-export function* wordSep(s: string) {
-  let ws: WordSep;
-  s = s.trim();
-  while (s != "") {
-    [ws, s] = getWordWhitspace(s);
-    yield ws;
-  }
+export function wordSep(s: string) {
+  const regex = /^([\w']+)(\W+)?.*/;
+  return s
+    .trim()
+    .split(" ")
+    .map((ws) => {
+      const m = ws.match(regex);
+      if (!m) {
+        throw `${ws} not matchin ${regex}`;
+      }
+      return { word: m[1], sep: m[2] || "" };
+    });
 }
 
 export function updateWordsSegmentId(o: { movie_id: number; clip_id: number }) {

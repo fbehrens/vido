@@ -6,18 +6,6 @@ import {
   type WordItem,
 } from "./alignArrays";
 describe("alignArrays", () => {
-  test("wordWhitespace", () => {
-    expect(getWordWhitspace("a.")).toStrictEqual([{ word: "a", sep: "." }, ""]);
-    expect(getWordWhitspace("a.b")).toStrictEqual([
-      { word: "a", sep: "." },
-      "b",
-    ]);
-    expect(getWordWhitspace("it's. b")).toStrictEqual([
-      { word: "it's", sep: ". " },
-      "b",
-    ]);
-    expect(getWordWhitspace("a")).toStrictEqual([{ word: "a", sep: " " }, ""]);
-  });
   test("wordSep", () => {
     expect([...wordSep(" a.")]).toStrictEqual([{ word: "a", sep: "." }]);
   });
