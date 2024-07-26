@@ -53,7 +53,7 @@ CREATE TABLE words (
   segment_id INTEGER,
   start REAL,
   end REAL,
-  word TEXT,
+  word TEXT, sep TEXT,
   FOREIGN KEY (movie_id, clip_id) REFERENCES clips(movie_id, id) ON DELETE CASCADE
   FOREIGN KEY (segment_id) REFERENCES segments(id) ON DELETE CASCADE
 );

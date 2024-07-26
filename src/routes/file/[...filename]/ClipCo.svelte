@@ -7,6 +7,22 @@
     word: string;
     sep: string;
   };
+
+  const apiStoreWords = async (mwords: MWord[]) => {
+    const response = await fetch("/api/storeWords", {
+      method: "POST",
+      body: JSON.stringify(
+        mwords.map(({ id, segment_id, sep }) => ({ id, segment_id, sep })),
+      ),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      console.log({ responseJson: await response.json() });
+    }
+  };
+
   function color(o: MWord) {
     if (o.id && o.segment_id) {
       return "bg-green-500";
@@ -35,6 +51,16 @@
 </script>
 
 Clip:{clip_id}
-{#each mwords as w}
-  <span class={color(w)}>{w.word}</span>{w.sep}
-{/each}
+{#if words.length && !words[0].segment_id}
+  <div class="w-full">
+    {#each mwords as w}
+      <span class={color(w)}>{w.word}</span>
+      {w.sep}&nbsp;
+    {/each}
+  </div>
+  <button
+    onclick={() => apiStoreWords(mwords)}
+    class="p-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300 ease-in-out"
+    >store</button
+  >
+{/if}

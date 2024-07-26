@@ -14,7 +14,7 @@ interface WordSep {
   sep: string;
 }
 
-export function wordSep(s: string) {
+export function wordSep(s: string): WordSep[] {
   const regex = /^([\w']+)(\W+)?.*/;
   return s
     .trim()
