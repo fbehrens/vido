@@ -53,7 +53,7 @@
       class="absolute text-xs bg-green-200 border border-green-300"
       style={word(w)}
     >
-      {w.word}
+      <button onclick={() => (time = w.start)}>{w.word}</button>
     </div>
     <Tooltip
       placement="right"
