@@ -120,7 +120,8 @@
 {#if activeTab == "Segments"}
   <Segments bind:time {segments} {apiDeleteSegment}></Segments>
 {:else if activeTab == "Timeline"}
-  <Timeline {segments} {words} duration={movie.duration} bind:time></Timeline>
+  <Timeline {segments} {words} duration={movie.duration} bind:time {start} {end}
+  ></Timeline>
 {:else if activeTab == "Clip"}
   <ClipCo
     {clip_id}
