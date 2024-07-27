@@ -6,7 +6,7 @@
 <div class="flex">
   <div class="p-1">Mockup:</div>
   {#each pages as p}
-    <div class="p-1"><a href={`mockup/${p}`}>{p}</a></div>
+    <div class="p-1"><a href={`/mockup/${p}`}>{p}</a></div>
   {/each}
 </div>
 {@render children()}
