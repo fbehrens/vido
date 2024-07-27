@@ -6,7 +6,7 @@
   const current = $derived($page.route.id?.replace("/mockup/", "")) as string;
 </script>
 
-<div class="flex">
+<div class="flex bg-blue-300 w-full">
   <div class="p-1">Mockup:</div>
   {#each pages as p}
     <div class="p-1 {current == p ? 'bg-gray-300' : ''}">

@@ -11,6 +11,6 @@
   </div>
 </header>
 
-<main class="container mx-auto p-1">
+<main class="container mx-auto">
   {@render children()}
 </main>
