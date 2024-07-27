@@ -11,5 +11,4 @@ export function getFileDir(filePath: string): string {
   return path.join(dir, base);
 }
 
-const flatten = <T>(arr: T[][]): T[] =>
-  arr.reduce((acc, val) => acc.concat(val), []);
+export const floor2 = (n: number) => Math.ceil(n * 100) / 100;

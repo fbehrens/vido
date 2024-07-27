@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Tooltip } from "flowbite-svelte";
   import type { Segment, Word } from "$lib/types";
+  import { floor2 as ceil2 } from "$lib/util";
   let {
     words,
     segments,
@@ -30,10 +31,10 @@
     const left: number = w.clip_id % 2 == 1 ? 30 : 130;
     const start = getHeight(w.start);
     const wHeigth = getHeight(w.end) - start + 1;
-    return `top:${start}px; left:${left}px; width:${w.word.length}ch; height:${wHeigth}px`;
+    return `top:${start}px; left:${left}px; width:7ch; height:${wHeigth}px`;
   }
   const selWords = $derived(
-    words.filter((w) => w.start > start && w.end < end),
+    words.filter((w) => w.start >= start && w.end < end),
   );
 </script>
 
@@ -53,7 +54,9 @@
 <div class="relative w-full bg-gray-300" style="min-height: {height}px">
   {#each selWords as w}
     <div
-      class="absolute text-xs bg-green-200 border border-green-300 {playing(w)
+      class="absolute text-xs bg-green-200 border border-green-300 z-10 {playing(
+        w,
+      )
         ? 'font-bold'
         : ''}"
       style={style(w)}
@@ -63,7 +66,7 @@
     <Tooltip
       placement="right"
       type="dark"
-      class="text-green-200 bg-black text-xs"
+      class="text-green-200 bg-black text-xs z-20"
       >start:{w.start}<br />end:{w.end}</Tooltip
     >
   {/each}
