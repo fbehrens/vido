@@ -26,14 +26,20 @@
   function playing(w: { start: number; end: number }): boolean {
     return w.start < time && time < w.end;
   }
-  function style(w: Word): string {
-    const left: number = w.clip_id % 2 == 1 ? 30 : 130;
-    const start = getHeight(w.start);
-    const wHeigth = getHeight(w.end) - start + 1;
-    return `top:${start}px; left:${left}px; width:7ch; height:${wHeigth}px`;
+  function style(
+    e: { start: number; end: number; clip_id: number },
+    width: number,
+  ): string {
+    const left: number = (e.clip_id % 2 == 1 ? 45 : 150) - width / 2;
+    const start = getHeight(e.start);
+    const wHeigth = getHeight(e.end) - start + 1;
+    return `top:${start}px; left:${left}px; width:${width}px; height:${wHeigth}px`;
   }
   const selWords = $derived(
-    words.filter((w) => w.start >= start && w.end < end),
+    words.filter((e) => e.start >= start && e.end < end),
+  );
+  const selSegments = $derived(
+    segments.filter((e) => e.start >= start && e.end < end),
   );
 </script>
 
@@ -63,22 +69,39 @@
     }
   }}
 >
-  {#each selWords as w}
+  {#each selWords as e}
     <div
       class="absolute text-xs bg-green-200 border border-green-300 z-10 {playing(
-        w,
+        e,
       )
         ? 'font-bold'
         : ''}"
-      style={style(w)}
+      style={style(e, 60)}
     >
-      <button onclick={() => (time = w.start)}>{w.word}</button>
+      <button onclick={() => (time = e.start)}>{e.word}</button>
     </div>
     <Tooltip
       placement="right"
       type="dark"
       class="text-green-200 bg-black text-xs z-20"
-      >start:{w.start}<br />end:{w.end}</Tooltip
+      >start:{e.start}<br />end:{e.end}</Tooltip
+    >
+  {/each}
+  {#each selSegments as e}
+    <div
+      class="absolute text-xs bg-green-300 border border-green-800 z-5 {playing(
+        e,
+      )
+        ? 'font-bold'
+        : ''}"
+      style={style(e, 80)}
+    >
+      <button onclick={() => (time = e.start)}></button>
+    </div>
+    <Tooltip
+      placement="right"
+      type="dark"
+      class="text-green-200 bg-black text-xs z-20">{e.text}</Tooltip
     >
   {/each}
 </div>
