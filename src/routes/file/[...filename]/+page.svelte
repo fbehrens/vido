@@ -118,7 +118,11 @@
 </div>
 
 {#if activeTab == "Segments"}
-  <Segments bind:time {segments} {apiDeleteSegment}></Segments>
+  <Segments
+    bind:time
+    segments={segments.filter((s) => s.clip_id == clip_id)}
+    {apiDeleteSegment}
+  ></Segments>
 {:else if activeTab == "Timeline"}
   <Timeline {segments} {words} duration={movie.duration} bind:time {start} {end}
   ></Timeline>
