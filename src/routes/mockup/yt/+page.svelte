@@ -1,7 +1,7 @@
 <svelte:options runes={true} />
 
 <script>
-  import YouTube from "svelte-youtube";
+  import YouTube from "$lib/components/YouTube.svelte";
 
   const options = {
     height: "390",
