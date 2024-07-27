@@ -1,21 +1,20 @@
 <script lang="ts">
   import { Tooltip } from "flowbite-svelte";
   import type { Segment, Word } from "$lib/types";
-  import { floor2 as ceil2 } from "$lib/util";
   let {
     words,
     segments,
     time = $bindable(),
     start,
     end,
-    duration,
+    togglePaused,
   }: {
     words: Word[];
     segments: Segment[];
     time: number;
     start: number;
     end: number;
-    duration: number;
+    togglePaused: () => void;
   } = $props();
   let range1: number = $state(4);
   let height = 1000;
@@ -51,7 +50,19 @@
   </div>
 </div>
 
-<div class="relative w-full bg-gray-300" style="min-height: {height}px">
+<div
+  class="relative w-full bg-gray-300"
+  style="min-height: {height}px"
+  role="button"
+  tabindex="0"
+  onkeydown={(e) => {
+    console.log(e);
+    if (e.key == " ") {
+      e.preventDefault();
+      togglePaused();
+    }
+  }}
+>
   {#each selWords as w}
     <div
       class="absolute text-xs bg-green-200 border border-green-300 z-10 {playing(

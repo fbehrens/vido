@@ -7,6 +7,7 @@
   import type { SubmitFunction } from "@sveltejs/kit";
   import Icon from "$lib/components/Icon.svelte";
   import ClipCo from "./ClipCo.svelte";
+  import type { KeyboardEventHandler } from "svelte/elements";
 
   const handleWhisper: SubmitFunction = () => {
     isSubmitting = true;
@@ -30,7 +31,15 @@
       console.log({ responseJson: await response.json() });
     }
   };
-
+  const togglePaused = () => {
+    if (paused) {
+      video.play();
+      paused = false; // paused is not binden correcly
+    } else {
+      video.pause();
+      paused = true;
+    }
+  };
   const { data } = $props();
   let movie: Movie = data.movie;
   let clips: Clip[] = $state(data.clips);
@@ -46,6 +55,8 @@
   let start: number = $state(10);
   let length: number = $state(10);
   let end: number = $state(20);
+  let paused = $state(true);
+  let video: HTMLVideoElement;
 </script>
 
 <form method="POST" use:enhance={handleWhisper}>
@@ -100,7 +111,14 @@
 <div class="grid grid-cols-[30%,1fr]">
   <div class="p-1">
     <!-- svelte-ignore a11y_media_has_caption -->
-    <video src={"/" + movie.filename} controls bind:currentTime={time}> </video>
+    <video
+      bind:this={video}
+      bind:paused
+      bind:currentTime={time}
+      src={"/" + movie.filename}
+      controls
+    >
+    </video>
   </div>
   <div>
     <p>time={time}</p>
@@ -124,7 +142,7 @@
     {apiDeleteSegment}
   ></Segments>
 {:else if activeTab == "Timeline"}
-  <Timeline {segments} {words} duration={movie.duration} bind:time {start} {end}
+  <Timeline {segments} {words} bind:time {start} {end} {togglePaused}
   ></Timeline>
 {:else if activeTab == "Clip"}
   <ClipCo

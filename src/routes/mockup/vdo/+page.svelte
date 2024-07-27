@@ -9,8 +9,8 @@
 </script>
 
 paused={paused}
-<!-- <button onclick={() => video.play()}>play</button>
-<button onclick={() => video.pause()}>pause</button> -->
+<button onclick={() => video.play()}>play</button>
+<button onclick={() => video.pause()}>pause</button>
 <button onclick={toggle}>toggle</button>
 
 <div>
