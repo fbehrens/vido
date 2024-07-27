@@ -3,17 +3,17 @@
 
   let {
     player = $bindable(),
-    initialVideoId,
+    videoId,
     height = "390",
     width = "640",
+    playerId = "youtube-player",
   } = $props();
 
-  const ytPlayerId = "youtube-player";
   function load() {
-    player = new YT.Player(ytPlayerId, {
+    player = new YT.Player(playerId, {
       height, // "100%",
       width, //"100%",
-      videoId: initialVideoId,
+      videoId,
       playerVars: { autoplay: 1 },
     });
   }
@@ -31,4 +31,4 @@
   <script src="https://www.youtube.com/iframe_api"></script>
 </svelte:head>
 
-<div id={ytPlayerId}></div>
+<div id={playerId}></div>
