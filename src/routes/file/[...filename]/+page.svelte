@@ -6,8 +6,9 @@
   import ClipsRow from "./ClipsRow.svelte";
   import type { SubmitFunction } from "@sveltejs/kit";
   import Icon from "$lib/components/Icon.svelte";
-  import ClipCo from "./ClipCo.svelte";
+  import ClipOne from "./ClipOne.svelte";
   import type { KeyboardEventHandler } from "svelte/elements";
+  import ClipTwo from "./ClipTwo.svelte";
 
   const handleWhisper: SubmitFunction = () => {
     isSubmitting = true;
@@ -43,7 +44,7 @@
   const { data } = $props();
   let movie: Movie = data.movie;
   let clips: Clip[] = $state(data.clips);
-  let clip_id = $state(1);
+  let clip_ids = $state([1]);
   let segments: Segment[] = $state(data.segments);
   let words: Word[] = $state(data.words);
 
@@ -125,7 +126,7 @@
   </div>
 </div>
 
-<ClipsRow {clips} duration={movie.duration} bind:start bind:end bind:clip_id />
+<ClipsRow {clips} duration={movie.duration} bind:start bind:end bind:clip_ids />
 
 <div class="flex">
   {#each tabs as t}
@@ -138,18 +139,30 @@
 {#if activeTab == "Segments"}
   <Segments
     bind:time
-    segments={segments.filter((s) => s.clip_id == clip_id)}
+    segments={segments.filter((s) => clip_ids.includes(s.clip_id))}
     {apiDeleteSegment}
   ></Segments>
 {:else if activeTab == "Timeline"}
   <Timeline {segments} {words} bind:time {start} {end} {togglePaused}
   ></Timeline>
 {:else if activeTab == "Clip"}
-  <ClipCo
-    {clip_id}
-    words={words.filter((w) => w.clip_id == clip_id)}
-    segments={segments.filter((s) => s.clip_id == clip_id)}
-  />
+  {#if clip_ids.length == 1}
+    <ClipOne
+      clip_id={clip_ids[0]}
+      words={words.filter((w) => w.clip_id == clip_ids[0])}
+      segments={segments.filter((s) => s.clip_id == clip_ids[0])}
+    />
+  {:else}
+    <ClipTwo
+      {clip_ids}
+      words={words.filter(
+        (e) => clip_ids.includes(e.clip_id) && e.end >= start && e.start <= end,
+      )}
+      segments={segments.filter(
+        (e) => clip_ids.includes(e.clip_id) && e.end >= start && e.start <= end,
+      )}
+    />
+  {/if}
 {/if}
 
 <style>

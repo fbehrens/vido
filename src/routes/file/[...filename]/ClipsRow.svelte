@@ -4,13 +4,13 @@
   let {
     clips,
     duration,
-    clip_id = $bindable(),
+    clip_ids = $bindable(),
     start = $bindable(),
     end = $bindable(),
   }: {
     clips: Clip[];
     duration: number;
-    clip_id: Number;
+    clip_ids: Number[];
     start: number;
     end: number;
   } = $props();
@@ -31,7 +31,7 @@
         onclick={() => {
           start = part.start;
           end = part.end;
-          clip_id = part.ids[0];
+          clip_ids = part.ids;
         }}>{part.ids}</button
       >
     </div>

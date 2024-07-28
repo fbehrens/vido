@@ -18,7 +18,7 @@ function getTranscript({ id }: { id: number }) {
       .all(id) as Segment[],
     words: db
       .prepare(
-        "SELECT id, clip_id, segment_id, start, end, word FROM words_v WHERE movie_id = ?",
+        "SELECT id, clip_id, segment_id, start, end, word, sep FROM words_v WHERE movie_id = ?",
       )
       .all(id) as Word[],
   };

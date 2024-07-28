@@ -20,6 +20,7 @@ export interface Word extends Duration {
   clip_id: number;
   segment_id: number;
   word: string;
+  sep?: string;
 }
 
 export interface Segment extends Duration {

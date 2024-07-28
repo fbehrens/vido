@@ -65,9 +65,10 @@ SELECT
   w.segment_id ,
   w.start + c.start "start",
   w.end + c.start "end",
-  w.word
+  w.word,
+  w.sep
 FROM
   words w
 JOIN
   clips c ON w.movie_id = c.movie_id AND w.clip_id = c.id
-/* words_v(movie_id,id,clip_id,segment_id,start,"end",word) */;
+/* words_v(movie_id,id,clip_id,segment_id,start,"end",word,sep) */;
