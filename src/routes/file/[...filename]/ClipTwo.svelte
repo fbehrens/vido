@@ -31,12 +31,23 @@
     ),
   );
   const mWords = $derived(alignArrays(w0, w1) as any[]);
-  function cutAfter(index: number) {
+  async function cutAfter(index: number) {
     let ids = [
       ...mWords.slice(0, index + 1).map((w) => w[1]),
       ...mWords.slice(index + 1).map((w) => w[0]),
     ].filter((e) => e);
     words = words.filter(({ id }) => !ids.includes(id));
+    const response = await fetch("/api/deleteWords", {
+      method: "POST",
+      body: JSON.stringify({ ids }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      const body = await response.json();
+      console.log(body);
+    }
   }
 </script>
 
