@@ -7,7 +7,6 @@
   import type { SubmitFunction } from "@sveltejs/kit";
   import Icon from "$lib/components/Icon.svelte";
   import ClipOne from "./ClipOne.svelte";
-  import type { KeyboardEventHandler } from "svelte/elements";
   import ClipTwo from "./ClipTwo.svelte";
 
   const handleWhisper: SubmitFunction = () => {
@@ -143,7 +142,7 @@
     {apiDeleteSegment}
   ></Segments>
 {:else if activeTab == "Timeline"}
-  <Timeline {segments} {words} bind:time {start} {end} {togglePaused}
+  <Timeline bind:segments bind:words bind:time {start} {end} {togglePaused}
   ></Timeline>
 {:else if activeTab == "Clip"}
   {#if clip_ids.length == 1}
@@ -153,15 +152,7 @@
       segments={segments.filter((s) => s.clip_id == clip_ids[0])}
     />
   {:else}
-    <ClipTwo
-      {clip_ids}
-      words={words.filter(
-        (e) => clip_ids.includes(e.clip_id) && e.end >= start && e.start <= end,
-      )}
-      segments={segments.filter(
-        (e) => clip_ids.includes(e.clip_id) && e.end >= start && e.start <= end,
-      )}
-    />
+    <ClipTwo {clip_ids} {start} {end} bind:words />
   {/if}
 {/if}
 

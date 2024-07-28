@@ -2,8 +2,8 @@
   import { Tooltip } from "flowbite-svelte";
   import type { Segment, Word } from "$lib/types";
   let {
-    words,
-    segments,
+    words = $bindable(),
+    segments = $bindable(),
     time = $bindable(),
     start,
     end,
@@ -78,7 +78,7 @@
         : ''}"
       style={style(e, 60)}
     >
-      <button onclick={() => (time = e.start)}>{e.word}</button>
+      <button onclick={() => (time = e.start)}>{e.word}{e.sep}</button>
     </div>
     <Tooltip
       placement="right"

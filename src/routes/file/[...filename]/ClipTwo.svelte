@@ -4,12 +4,14 @@
 
   let {
     clip_ids,
-    words,
-    segments,
+    words = $bindable(),
+    start,
+    end,
   }: {
     clip_ids: number[];
     words: Word[];
-    segments: Segment[];
+    start: number;
+    end: number;
   } = $props();
   let colors = ["bg-blue-200", "bg-red-200", "bg-green-200"];
   let color = (w: any) => {
@@ -24,11 +26,11 @@
     clip_ids.map((c, ci) =>
       words
         .filter(({ clip_id }) => clip_id == c)
+        .filter((e) => e.end >= start && e.start <= end)
         .map((w) => ({ ...w, [ci]: w.id })),
     ),
   );
   const mWords = $derived(alignArrays(w0, w1) as any[]);
-  console.table(mWords);
   function cutAfter(index: number) {
     let ids = [
       ...mWords.slice(0, index + 1).map((w) => w[1]),
