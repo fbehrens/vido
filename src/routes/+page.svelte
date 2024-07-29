@@ -1,31 +1,49 @@
 <script lang="ts">
-  export let data;
-  let fltr = "";
-  $: filtrd = data.files.filter((e) => e.filename.includes(fltr));
-  //   console.log(data)
+  let { data } = $props();
+  let { files } = data;
+  let fltr = $state("");
+  let filtrd = $derived(files.filter((e: any) => e.filename.includes(fltr)));
 </script>
 
 <main>
-  <div class="flex w-full">
-    <div class="bg-gray-200 p-2 flex-grow">
-      Filename:<br />
-      <input class="w-full" bind:value={fltr} />
-    </div>
-    <div class="bg-white p-2 w-32">Size</div>
+  <div class="relative overflow-x-auto">
+    <table
+      class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+    >
+      <thead
+        class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+      >
+        <tr>
+          <th scope="col" class="px-6 py-3">
+            Filename <br /><input class="w-full" bind:value={fltr} /></th
+          >
+          <th scope="col" class="px-6 py-3"> size </th>
+          <th scope="col" class="px-6 py-3"> id </th>
+          <th scope="col" class="px-6 py-3"> duration </th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each filtrd as f}
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <th
+              scope="row"
+              class:is-vdo={f.isVdo}
+              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            >
+              <a href="file/{f.filename}?id={f.id}">{f.filename}</a>
+            </th>
+            <td class="px-6 py-4"> {f.size} </td>
+            <td class="px-6 py-4"> {f.id} </td>
+            <td class="px-6 py-4"> {f.duration} </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
   </div>
-
-  {#each filtrd as row}
-    <div class="flex w-full">
-      <div class:is-vdo={row.isVdo} class="bg-gray-200 p-2 flex-grow">
-        <a href="file/{row.filename}">{row.filename}</a>
-      </div>
-      <div class="bg-white p-2 w-32">{row.size}</div>
-    </div>
-  {/each}
 </main>
 
 <style>
   .is-vdo {
-    color: red;
+    color: yellow;
   }
 </style>
