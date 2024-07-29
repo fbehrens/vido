@@ -19,3 +19,7 @@ FROM
 JOIN
   clips c ON w.movie_id = c.movie_id AND w.clip_id = c.id;
 
+CREATE TABLE youtube (
+  id TEXT PRIMARY KEY ,
+  info TEXT
+);

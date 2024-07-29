@@ -7,6 +7,7 @@
   <div class="flex-container">
     <div class="flex"><p class="text-xl">video transcripting</p></div>
     <a class="text-xs" href="/">home</a>
+    <a class="text-xs" href="/yt">youtube</a>
     <a class="text-xs" href="/mockup">mockup</a>
   </div>
 </header>

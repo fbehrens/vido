@@ -72,3 +72,7 @@ FROM
 JOIN
   clips c ON w.movie_id = c.movie_id AND w.clip_id = c.id
 /* words_v(movie_id,id,clip_id,segment_id,start,"end",word,sep) */;
+CREATE TABLE youtube (
+  id TEXT PRIMARY KEY ,
+  info TEXT
+);
