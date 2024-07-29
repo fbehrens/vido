@@ -27,7 +27,6 @@
           <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
             <th
               scope="row"
-              class:is-vdo={f.isVdo}
               class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               <a href="file/{f.filename}?id={f.id}">{f.filename}</a>
@@ -41,9 +40,3 @@
     </table>
   </div>
 </main>
-
-<style>
-  .is-vdo {
-    color: yellow;
-  }
-</style>

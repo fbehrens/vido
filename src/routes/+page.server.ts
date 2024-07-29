@@ -7,20 +7,10 @@ import type { Movie } from "$lib/types";
 
 export interface MyFile {
   filename: string;
-  isVdo: boolean;
   size: number;
 }
 
 const dir = process.cwd() + "/static/";
-
-function myFile(name: string, stat: Stats): MyFile {
-  const filePattern = /\.(mov|mp4)$/i;
-  return {
-    filename: name.replace(dir, ""),
-    isVdo: filePattern.test(name),
-    size: stat.size,
-  };
-}
 
 function getAllFiles(dirPath: string, arrayOfFiles: MyFile[] = []): MyFile[] {
   const files = readdirSync(dirPath);
@@ -30,14 +20,19 @@ function getAllFiles(dirPath: string, arrayOfFiles: MyFile[] = []): MyFile[] {
     if (stat.isDirectory()) {
       arrayOfFiles = getAllFiles(filePath, arrayOfFiles);
     } else {
-      arrayOfFiles.push(myFile(filePath, stat));
+      arrayOfFiles.push({
+        filename: filePath.replace(dir, ""),
+        size: stat.size,
+      });
     }
   });
   return arrayOfFiles;
 }
 
 export async function load({}) {
-  const files = getAllFiles(dir).filter((f) => f.isVdo);
+  const files = getAllFiles(dir).filter((f) =>
+    /\.(mov|mp4)$/i.test(f.filename),
+  );
   const movies = db
     .prepare("Select filename,id,duration from movies")
     .all() as Movie[];
