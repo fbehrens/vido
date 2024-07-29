@@ -12,7 +12,7 @@ export async function load({ params }) {
     const { title, description, duration } = info;
     return { ...yt, title, description, duration };
   });
-  return { now: new Date().toLocaleTimeString(), yts };
+  return { yts };
 }
 
 export const actions = {
@@ -21,7 +21,6 @@ export const actions = {
     const url = data.get("url") as string;
     const id = ytGetId(url);
     if (!id) return;
-
     const info = await ytGetInfo(id);
     db.prepare("insert into youtube (id,info) values (?,?)").run(id, info);
   },

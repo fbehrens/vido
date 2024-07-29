@@ -1,6 +1,6 @@
 <script lang="ts">
   let { data } = $props();
-  let { now, yts } = data;
+  let { yts } = data;
   let value = $state("");
   // https://youtu.be/OXGznpKZ_sA?si=xm8IitoTrgV0IYHT
 </script>
@@ -19,7 +19,6 @@
 </form>
 <div>
   {#each yts as yt}
-    <h2>{yt.id} {yt.title}</h2>
+    <a href="yt/{yt.id}">{yt.title}</a>
   {/each}
 </div>
-served at {now}
