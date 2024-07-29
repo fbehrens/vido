@@ -1,11 +1,10 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
+
   let { data } = $props();
   let { files } = data;
   let fltr = $state("");
   let filtrd = $derived(files.filter((e: any) => e.filename.includes(fltr)));
-  $effect(() => {
-    console.log(filtrd);
-  });
 </script>
 
 <main>
@@ -33,13 +32,30 @@
               class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               {#if f.id}
-                <a href="file/{f.filename}?id={f.id}">{f.filename}</a>
+                <a href="file/{f.id}">{f.filename}</a>
               {:else}
                 {f.filename}
               {/if}
             </th>
             <td class="px-6 py-4"> {f.size} </td>
-            <td class="px-6 py-4"> {f.id} </td>
+            <td class="px-6 py-4">
+              {#if f.id}{f.id}{:else}<button
+                  onclick={async () => {
+                    const response = await fetch("/api/createMovie", {
+                      method: "POST",
+                      body: JSON.stringify(f),
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                    });
+                    if (response.ok) {
+                      const { id } = await response.json();
+                      console.log({ id });
+                      goto(`file/${id}`);
+                    }
+                  }}>create</button
+                >{/if}
+            </td>
             <td class="px-6 py-4"> {f.duration} </td>
           </tr>
         {/each}

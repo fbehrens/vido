@@ -1,24 +1,17 @@
 import { db } from "$lib/db";
 import type { Clip, Movie, Segment, Word } from "$lib/types.js";
 import { getFileDir, makeDirFor } from "$lib/util";
-import { createMovie, selectSegmentsByClip } from "$lib/sqlite.js";
-import { getDuration, extractMp3 } from "$lib/ffmpeg.js";
+import { extractMp3 } from "$lib/ffmpeg.js";
 import { transcribe } from "$lib/whisper";
 import * as fs from "fs";
 
-export async function load({ params, url }) {
+export async function load({ params }) {
   console.log({ serverload: params });
-  const { filename } = params;
-  const movie =
-    (db
-      .prepare("Select * FROM movies where filename = ?")
-      .get(filename) as Movie) ||
-    createMovie(db, {
-      filename,
-      duration: await getDuration(`static/${filename}`),
-    });
+  const { id } = params;
+  const movie = db
+    .prepare("Select * FROM movies where id = ?")
+    .get(id) as Movie;
   console.log(movie);
-  console.log(url);
   return { movie, ...getTranscript(movie) };
 }
 

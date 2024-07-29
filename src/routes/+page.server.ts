@@ -1,7 +1,6 @@
 import { readdir, stat } from "fs/promises";
 import { Stats, readdirSync, statSync } from "fs";
 import { join } from "path";
-import { Select } from "flowbite-svelte";
 import { db } from "$lib/db";
 import type { Movie } from "$lib/types";
 
