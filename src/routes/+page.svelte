@@ -3,6 +3,9 @@
   let { files } = data;
   let fltr = $state("");
   let filtrd = $derived(files.filter((e: any) => e.filename.includes(fltr)));
+  $effect(() => {
+    console.log(filtrd);
+  });
 </script>
 
 <main>
@@ -29,7 +32,11 @@
               scope="row"
               class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
-              <a href="file/{f.filename}?id={f.id}">{f.filename}</a>
+              {#if f.id}
+                <a href="file/{f.filename}?id={f.id}">{f.filename}</a>
+              {:else}
+                {f.filename}
+              {/if}
             </th>
             <td class="px-6 py-4"> {f.size} </td>
             <td class="px-6 py-4"> {f.id} </td>

@@ -6,6 +6,22 @@ import { getDuration, extractMp3 } from "$lib/ffmpeg.js";
 import { transcribe } from "$lib/whisper";
 import * as fs from "fs";
 
+export async function load({ params, url }) {
+  console.log({ serverload: params });
+  const { filename } = params;
+  const movie =
+    (db
+      .prepare("Select * FROM movies where filename = ?")
+      .get(filename) as Movie) ||
+    createMovie(db, {
+      filename,
+      duration: await getDuration(`static/${filename}`),
+    });
+  console.log(movie);
+  console.log(url);
+  return { movie, ...getTranscript(movie) };
+}
+
 function getTranscript({ id }: { id: number }) {
   return {
     clips: db
@@ -22,21 +38,6 @@ function getTranscript({ id }: { id: number }) {
       )
       .all(id) as Word[],
   };
-}
-
-export async function load({ params }) {
-  console.log({ serverload: params });
-  const { filename } = params;
-  const movie =
-    (db
-      .prepare("Select * FROM movies where filename = ?")
-      .get(filename) as Movie) ||
-    createMovie(db, {
-      filename,
-      duration: await getDuration(`static/${filename}`),
-    });
-  console.log(movie);
-  return { movie, ...getTranscript(movie) };
 }
 
 function sleep(ms: number) {

@@ -2,7 +2,8 @@ node_modules
 play
 db
 *.mov
-static/mov/test
+*.mp4
+*.mp3
 
 # Output
 .output
