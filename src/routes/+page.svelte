@@ -32,7 +32,7 @@
               class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               {#if f.id}
-                <a href="file/{f.id}">{f.filename}</a>
+                <a href="movie/{f.id}">{f.filename}</a>
               {:else}
                 {f.filename}
               {/if}
@@ -51,7 +51,7 @@
                     if (response.ok) {
                       const { id } = await response.json();
                       console.log({ id });
-                      goto(`file/${id}`);
+                      goto(`movie/${id}`);
                     }
                   }}>create</button
                 >{/if}
