@@ -1,7 +1,7 @@
 <script lang="ts">
   export let data;
   let fltr = "";
-  $: filtrd = data.files.filter((e) => e.name.includes(fltr));
+  $: filtrd = data.files.filter((e) => e.filename.includes(fltr));
   //   console.log(data)
 </script>
 
@@ -17,7 +17,7 @@
   {#each filtrd as row}
     <div class="flex w-full">
       <div class:is-vdo={row.isVdo} class="bg-gray-200 p-2 flex-grow">
-        <a href="file/{row.name}">{row.name}</a>
+        <a href="file/{row.filename}">{row.filename}</a>
       </div>
       <div class="bg-white p-2 w-32">{row.size}</div>
     </div>

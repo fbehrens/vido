@@ -1,9 +1,12 @@
 import { readdir, stat } from "fs/promises";
 import { Stats, readdirSync, statSync } from "fs";
 import { join } from "path";
+import { Select } from "flowbite-svelte";
+import { db } from "$lib/db";
+import type { Movie } from "$lib/types";
 
 export interface MyFile {
-  name: string;
+  filename: string;
   isVdo: boolean;
   size: number;
 }
@@ -13,7 +16,7 @@ const dir = process.cwd() + "/static/";
 function myFile(name: string, stat: Stats): MyFile {
   const filePattern = /\.(mov|mp4)$/i;
   return {
-    name: name.replace(dir, ""),
+    filename: name.replace(dir, ""),
     isVdo: filePattern.test(name),
     size: stat.size,
   };
@@ -35,5 +38,13 @@ function getAllFiles(dirPath: string, arrayOfFiles: MyFile[] = []): MyFile[] {
 
 export async function load({}) {
   const files = getAllFiles(dir).filter((f) => f.isVdo);
-  return { files };
+  const movies = db
+    .prepare("Select filename,id,duration from movies")
+    .all() as Movie[];
+  const fns = [...movies, ...files].map(({ filename }) => filename);
+  const join = [...new Set(fns)].map((fn) => ({
+    ...files.find((f) => f.filename === fn),
+    ...movies.find((f) => f.filename === fn),
+  }));
+  return { files: join };
 }
