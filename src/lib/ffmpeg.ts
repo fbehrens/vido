@@ -1,6 +1,7 @@
 import ffmpeg from "fluent-ffmpeg";
 import { json } from "@sveltejs/kit";
 import { makeDirFor } from "$lib/util";
+import { exec } from "./util/util";
 
 export function getDuration(videoPath: string): Promise<number> {
   return new Promise((resolve, reject) => {
@@ -15,26 +16,14 @@ export function getDuration(videoPath: string): Promise<number> {
   });
 }
 
-export function extractMp3(
+export async function extractMp3(
   filename: string,
   start: number,
   end: number,
   out: string,
 ) {
   makeDirFor(out);
-  return new Promise((resolve, reject) => {
-    try {
-      ffmpeg(filename)
-        .inputOptions([`-ss ${start}`, `-t ${end}`])
-        .audioCodec("libmp3lame")
-        .withNoVideo()
-        .output(out)
-        .on("end", function () {
-          resolve(out);
-        })
-        .run();
-    } catch (error) {
-      reject(error);
-    }
-  });
+  const command = `ffmpeg -ss ${start} -t ${end} -i ${filename} -y -acodec libmp3lame -vn ${out}`;
+  const info = await exec(command);
+  console.log({ command, output: info.stderr });
 }

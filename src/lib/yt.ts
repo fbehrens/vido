@@ -1,6 +1,4 @@
-import { promisify } from "util";
-import { exec as exec_ } from "child_process";
-const exec = promisify(exec_);
+import { exec } from "./util/util";
 
 export async function ytGetInfo(id: string): Promise<string> {
   const info = await exec(
