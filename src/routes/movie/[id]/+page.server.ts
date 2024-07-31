@@ -1,6 +1,6 @@
 import { db } from "$lib/db";
 import type { Clip, Movie, Segment, Word } from "$lib/types.js";
-import { getFileDir, makeDirFor } from "$lib/util";
+import { getFileDir } from "$lib/util";
 import { extractMp3 } from "$lib/ffmpeg.js";
 import { transcribe } from "$lib/whisper";
 import * as fs from "fs";
@@ -69,9 +69,18 @@ export const actions = {
     }
 
     const t = await transcribe(mp3Path);
+    const transcript = JSON.stringify(t);
     db.prepare(
-      "INSERT INTO clips (id, movie_id, start, end, text, filesize) VALUES (?, ?, ?, ?, ?, ?)",
-    ).run(clip_id, movie_id, start, end, t.text, fileSize);
+      `INSERT INTO clips (id, movie_id, start, end, text, filesize, transcript) VALUES (@clip_id, @movie_id, @start, @end, @text, @fileSize, @transcript)`,
+    ).run({
+      clip_id,
+      movie_id,
+      start,
+      end,
+      text: t.text,
+      fileSize,
+      transcript,
+    });
 
     t.segments.forEach((s) =>
       db

@@ -26,4 +26,8 @@ CREATE TABLE youtube (
 --14
 alter table youtube add column lang TEXT;
 alter table youtube add column json3 TEXT;
+--15
+alter table movies add column transcript TEXT;
+alter table movies drop column transcript ;
+alter table clips add column transcript TEXT;
 
