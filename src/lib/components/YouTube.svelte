@@ -14,9 +14,6 @@
 
   function load() {
     player = new YT.Player(playerId, {
-      height, // "100%",
-      width, //"100%",
-      videoId,
       playerVars: { autoplay: 1 },
       events: {
         onReady: () => {
@@ -35,7 +32,9 @@
       window.onYouTubeIframeAPIReady = load;
     }
     return () => {
-      intervallId && clearInterval(intervallId);
+      if (intervallId) {
+        clearInterval(intervallId);
+      }
     };
   });
 </script>
@@ -44,4 +43,12 @@
   <script src="https://www.youtube.com/iframe_api"></script>
 </svelte:head>
 
-<div title={playerId} id={playerId}></div>
+<!-- svelte-ignore a11y_missing_attribute -->
+<iframe
+  id={playerId}
+  type="text/html"
+  {width}
+  {height}
+  src="http://www.youtube.com/embed/{videoId}?enablejsapi=1"
+  frameborder="0"
+></iframe>
