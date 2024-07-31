@@ -23,3 +23,7 @@ CREATE TABLE youtube (
   id TEXT PRIMARY KEY ,
   info TEXT
 );
+--14
+alter table youtube add column lang TEXT;
+alter table youtube add column json3 TEXT;
+

@@ -1,19 +1,12 @@
-import ffmpeg from "fluent-ffmpeg";
 import { json } from "@sveltejs/kit";
 import { makeDirFor } from "$lib/util";
 import { exec } from "./util/util";
 
-export function getDuration(videoPath: string): Promise<number> {
-  return new Promise((resolve, reject) => {
-    ffmpeg.ffprobe(videoPath, (err, metadata) => {
-      if (err) {
-        reject(err);
-      } else {
-        const duration = metadata.format.duration;
-        resolve(duration!);
-      }
-    });
-  });
+export async function getDuration(videoPath: string): Promise<number> {
+  let command = `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 ${videoPath}`;
+  //   command = `mediainfo --Output='General;%Duration%' ${videoPath}`;
+  const info = await exec(command);
+  return Number(info.out);
 }
 
 export async function extractMp3(
@@ -25,5 +18,4 @@ export async function extractMp3(
   makeDirFor(out);
   const command = `ffmpeg -ss ${start} -t ${end} -i ${filename} -y -acodec libmp3lame -vn ${out}`;
   const info = await exec(command);
-  console.log({ command, output: info.stderr });
 }
