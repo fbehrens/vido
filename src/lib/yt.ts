@@ -30,6 +30,6 @@ export function ytGetId(url: string): string | null {
 
     return null;
   } catch (error) {
-    return null;
+    return url;
   }
 }

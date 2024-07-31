@@ -1,10 +1,12 @@
 <script lang="ts">
   import YouTube from "$lib/components/YouTube.svelte";
+  import type { Json3Event } from "$lib/types.js";
 
   let { data } = $props();
-  let { description, duration, id, info, title, chapters } = data;
-  console.log(chapters[0]);
+  let { description, duration, id, info, title, chapters, json3text } = data;
+  const events = JSON.parse(json3text).events as Json3Event[];
   let player = $state<YT.Player>();
+  console.log(events.slice(0, 4));
 </script>
 
 <!-- <svelte:head>

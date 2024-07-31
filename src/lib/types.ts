@@ -36,3 +36,19 @@ export interface SegmentAll extends Segment {
   compression_ratio: number;
   no_speech_prob: number;
 }
+
+export type Json3Seg = {
+  utf8: string;
+  tOffsetMs?: number;
+  acAsrConf: number;
+};
+
+export type Json3Event = {
+  tStartMs: number;
+  dDurationMs: number;
+  segs?: Json3Seg[];
+  id?: number;
+  wpWinPosId: number;
+  wsWinStyleId: number;
+  wWinId?: number;
+};

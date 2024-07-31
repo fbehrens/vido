@@ -15,10 +15,24 @@
       size="50"
     />
   </label>
-  <button type="submit">Submit</button><br />
+  <button
+    class="p-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300 ease-in-out"
+    >Submit</button
+  ><br />
 </form>
-<div>
+<div class="container">
+  <div>id</div>
+  <div>title</div>
   {#each yts as yt}
-    <a href="yt/{yt.id}">{yt.title}</a>
+    <div>{yt.id}</div>
+    <div><a href="yt/{yt.id}">{yt.title}</a></div>
   {/each}
 </div>
+
+<style>
+  .container {
+    display: grid;
+    gap: 1px;
+    grid-template-columns: 1fr 4fr;
+  }
+</style>

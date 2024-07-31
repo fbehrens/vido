@@ -75,4 +75,4 @@ JOIN
 CREATE TABLE youtube (
   id TEXT PRIMARY KEY ,
   info TEXT
-);
+, lang TEXT, json3 TEXT);

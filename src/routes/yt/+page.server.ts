@@ -12,6 +12,7 @@ export async function load({ params }) {
     const { title, description, duration } = info;
     return { ...yt, title, description, duration };
   });
+  yts.forEach((yt) => console.log(yt.title));
   return { yts };
 }
 
@@ -22,6 +23,18 @@ export const actions = {
     const id = ytGetId(url);
     if (!id) return;
     const info = await ytGetInfo(id);
-    db.prepare("insert into youtube (id,info) values (?,?)").run(id, info);
+    const { automatic_captions } = JSON.parse(info);
+
+    const lang = "en";
+    const json3Url = automatic_captions[lang].find((c) => c.ext == "json3").url;
+    const response = await fetch(json3Url);
+    if (!response.ok) throw "Error fetching json3";
+    const json3 = await response.text();
+    db.prepare("insert into youtube (id,info,lang,json3) values (?,?,?,?)").run(
+      id,
+      info,
+      lang,
+      json3,
+    );
   },
 };
