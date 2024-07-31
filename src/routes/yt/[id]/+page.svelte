@@ -1,23 +1,56 @@
 <script lang="ts">
+  import TextEvent from "$lib/components/TextEvent.svelte";
   import YouTube from "$lib/components/YouTube.svelte";
-  import type { Json3Event } from "$lib/types.js";
+  import type { Json3Event, Json3Event1 } from "$lib/types.js";
 
   let { data } = $props();
-  let { description, duration, id, info, title, chapters, json3text } = data;
-  const events = JSON.parse(json3text).events as Json3Event[];
+  let time = $state(0);
   let player = $state<YT.Player>();
-  console.log(events.slice(0, 4));
+  let { description, duration, id, info, title, chapters, json3text } = data;
+  const [e1, ...events] = JSON.parse(json3text).events as [
+    Json3Event1,
+    Json3Event,
+  ];
+  const textEvents = events.filter((e) => !e.aAppend);
+  let current = $derived.by(() => {
+    const i = textEvents.findIndex((e) => e.tStartMs + 100 > time * 1000);
+    return textEvents.slice(i - 1, i + 10);
+  });
+  const seek = (ms: number): void => player.seekTo(ms / 1000);
+  //   assert()
+  function assert() {
+    const aAppend = events.filter((e) => e.aAppend);
+    console.assert(aAppend.every((e) => e.segs?.length == 1));
+    console.assert(aAppend.every((e) => e.segs![0].utf8 == "\n"));
+    console.assert(aAppend.every((e) => e.wWinId == 1));
+    console.assert(
+      events.every((e, i) =>
+        !(i % 2) ? e.aAppend === undefined : e.aAppend === 1,
+      ),
+      "ever odd event is a appendEvent",
+    );
+  }
 </script>
 
-<!-- <svelte:head>
-  <script src="https://www.youtube.com/iframe_api"></script>
-</svelte:head> -->
+<div class="grid grid-cols-2 gap-1">
+  <div>
+    {title}<span class="text-xs">{time}</span>
+    <YouTube bind:time bind:player videoId={id} />
+  </div>
 
-<h2>{title}</h2>
-<YouTube bind:player videoId={id} />
-{#each chapters as chapter}
-  <button onclick={() => player.seekTo(chapter.start_time)}
-    >{chapter.title}</button
-  ><br />
-{/each}
+  <div>
+    <h3>Chapters</h3>
+    {#each chapters as chapter}
+      <button onclick={() => seek(chapter.start_time * 1000)}
+        >{chapter.title}</button
+      ><br />
+    {/each}
+  </div>
+  <div>
+    {#each current as te}
+      <TextEvent {seek} bind:time {...te} />
+    {/each}
+  </div>
+</div>
+
 <!-- {description} -->

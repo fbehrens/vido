@@ -43,12 +43,17 @@ export type Json3Seg = {
   acAsrConf: number;
 };
 
+export type Json3Event1 = {
+  tStartMs: number;
+  dDurationMs: number;
+  id: number; // 1
+  wpWinPosId: number;
+  wsWinStyleId: number;
+};
 export type Json3Event = {
   tStartMs: number;
   dDurationMs: number;
-  segs?: Json3Seg[];
-  id?: number;
-  wpWinPosId: number;
-  wsWinStyleId: number;
-  wWinId?: number;
+  wWinId: number; // 1
+  segs: Json3Seg[];
+  aAppend?: number; // all odd 1 => segs[0].utf8 = '\n'
 };
