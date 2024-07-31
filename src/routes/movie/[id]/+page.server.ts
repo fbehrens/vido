@@ -16,20 +16,37 @@ export async function load({ params }) {
 }
 
 function getTranscript({ id }: { id: number }) {
+  const clips = db
+    .prepare(
+      "SELECT id, start, end, text,transcript FROM clips WHERE movie_id = ? order by id",
+    )
+    .all(id) as Clip[];
+  const segments: Segment[] = [];
+  const words: Word[] = [];
+  clips.forEach((c) => {
+    const transcript = JSON.parse(c.transcript);
+    transcript.segments.forEach((s: any) =>
+      segments.push({
+        start: s.start + c.start,
+        end: s.end + c.start,
+        text: s.text,
+        clip_id: c.id,
+      } as Segment),
+    );
+    transcript.words.forEach((s: any) =>
+      words.push({
+        start: s.start + c.start,
+        end: s.end + c.start,
+        word: s.word,
+        clip_id: c.id,
+      } as Word),
+    );
+  });
+  console.log(segments, words);
   return {
-    clips: db
-      .prepare("SELECT id, start, end, text FROM clips WHERE movie_id = ?")
-      .all(id) as Clip[],
-    segments: db
-      .prepare(
-        "SELECT clip_id, start, end, text, id FROM segments_v WHERE movie_id = ? ORDER BY start",
-      )
-      .all(id) as Segment[],
-    words: db
-      .prepare(
-        "SELECT id, clip_id, segment_id, start, end, word, sep FROM words_v WHERE movie_id = ?",
-      )
-      .all(id) as Word[],
+    clips,
+    segments,
+    words,
   };
 }
 
@@ -82,26 +99,6 @@ export const actions = {
       transcript,
     });
 
-    t.segments.forEach((s) =>
-      db
-        .prepare(
-          ` INSERT INTO segments (movie_id, clip_id, start, end, text, seek, tokens, temperature, avg_logprob, compression_ratio, no_speech_prob)
-          VALUES (@movie_id, @clip_id, @start, @end, @text, @seek, @tokens, @temperature, @avg_logprob, @compression_ratio, @no_speech_prob)`,
-        )
-        .run({
-          movie_id,
-          clip_id: clip_id,
-          ...s,
-          tokens: JSON.stringify(s.tokens),
-        }),
-    );
-    t.words.forEach((w) =>
-      db
-        .prepare(
-          "INSERT INTO words (movie_id, clip_id, start, end, word) VALUES (?, ?, ?, ?, ?)",
-        )
-        .run(movie_id, clip_id, w.start, w.end, w.word),
-    );
     // updateWordsSegmentId({ movie_id, clip_id });
 
     return {
