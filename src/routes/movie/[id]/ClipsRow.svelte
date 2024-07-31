@@ -6,12 +6,14 @@
     duration,
     clip_ids = $bindable(),
     start = $bindable(),
+    length = $bindable(),
     end = $bindable(),
   }: {
     clips: Clip[];
     duration: number;
     clip_ids: Number[];
     start: number;
+    length: number;
     end: number;
   } = $props();
   function style(part: { ids: number[]; start: number; end: number }) {
@@ -31,6 +33,7 @@
         onclick={() => {
           start = part.start;
           end = part.end;
+          length = part.end - part.start;
           clip_ids = part.ids;
         }}>{part.ids}</button
       >

@@ -125,7 +125,14 @@
   </div>
 </div>
 
-<ClipsRow {clips} duration={movie.duration} bind:start bind:end bind:clip_ids />
+<ClipsRow
+  {clips}
+  duration={movie.duration}
+  bind:start
+  bind:length
+  bind:end
+  bind:clip_ids
+/>
 
 <div class="flex">
   {#each tabs as t}
