@@ -3,11 +3,14 @@
 
   let {
     player = $bindable(),
+    time = $bindable(),
     videoId,
     height = "390",
     width = "640",
     playerId = "youtube-player",
   } = $props();
+
+  let intervallId = $state(0);
 
   function load() {
     player = new YT.Player(playerId, {
@@ -15,6 +18,13 @@
       width, //"100%",
       videoId,
       playerVars: { autoplay: 1 },
+      events: {
+        onReady: () => {
+          intervallId = setInterval(() => {
+            time = player.getCurrentTime();
+          }, 100);
+        },
+      },
     });
   }
 
@@ -24,6 +34,9 @@
     } else {
       window.onYouTubeIframeAPIReady = load;
     }
+    return () => {
+      intervallId && clearInterval(intervallId);
+    };
   });
 </script>
 
@@ -31,4 +44,4 @@
   <script src="https://www.youtube.com/iframe_api"></script>
 </svelte:head>
 
-<div id={playerId}></div>
+<div title={playerId} id={playerId}></div>
