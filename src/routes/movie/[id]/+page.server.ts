@@ -21,28 +21,52 @@ function getTranscript({ id }: { id: number }) {
       "SELECT id, start, end, text,transcript FROM clips WHERE movie_id = ? order by id",
     )
     .all(id) as Clip[];
-  const segments: Segment[] = [];
-  const words: Word[] = [];
+  let segments: Segment[] = [];
+  let words: Word[] = [];
+  const rSplit = /^([\w']+)(\W+)?.*/;
   clips.forEach((c) => {
     const transcript = JSON.parse(c.transcript);
-    transcript.segments.forEach((s: any) =>
+    const newWords = transcript.words.map((s: any) => ({
+      start: s.start + c.start,
+      end: s.end + c.start,
+      word: s.word,
+      clip_id: c.id,
+    })) as Word[];
+    words = [...words, ...newWords];
+    console.log("--------------");
+    transcript.segments.forEach((s: any) => {
+      const words = s.text
+        .trim()
+        .split(" ")
+        .map((ws: string) => {
+          const m = ws.match(rSplit);
+          if (!m) throw `${ws} not matchin ${rSplit}`;
+          const [wordS, sep] = [m[1], m[2] || ""];
+          const i = newWords.findIndex((w) => w.word == wordS);
+          const word = newWords[i];
+          word.sep = sep;
+          if (i > -1) {
+            newWords.splice(i, 1);
+          } else {
+            console.error({
+              message: "segment word not found in words",
+              segmentStart: s.start,
+              text: s.text,
+              wordS: wordS,
+            });
+          }
+          return word;
+        });
       segments.push({
+        clip_id: c.id,
         start: s.start + c.start,
         end: s.end + c.start,
         text: s.text,
-        clip_id: c.id,
-      } as Segment),
-    );
-    transcript.words.forEach((s: any) =>
-      words.push({
-        start: s.start + c.start,
-        end: s.end + c.start,
-        word: s.word,
-        clip_id: c.id,
-      } as Word),
-    );
+        words,
+      });
+    });
   });
-  console.log(segments, words);
+  //   console.log(segments[0]);
   return {
     clips,
     segments,

@@ -20,11 +20,13 @@ export interface Clip extends Duration {
 export interface Word extends Duration {
   clip_id: number;
   word: string;
+  sep: string;
 }
 
 export interface Segment extends Duration {
   clip_id: number;
   text: string;
+  words: Word[];
 }
 
 export interface SegmentAll extends Segment {
