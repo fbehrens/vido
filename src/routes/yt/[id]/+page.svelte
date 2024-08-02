@@ -7,17 +7,17 @@
   let time = $state(0);
   let player = $state<YT.Player>();
   let { description, duration, id, info, title, chapters, json3text } = data;
-  const [e1, ...events] = JSON.parse(json3text).events as [
-    Json3Event1,
-    Json3Event,
-  ];
+
+  const js = JSON.parse(json3text);
+  const es = js.events;
+  const [e1, ...events] = es as [Json3Event1, Json3Event];
   const textEvents = events.filter((e) => !e.aAppend);
   let current = $derived.by(() => {
     const i = textEvents.findIndex((e) => e.tStartMs + 100 > time * 1000);
-    return textEvents.slice(i - 1, i + 10);
+    return textEvents.slice(i ? i - 1 : i, i + 10);
   });
   const seek = (ms: number): void => player.seekTo(ms / 1000);
-  //   assert()
+  //   assert();
   function assert() {
     const aAppend = events.filter((e) => e.aAppend);
     console.assert(aAppend.every((e) => e.segs?.length == 1));
@@ -32,10 +32,15 @@
   }
 </script>
 
-<div class="grid grid-cols-2 gap-1">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-1">
   <div>
     {title}<span class="text-xs">{time}</span>
     <YouTube bind:time bind:player videoId={id} />
+  </div>
+  <div>
+    {#each current as te}
+      <TextEvent {seek} bind:time {...te} />
+    {/each}
   </div>
 
   <div>
@@ -44,11 +49,6 @@
       <button onclick={() => seek(chapter.start_time * 1000)}
         >{chapter.title}</button
       ><br />
-    {/each}
-  </div>
-  <div>
-    {#each current as te}
-      <TextEvent {seek} bind:time {...te} />
     {/each}
   </div>
 </div>
