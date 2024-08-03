@@ -49,7 +49,7 @@
 
   let time = $state(0);
   let tabs = ["Timeline", "Segments", "Clip"];
-  let activeTab = $state(tabs[0]);
+  let activeTab = $state(tabs[1]);
   let isSubmitting: boolean = $state(false);
 
   let start: number = $state(10);
@@ -59,22 +59,23 @@
   let video: HTMLVideoElement;
 </script>
 
+<button
+  onclick={async () => {
+    const response = await fetch("/api/deleteMovie", {
+      method: "POST",
+      body: JSON.stringify({ id: movie.id }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      [clips, segments, words] = [[], [], []];
+      console.log({ responseDeleteMovie: await response.json() });
+    }
+  }}><Icon name="delete" /></button
+>
+
 <form method="POST" use:enhance={handleWhisper}>
-  <button
-    onclick={async () => {
-      const response = await fetch("/api/deleteMovie", {
-        method: "POST",
-        body: JSON.stringify({ id: movie.id }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.ok) {
-        [clips, segments, words] = [[], [], []];
-        console.log({ responseDeleteMovie: await response.json() });
-      }
-    }}><Icon name="delete" /></button
-  >
   <input hidden name="id" value={movie.id} />
 
   <input class="bg-gray-200" readonly name="filename" value={movie.filename} />
