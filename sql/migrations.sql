@@ -30,4 +30,8 @@ alter table youtube add column json3 TEXT;
 alter table movies add column transcript TEXT;
 alter table movies drop column transcript ;
 alter table clips add column transcript TEXT;
+--16
+alter table clips add column segments TEXT;
+alter table movies add column segments TEXT;
+
 

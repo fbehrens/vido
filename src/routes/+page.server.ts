@@ -33,7 +33,9 @@ export async function load({}) {
     /\.(mov|mp4)$/i.test(f.filename),
   );
   const movies = db
-    .prepare("Select filename,id,duration from movies")
+    .prepare(
+      "Select filename,id,duration,(CASE WHEN segments IS NULL THEN 1 ELSE 0 END)'create' from movies",
+    )
     .all() as Movie[];
   const fns = [...movies, ...files].map(({ filename }) => filename);
   const join = [...new Set(fns)].map((fn) => ({

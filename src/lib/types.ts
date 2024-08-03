@@ -2,6 +2,7 @@ export interface Movie {
   filename: string;
   duration: number;
   id: number;
+  create: boolean;
 }
 
 export type Artefact = "mp3" | "text" | "words" | "segments";
@@ -15,6 +16,7 @@ export interface Clip extends Duration {
   id: number;
   text: string;
   transcript: string;
+  segments: string;
 }
 
 export interface Word extends Duration {

@@ -1,5 +1,9 @@
 # vod
 
+
+
+
+
 ```bash
 
 script/flushdb_from_schema dev
@@ -18,3 +22,14 @@ sqlite3 db/vod.db '.schema' > schema.sql
 * [Waytogo](https://github.com/unplugin/unplugin-icons)
 * [Gellery](https://icones.js.org/collection/ph)
 *  [discussion](https://www.reddit.com/r/sveltejs/comments/10rvng1/comment/j6y7bmz/)
+
+## ffmpeg
+
+```
+# join videos
+
+
+
+```
+
+## yt-dlp
