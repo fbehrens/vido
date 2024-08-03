@@ -23,7 +23,7 @@ function getTranscript({ id }: { id: number }) {
     .all(id) as Clip[];
   let segments: Segment[] = [];
   let words: Word[] = [];
-  const rSplit = /^([\w']+)(\W+)?.*/;
+  const rSplit = /^([\w']*)(\W*)$/;
   clips.forEach((c) => {
     const transcript = JSON.parse(c.transcript);
     const newWords = transcript.words.map((s: any) => ({
@@ -33,7 +33,6 @@ function getTranscript({ id }: { id: number }) {
       clip_id: c.id,
     })) as Word[];
     words = [...words, ...newWords];
-    console.log("--------------");
     transcript.segments.forEach((s: any) => {
       const words = s.text
         .trim()
@@ -41,11 +40,19 @@ function getTranscript({ id }: { id: number }) {
         .map((ws: string) => {
           const m = ws.match(rSplit);
           if (!m) throw `${ws} not matchin ${rSplit}`;
-          const [wordS, sep] = [m[1], m[2] || ""];
+          const [wordS, sep] = [m[1], m[2]];
+          if (wordS == "") {
+            return {
+              word: "",
+              sep: sep,
+              start: s.start,
+              end: s.start + 0.1,
+            };
+          }
           const i = newWords.findIndex((w) => w.word == wordS);
           const word = newWords[i];
-          word.sep = sep;
           if (i > -1) {
+            word.sep = sep;
             newWords.splice(i, 1);
           } else {
             console.error({
@@ -56,7 +63,8 @@ function getTranscript({ id }: { id: number }) {
             });
           }
           return word;
-        });
+        })
+        .filter((w: any) => w);
       segments.push({
         clip_id: c.id,
         start: s.start + c.start,
@@ -66,7 +74,7 @@ function getTranscript({ id }: { id: number }) {
       });
     });
   });
-  //   console.log(segments[0]);
+  console.log(segments[0]);
   return {
     clips,
     segments,
@@ -108,7 +116,6 @@ export const actions = {
         success: true,
       };
     }
-
     const t = await transcribe(mp3Path);
     const transcript = JSON.stringify(t);
     db.prepare(
