@@ -8,6 +8,7 @@ interface ExtendedTranscription extends OpenAI.Audio.Transcription {
 }
 
 export async function transcribe(filename: string) {
+  console.log({ transcribe: filename });
   const transcription = await openai.audio.transcriptions.create({
     // language: 'de', https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes
     file: fs.createReadStream(filename),
@@ -15,7 +16,7 @@ export async function transcribe(filename: string) {
     response_format: "verbose_json",
     timestamp_granularities: ["word", "segment"],
   });
-
   const { text, segments, words } = transcription as ExtendedTranscription;
+  console.log({ text });
   return { text, segments, words };
 }
