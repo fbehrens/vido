@@ -16,6 +16,7 @@ export async function extractMp3(
   out: string,
 ) {
   makeDirFor(out);
-  const command = `ffmpeg -ss ${start} -t ${end} -i ${filename} -y -acodec libmp3lame -vn ${out}`;
+  const command = `ffmpeg -ss ${start} -to ${end} -i ${filename} -y -acodec libmp3lame -vn ${out}`;
+  console.log(command);
   const info = await exec(command);
 }
