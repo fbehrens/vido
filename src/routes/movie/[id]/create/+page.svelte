@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Segments from "../Segments.svelte";
+  import type { Segment, Word } from "$lib/types";
 
   let { data } = $props();
   let { movie, clips } = data;
@@ -10,16 +10,15 @@
       return {
         start: clip.start,
         end: prev.end,
-        // cutAt: (clip.start + prev.end) / 2,
-        seg: (JSON.parse(prev.segments) as Segments[]).filter(
+        seg: (JSON.parse(prev.segments) as Segment[]).filter(
           (s) => s.end >= clip.start,
         ),
-        nxt: (JSON.parse(clip.segments) as Segments[]).filter(
+        nxt: (JSON.parse(clip.segments) as Segment[]).filter(
           (s) => s.start <= prev.end,
         ),
       };
     })
-    .filter((c) => c);
+    .filter((c) => c !== undefined);
 
   let seconds = $state(10); //
   let cut = $state(overlaps.map(({ start, end }) => (start + end) / 2));
@@ -34,7 +33,8 @@
         startPos: pos(o.start),
         endPos: pos(o.end),
       });
-      const inRange = (s) => s.endPos >= 0 && s.startPos <= 100;
+      const inRange = (s: { startPos: number; endPos: number }) =>
+        s.endPos >= 0 && s.startPos <= 100;
       const addValid = (nxt: boolean) => {
         return (o: { startPos: number }) => ({
           ...o,
@@ -46,17 +46,17 @@
         startPos: Math.max(0, o.startPos),
         endPos: Math.min(100, o.endPos),
       });
-      const segPos = ol?.seg
+      const segPos = ol.seg
         .map(addPos)
         .filter(inRange)
-        .map(addValid(false))
-        .map(clipBorders);
+        .map(clipBorders)
+        .map(addValid(false));
       const segWords = segPos
-        ?.flatMap((s) => s.words)
+        ?.flatMap((s: any) => s.words)
         .map(addPos)
         .filter(inRange)
-        .map(addValid(false))
-        .map(clipBorders);
+        .map(clipBorders)
+        .map(addValid(false));
       return { index, ...ol, segPos, segWords, cut: cut[index] };
     }),
   );
@@ -82,8 +82,8 @@
         type="range"
         id="cutAt_0"
         name="cutAt_0"
-        min={ol?.start}
-        max={ol?.end}
+        min={ol.start}
+        max={ol.end}
         step="any"
         bind:value={cut[ol.index]}
       />
