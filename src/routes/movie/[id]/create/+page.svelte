@@ -28,7 +28,7 @@
       const pos = function (time: number) {
         return ((time - cut[index] + seconds) / seconds) * 100;
       };
-      const addPos = (o: { start: number; end: number }) => ({
+      const addPos = (o: Word | Segment) => ({
         ...o,
         startPos: pos(o.start),
         endPos: pos(o.end),
@@ -36,7 +36,7 @@
       const inRange = (s: { startPos: number; endPos: number }) =>
         s.endPos >= 0 && s.startPos <= 100;
       const addValid = (nxt: boolean) => {
-        return (o: { startPos: number }) => ({
+        return (o: any) => ({
           ...o,
           valid: nxt ? o.startPos > 50 : o.startPos <= 50,
         });
@@ -51,21 +51,29 @@
         .filter(inRange)
         .map(clipBorders)
         .map(addValid(false));
-      const segWords = segPos
-        ?.flatMap((s: any) => s.words)
+      const nxtPos = ol.nxt
+        .map(addPos)
+        .filter(inRange)
+        .map(clipBorders)
+        .map(addValid(true));
+      const segWords = (segPos.flatMap((s: any) => s.words) as Word[])
         .map(addPos)
         .filter(inRange)
         .map(clipBorders)
         .map(addValid(false));
+      const nxtWords = (nxtPos.flatMap((s: any) => s.words) as Word[])
+        .map(addPos)
+        .filter(inRange)
+        .map(clipBorders)
+        .map(addValid(true));
       return { index, ...ol, segPos, segWords, cut: cut[index] };
     }),
   );
-  let selStart = $derived(cut.map((v) => v - seconds / 2));
-  $effect(() => {
-    console.log(rOverlaps[0]);
-    console.table(rOverlaps[0].segPos);
-    console.table(rOverlaps[0].segWords);
-  });
+  //   $effect(() => {
+  //     console.log(rOverlaps[0]);
+  //     console.table(rOverlaps[0].segPos);
+  //     console.table(rOverlaps[0].segWords);
+  //   });
 </script>
 
 <form>
@@ -76,7 +84,7 @@
 </form>
 
 <form class="w-full">
-  {#each rOverlaps.slice(0, 1) as ol}
+  {#each rOverlaps as ol}
     <div>
       <input
         type="range"
@@ -87,14 +95,31 @@
         step="any"
         bind:value={cut[ol.index]}
       />
-      <div class="bg-blue-200 relative">
-        {ol.index}
-
-        <span class="absolute bg-blue-300" style="left:10%;right:89%;"
-          >Hello</span
-        >
+      <div
+        class="bg-blue-100 relative text-xs h-10 border border-y-1 border-blue-600"
+      >
+        <div
+          class="absolute h-10 border-l-2 border border-black"
+          style="left:50%;"
+        ></div>
+        <span>{ol.index}</span>
+        {#each ol.segWords as w}
+          <span
+            class="absolute bg-blue-300 my-3 border-black border z-10 {w.valid
+              ? ''
+              : 'text-slate-500'}"
+            style="left:{w.startPos}%;right:{100 - w.endPos}%;"
+            >{w.word}{w.sep}</span
+          >
+        {/each}
+        {#each ol.segPos as w}
+          <span
+            class="absolute bg-blue-400 h-8 my-1 z-0 border border-white border-x-2"
+            style="left:{w.startPos}%;right:{100 - w.endPos}%;"
+          ></span>
+        {/each}
       </div>
-      <div class="bg-green-200">{ol.index + 1}</div>
+      <div class="bg-blue-200">{ol.index + 1}</div>
     </div>
   {/each}
 </form>
