@@ -35,10 +35,10 @@
       });
       const inRange = (s: { startPos: number; endPos: number }) =>
         s.endPos >= 0 && s.startPos <= 100;
-      const addValid = (nxt: boolean) => {
+      const addInvalid = (nxt: boolean) => {
         return (o: any) => ({
           ...o,
-          valid: nxt ? o.startPos > 50 : o.startPos <= 50,
+          invalid: nxt ? o.startPos <= 50 : o.startPos > 50,
         });
       };
       const clipBorders = (o: { startPos: number; endPos: number }) => ({
@@ -50,23 +50,31 @@
         .map(addPos)
         .filter(inRange)
         .map(clipBorders)
-        .map(addValid(false));
+        .map(addInvalid(false));
       const nxtPos = ol.nxt
         .map(addPos)
         .filter(inRange)
         .map(clipBorders)
-        .map(addValid(true));
+        .map(addInvalid(true));
       const segWords = (segPos.flatMap((s: any) => s.words) as Word[])
         .map(addPos)
         .filter(inRange)
         .map(clipBorders)
-        .map(addValid(false));
+        .map(addInvalid(false));
       const nxtWords = (nxtPos.flatMap((s: any) => s.words) as Word[])
         .map(addPos)
         .filter(inRange)
         .map(clipBorders)
-        .map(addValid(true));
-      return { index, ...ol, segPos, segWords, cut: cut[index] };
+        .map(addInvalid(true));
+      return {
+        index,
+        ...ol,
+        segPos,
+        segWords,
+        nxtPos,
+        nxtWords,
+        cut: cut[index],
+      };
     }),
   );
   //   $effect(() => {
@@ -95,31 +103,36 @@
         step="any"
         bind:value={cut[ol.index]}
       />
-      <div
-        class="bg-blue-100 relative text-xs h-10 border border-y-1 border-blue-600"
-      >
+      {#snippet timeline(segs, words, index)}
         <div
-          class="absolute h-10 border-l-2 border border-black"
-          style="left:50%;"
-        ></div>
-        <span>{ol.index}</span>
-        {#each ol.segWords as w}
+          class="bg-blue-100 relative text-xs h-10 border border-y-1 border-blue-600"
+        >
+          <div
+            class="absolute h-10 border-l-1 border border-black"
+            style="left:50%;"
+          ></div>
+          {#each segs as w}
+            <span
+              class="absolute bg-blue-400 h-8 my-1 z-0 border border-white border-x-1"
+              style="left:{w.startPos}%;right:{100 - w.endPos}%;"
+            ></span>
+          {/each}
+          {#each words as w}
+            <span
+              class:text-slate-500={w.invalid}
+              class="absolute bg-blue-300 my-3 border-black border z-10"
+              style="left:{w.startPos}%;right:{100 - w.endPos}%;"
+              >{w.word}{w.sep}</span
+            >
+          {/each}
           <span
-            class="absolute bg-blue-300 my-3 border-black border z-10 {w.valid
-              ? ''
-              : 'text-slate-500'}"
-            style="left:{w.startPos}%;right:{100 - w.endPos}%;"
-            >{w.word}{w.sep}</span
+            class="absolute z-20 bg-white border-r-[1px] border-b-[1px] pr-1 border-black font-bold"
+            style="left:0%">{index}</span
           >
-        {/each}
-        {#each ol.segPos as w}
-          <span
-            class="absolute bg-blue-400 h-8 my-1 z-0 border border-white border-x-2"
-            style="left:{w.startPos}%;right:{100 - w.endPos}%;"
-          ></span>
-        {/each}
-      </div>
-      <div class="bg-blue-200">{ol.index + 1}</div>
+        </div>
+      {/snippet}
+      {@render timeline(ol.segPos, ol.segWords, ol.index)}
+      {@render timeline(ol.nxtPos, ol.nxtWords, ol.index + 1)}
     </div>
   {/each}
 </form>
