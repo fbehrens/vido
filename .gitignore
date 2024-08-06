@@ -4,6 +4,7 @@ db
 *.mov
 *.mp4
 *.mp3
+mov
 
 # Output
 .output

@@ -3,6 +3,7 @@ import { extractMp3 } from "$lib/ffmpeg";
 import type { Clip, Movie, Segment, Word } from "$lib/types";
 import { getFileDir } from "$lib/util";
 import { transcribe } from "$lib/whisper";
+import { redirect } from "@sveltejs/kit";
 import * as fs from "fs";
 
 export async function load({ params }) {
@@ -75,6 +76,60 @@ export async function load({ params }) {
     clips = getClips();
   }
   return { movie, clips };
+}
+
+export const actions = {
+  default: async ({ cookies, request }) => {
+    const fd = await request.formData();
+    const cut = fd.getAll("cut") as unknown as number[];
+    const movie_id = fd.get("movie_id") as unknown as number;
+    joinClips(cut, movie_id);
+    redirect(303, `/movie/${movie_id}`);
+  },
+};
+
+function joinClips(cut: number[], movie_id: number) {
+  const filterSeg = (wordFn: (w: { start: number }) => boolean) => {
+    return (seg) => {
+      if (seg.words.every(wordFn)) {
+        return seg;
+      } else if (seg.words.some(wordFn)) {
+        const words = seg.words.filter(wordFn);
+        return {
+          text: seg.text,
+          words,
+          start: Math.min(...words.map((w) => w.start)),
+          end: Math.max(...words.map((w) => w.end)),
+        };
+      } else {
+        return undefined;
+      }
+    };
+  };
+  const clips = db
+    .prepare("select id,segments from clips where movie_id = ? order by id")
+    .all(movie_id)
+    .map((s: any, index) => {
+      console.assert(s.id == index);
+      const segs = JSON.parse(s.segments);
+      segs.forEach((s) => delete s.clip_id);
+      return segs;
+    });
+
+  cut.forEach((time, index) => {
+    clips[index] = clips[index]
+      .map(filterSeg((word: any) => word.start <= time))
+      .filter((s) => s);
+    clips[index + 1] = clips[index + 1]
+      .map(filterSeg((word: any) => word.start > time))
+      .filter((s) => s);
+  });
+  const segments = clips.flatMap((c) => c);
+  console.log(segments.length);
+  db.prepare("update movies set segments= ? where id = ?").run(
+    JSON.stringify(segments),
+    movie_id,
+  );
 }
 
 function calcSegments({

@@ -77,65 +77,71 @@
       };
     }),
   );
-  //   $effect(() => {
-  //     console.log(rOverlaps[0]);
-  //     console.table(rOverlaps[0].segPos);
-  //     console.table(rOverlaps[0].segWords);
-  //   });
+  $effect(() => {
+    // console.log(rOverlaps[0]);
+    // console.table(rOverlaps[0].segPos);
+    // console.table(rOverlaps[0].segWords);
+  });
 </script>
 
 <form>
   <div class="flex">
-    <label for="sec">{seconds}seconds:</label>
+    <label class="whitespace-nowrap" for="sec">Showing {seconds}seconds:</label>
     <input type="range" id="sec" min="5" max="20" bind:value={seconds} />
   </div>
 </form>
 
-<form class="w-full">
+<form class="w-full" method="post">
+  <input hidden name="movie_id" value={movie.id} />
   {#each rOverlaps as ol}
     <div>
       <input
         type="range"
-        id="cutAt_0"
-        name="cutAt_0"
+        name="cut"
         min={ol.start}
         max={ol.end}
         step="any"
         bind:value={cut[ol.index]}
       />
-      {#snippet timeline(segs, words, index)}
-        <div
-          class="bg-blue-100 relative text-xs h-10 border border-y-1 border-blue-600"
-        >
-          <div
-            class="absolute h-10 border-l-1 border border-black"
-            style="left:50%;"
-          ></div>
-          {#each segs as w}
-            <span
-              class="absolute bg-blue-400 h-8 my-1 z-0 border border-white border-x-1"
-              style="left:{w.startPos}%;right:{100 - w.endPos}%;"
-            ></span>
-          {/each}
-          {#each words as w}
-            <span
-              class:text-slate-500={w.invalid}
-              class="absolute bg-blue-300 my-3 border-black border z-10"
-              style="left:{w.startPos}%;right:{100 - w.endPos}%;"
-              >{w.word}{w.sep}</span
-            >
-          {/each}
-          <span
-            class="absolute z-20 bg-white border-r-[1px] border-b-[1px] pr-1 border-black font-bold"
-            style="left:0%">{index}</span
-          >
-        </div>
-      {/snippet}
       {@render timeline(ol.segPos, ol.segWords, ol.index)}
       {@render timeline(ol.nxtPos, ol.nxtWords, ol.index + 1)}
     </div>
   {/each}
+  <button
+    type="submit"
+    class="text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2"
+    >Join Clips</button
+  >
 </form>
+
+{#snippet timeline(segs: any, words: any, index: number)}
+  <div
+    class="bg-blue-100 relative text-xs h-10 border border-y-1 border-blue-600"
+  >
+    <div
+      class="absolute h-10 border-l-1 border border-black"
+      style="left:50%;"
+    ></div>
+    {#each segs as w}
+      <span
+        class="absolute bg-blue-400 h-8 my-1 z-0 border border-white border-x-1"
+        style="left:{w.startPos}%;right:{100 - w.endPos}%;"
+      ></span>
+    {/each}
+    {#each words as w}
+      <span
+        class:text-slate-500={w.invalid}
+        class="absolute bg-blue-300 my-3 border-black border z-10"
+        style="left:{w.startPos}%;right:{100 - w.endPos}%;"
+        >{w.word}{w.sep}</span
+      >
+    {/each}
+    <span
+      class="absolute z-20 bg-white border-r-[1px] border-b-[1px] pr-1 border-black font-bold"
+      style="left:0%">{index}</span
+    >
+  </div>
+{/snippet}
 
 <style>
   input {
