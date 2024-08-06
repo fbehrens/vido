@@ -4,34 +4,34 @@
 
   let { data } = $props();
   let { files } = data;
-  let fltr = $state("");
-  let filtrd = $derived(files.filter((e: any) => e.filename.includes(fltr)));
+  let searchString = $state("");
+  let selected = $derived(
+    files.filter((e: any) =>
+      e.filename.toLowerCase().includes(searchString.toLowerCase()),
+    ),
+  );
 </script>
 
 <main>
   <div class="relative overflow-x-auto">
-    <table
-      class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-    >
-      <thead
-        class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-      >
+    <table class="table-auto">
+      <thead class="">
         <tr>
-          <th scope="col" class="px-6 py-3">
-            Filename <br /><input class="w-full" bind:value={fltr} /></th
+          <th scope="col" class="">
+            Filename <br /><input
+              class="w-full"
+              bind:value={searchString}
+            /></th
           >
-          <th scope="col" class="px-6 py-3"> size </th>
-          <th scope="col" class="px-6 py-3"> id </th>
-          <th scope="col" class="px-6 py-3"> duration </th>
+          <th scope="col" class="align-top"> size </th>
+          <th scope="col" class="align-top"> id </th>
+          <th scope="col" class="align-top"> duration </th>
         </tr>
       </thead>
       <tbody>
-        {#each filtrd as f}
-          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-            <th
-              scope="row"
-              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-            >
+        {#each selected as f}
+          <tr>
+            <td>
               {#if f.id}
                 <a href="movie/{f.id}{f.create ? '/create' : ''}"
                   >{f.filename}</a
@@ -39,9 +39,9 @@
               {:else}
                 {f.filename}
               {/if}
-            </th>
-            <td class="px-6 py-4"> {f.size} </td>
-            <td class="px-6 py-4">
+            </td>
+            <td> {f.size} </td>
+            <td>
               {#if f.id}
                 {f.id}
                 <button
@@ -74,7 +74,7 @@
                   }}>create</button
                 >{/if}
             </td>
-            <td class="px-6 py-4"> {f.duration} </td>
+            <td class=""> {f.duration} </td>
           </tr>
         {/each}
       </tbody>
