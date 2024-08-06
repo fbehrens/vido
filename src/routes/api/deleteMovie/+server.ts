@@ -4,9 +4,7 @@ export async function POST({ request, cookies }) {
   const { id } = await request.json();
 
   const result = {
-    words: db.prepare(`delete from words where movie_id= ?`).run(id).changes,
-    segments: db.prepare(`delete from segments where movie_id= ?`).run(id)
-      .changes,
+    movie: db.prepare(`delete from movies where id= ?`).run(id).changes,
     clips: db.prepare(`delete from clips where movie_id= ?`).run(id).changes,
   };
   return json(result);

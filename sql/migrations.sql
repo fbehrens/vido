@@ -33,5 +33,7 @@ alter table clips add column transcript TEXT;
 --16
 alter table clips add column segments TEXT;
 alter table movies add column segments TEXT;
-
-
+--17
+drop view segments_v;
+drop table segments;
+drop table words;

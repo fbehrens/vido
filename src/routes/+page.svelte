@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import Icon from "$lib/components/Icon.svelte";
 
   let { data } = $props();
   let { files } = data;
@@ -41,7 +42,22 @@
             </th>
             <td class="px-6 py-4"> {f.size} </td>
             <td class="px-6 py-4">
-              {#if f.id}{f.id}{:else}<button
+              {#if f.id}
+                {f.id}
+                <button
+                  onclick={async () => {
+                    const response = await fetch("/api/deleteMovie", {
+                      method: "POST",
+                      body: JSON.stringify({ id: f.id }),
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                    });
+                    if (response.ok) {
+                    }
+                  }}><Icon name="delete" /></button
+                >
+              {:else}<button
                   onclick={async () => {
                     const response = await fetch("/api/createMovie", {
                       method: "POST",
@@ -53,7 +69,7 @@
                     if (response.ok) {
                       const { id } = await response.json();
                       console.log({ id });
-                      goto(`movie/${id}`);
+                      goto(`movie/${id}/create`);
                     }
                   }}>create</button
                 >{/if}

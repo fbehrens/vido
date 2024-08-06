@@ -5,16 +5,14 @@
   let {
     segments,
     time = $bindable(),
-    apiDeleteSegment,
   }: {
     segments: Segment[];
     time: number;
-    apiDeleteSegment: any;
   } = $props();
 </script>
 
 <div class="border border-green-300">
   {#each segments as s}
-    <SegmentRow {...s} bind:time {apiDeleteSegment}></SegmentRow>
+    <SegmentRow {...s} bind:time></SegmentRow>
   {/each}
 </div>
