@@ -52,14 +52,14 @@ export async function load({ params }) {
   }
   const toTranscribe = clips.filter((c) => !c.transcript);
   if (toTranscribe.length) {
-    await toTranscribe.forEach(async (c) => {
+    for (const c of toTranscribe) {
       console.log({ clip_id: c.id, action: `call whisper` });
       const t = await transcribe(mp3Path(movie, c.id));
       const transcript = JSON.stringify(t);
       db.prepare(
         `UPDATE clips set transcript = @transcript where movie_id = @id and id= @clip_id`,
       ).run({ transcript, id, clip_id: c.id });
-    });
+    }
     clips = getClips();
   }
 
