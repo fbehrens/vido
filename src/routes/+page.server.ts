@@ -30,7 +30,7 @@ function getAllFiles(dirPath: string, arrayOfFiles: MyFile[] = []): MyFile[] {
 
 export async function load({}) {
   const files = getAllFiles(dir).filter((f) =>
-    /\.(mov|mp4)$/i.test(f.filename),
+    /\.(mov|mp4|mkv)$/i.test(f.filename),
   );
   const movies = db
     .prepare(
