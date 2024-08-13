@@ -1,9 +1,5 @@
 import { db } from "$lib/db";
-import type { Clip, Movie, Segment, Word } from "$lib/types.js";
-import { getFileDir } from "$lib/util";
-import { extractMp3 } from "$lib/ffmpeg.js";
-import { transcribe } from "$lib/whisper";
-import * as fs from "fs";
+import type { Movie } from "$lib/types.js";
 
 export async function load({ params }) {
   console.log({ serverload: params });
@@ -12,8 +8,4 @@ export async function load({ params }) {
     .prepare("Select * FROM movies where id = ?")
     .get(id) as Movie;
   return { movie };
-}
-
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }
