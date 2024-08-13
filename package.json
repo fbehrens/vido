@@ -32,7 +32,7 @@
     "vitest": "^2.0.0"
   },
   "dependencies": {
-    "@types/node": "^20.14.9",
+    "@types/node": "^22.1",
     "better-sqlite3": "^11.1.2",
     "flowbite": "^2.4.1",
     "flowbite-svelte": "^0.46.15",
