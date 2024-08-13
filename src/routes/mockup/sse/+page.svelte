@@ -1,16 +1,18 @@
-<script>
-  import { onMount } from "svelte";
-
-  /** @type {string} */
-  let server_time;
+<script lang="ts">
+  let datas: string[] = $state([]);
 
   function subscribe() {
     const sse = new EventSource("/mockup/sse");
-    sse.onmessage = (e) => (server_time = e.data);
+    sse.onmessage = (e) => {
+      datas.push(e.data as string);
+    };
     return () => sse.close();
   }
-
-  onMount(subscribe);
+  $effect(() => {
+    return subscribe();
+  });
 </script>
 
-<pre>{server_time}</pre>
+{#each datas as data}
+  <pre>{data}</pre>
+{/each}
