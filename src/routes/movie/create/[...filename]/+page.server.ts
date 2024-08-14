@@ -1,5 +1,5 @@
 import { db } from "$lib/db";
-import { extractMp3 } from "$lib/ffmpeg";
+import { extractMp3, getDuration } from "$lib/ffmpeg";
 import type { Clip, Movie, Segment, Word } from "$lib/types";
 import { getFileDir } from "$lib/util";
 import { transcribe } from "$lib/whisper";
@@ -12,18 +12,25 @@ export async function load({ params }) {
     const fileDir = getFileDir(filename);
     return `${fileDir}/mp3/${clip_id}.mp3`;
   };
-  const getClips = () =>
-    db.prepare("select * from clips where movie_id = ?").all(id) as Clip[];
-  const { id } = params;
+  let { filename } = params;
+  let row = db.prepare("select id from movies where filename= ?").get(filename);
+  if (!row)
+    db.prepare(
+      "INSERT OR IGNORE INTO movies (filename,duration) VALUES (?,?)",
+    ).run(filename, await getDuration(`static/${filename}`));
+  const { id } = db
+    .prepare("select id from movies where filename=?")
+    .get(filename) as { id: number };
+
   const movie = db
     .prepare("select * from movies where id = ?")
     .get(id) as Movie;
+  const getClips = () =>
+    db.prepare("select * from clips where movie_id = ?").all(id) as Clip[];
   let clips = getClips();
-  console.log(movie);
   if (clips.length == 0) {
     console.log("create clips");
     const [maxClipLength, overlap] = [1450, 40];
-
     let clip_id = 0;
     let start = 0;
     let end: number;
