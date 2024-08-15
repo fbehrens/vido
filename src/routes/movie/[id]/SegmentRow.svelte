@@ -8,14 +8,17 @@
     start,
     end,
     text,
+    words,
   }: {
     time: number;
     start: number;
     end: number;
     text: string;
+    words: Word[];
   } = $props();
 
   let isCurrent = $derived(time >= start && time <= end);
+  let wordCurrent = (w: any) => isCurrent && time >= w.start && time <= w.end;
 </script>
 
 <div class="flex">
@@ -24,7 +27,12 @@
     {start.toFixed(2)}
   </button>
   <div class="w-[7ch]">{end.toFixed(2)}</div>
-  <div class="flex-1 {isCurrent ? 'bg-green-200' : ''}">
-    {text}
+  <div class="flex-1 {isCurrent ? 'bg-green-100' : ''}">
+    {#each words as word}
+      <span class={wordCurrent(word) ? "bg-green-200" : ""}
+        >{word.word}{word.sep}&nbsp;</span
+      >
+    {/each}
+    <!-- {text} -->
   </div>
 </div>

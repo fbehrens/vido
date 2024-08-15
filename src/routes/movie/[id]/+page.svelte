@@ -14,8 +14,12 @@
   };
   const { data } = $props();
   let movie: Movie = data.movie;
-  let segments: Segment[] = $state(JSON.parse(movie.segments));
+  let segments: Segment[] = JSON.parse(movie.segments);
   let time = $state(0);
+  let currentSegments = $derived(
+    segments.filter((s) => s.start > time - 10 && s.end < time + 20),
+  );
+  let playbackRate = $state(1);
   let paused = $state(true);
   let video: HTMLVideoElement;
 </script>
@@ -33,6 +37,7 @@
       bind:this={video}
       bind:paused
       bind:currentTime={time}
+      defaultplaybackrate="0.5"
       src={"/" + movie.filename}
       controls
     >
@@ -40,9 +45,10 @@
   </div>
   <div>
     <p>time={time}</p>
+    <p>playbackRate={playbackRate}</p>
   </div>
 </div>
-{#each segments as s}
+{#each currentSegments as s}
   <SegmentRow {...s} bind:time></SegmentRow>
 {/each}
 

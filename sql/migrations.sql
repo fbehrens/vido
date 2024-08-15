@@ -37,3 +37,7 @@ alter table movies add column segments TEXT;
 drop view segments_v;
 drop table segments;
 drop table words;
+--18
+DROP VIEW clips_v;
+CREATE VIEW clips_v AS
+select movie_id,c.id,c.segments,m.filename as m_filename from clips as c join movies as m on c.movie_id = m.id;

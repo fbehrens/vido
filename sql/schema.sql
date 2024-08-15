@@ -16,3 +16,6 @@ CREATE TABLE youtube (
   id TEXT PRIMARY KEY ,
   info TEXT
 , lang TEXT, json3 TEXT);
+CREATE VIEW clips_v AS
+select movie_id,c.id,c.segments,m.filename as m_filename from clips as c join movies as m on c.movie_id = m.id
+/* clips_v(movie_id,id,segments,m_filename) */;

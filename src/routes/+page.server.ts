@@ -1,5 +1,4 @@
-import { readdir, stat } from "fs/promises";
-import { Stats, readdirSync, statSync } from "fs";
+import { readdirSync, statSync } from "fs";
 import { join } from "path";
 import { db } from "$lib/db";
 import type { Movie } from "$lib/types";
@@ -37,10 +36,17 @@ export async function load({}) {
       "Select filename,id,duration,(CASE WHEN segments IS NULL THEN 1 ELSE 0 END)'create' from movies",
     )
     .all() as Movie[];
+
+  const clips = db.prepare("Select movie_id,id from clips_v").all();
   const fns = [...movies, ...files].map(({ filename }) => filename);
-  const join = [...new Set(fns)].map((fn) => ({
-    ...files.find((f) => f.filename === fn),
-    ...movies.find((f) => f.filename === fn),
-  }));
+  const join = [...new Set(fns)]
+    .map((fn) => ({
+      ...files.find((f) => f.filename === fn),
+      ...movies.find((f) => f.filename === fn),
+    }))
+    .map((m) => ({
+      ...m,
+      clips: clips.filter((c: any) => c.movie_id === m.id).map((c) => c.id),
+    }));
   return { files: join };
 }

@@ -1,7 +1,5 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
   import Icon from "$lib/components/Icon.svelte";
-
   let { data } = $props();
   let { files } = data;
   let searchString = $state("");
@@ -27,6 +25,7 @@
             <th scope="col" class="align-top"> size </th>
             <th scope="col" class="align-top"> id </th>
             <th scope="col" class="align-top"> duration </th>
+            <th scope="col" class="align-top"> clips </th>
           </tr>
         </thead>
         <tbody>
@@ -59,6 +58,11 @@
                 {/if}
               </td>
               <td class=""> {f.duration} </td>
+              <td
+                >{#each f.clips as c}
+                  <a href="/movie/{f.id}/{c}">{c}</a>&nbsp;
+                {/each}
+              </td>
             </tr>
           {/each}
         </tbody>

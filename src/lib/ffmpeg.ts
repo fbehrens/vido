@@ -1,5 +1,5 @@
 import { json } from "@sveltejs/kit";
-import { makeDirFor } from "$lib/util";
+import { makeDirFor } from "$lib/util/util";
 import { exec } from "./util/util";
 
 export async function getDuration(videoPath: string): Promise<number> {
