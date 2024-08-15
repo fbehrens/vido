@@ -2,6 +2,7 @@
   import type { Segment, Movie } from "$lib/types.js";
   import Icon from "$lib/components/Icon.svelte";
   import SegmentRow from "./SegmentRow.svelte";
+  import Srt from "$lib/components/Srt.svelte";
 
   const togglePaused = () => {
     if (paused) {
@@ -30,6 +31,7 @@
   </a>
   <input class="bg-gray-200" readonly name="filename" value={movie.filename} />
 </div>
+<Srt id={movie.id} />
 <div class="grid grid-cols-[30%,1fr]">
   <div class="p-1">
     <!-- svelte-ignore a11y_media_has_caption -->

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Srt from "$lib/components/Srt.svelte";
+
   const { data } = $props();
   const { filename, segments, id, movie_id } = data;
   let currentTime = $state(0);
@@ -8,10 +10,7 @@
 </script>
 
 {filename} <br />
-download srt
-<a href="/api/srt?id={movie_id}&clip_id={id}&unit=word">word</a>&nbsp;<a
-  href="/api/srt?id={movie_id}&clip_id={id}&unit=segment">segment</a
->
+<Srt id={movie_id} clip_id={id} />
 <audio controls bind:currentTime>
   <source src={filename} type="audio/mpeg" />
 </audio>

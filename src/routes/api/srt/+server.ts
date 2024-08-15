@@ -7,7 +7,7 @@ export async function GET(event: RequestEvent) {
   const clip_id = event.url.searchParams.get("clip_id");
   const unit = event.url.searchParams.get("unit") as Unit;
   //   const filename = clip_id ? `${id}_${clip_id}.srt` : `${id}.srt`;
-  const filename = `${id}${clip_id === null ? "" : `_${clip_id}`}_${unit}.srt`;
+  const filename = `${id}_${clip_id}_${unit}.srt`;
   const { segments } = (
     clip_id
       ? db
@@ -28,7 +28,6 @@ export async function GET(event: RequestEvent) {
       : segs.map(({ start, end, text }) => ({ start, end, text }));
   //   return json({ filename, ts: timestamps[0] });
   const srt = createSrt(timestamps);
-  console.log(srt);
   const headers = new Headers();
   headers.append("Content-Type", "text/plain");
   headers.append("Content-Disposition", `attachment; filename="${filename}"`);
