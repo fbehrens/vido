@@ -39,7 +39,7 @@
       bind:this={video}
       bind:paused
       bind:currentTime={time}
-      defaultplaybackrate="0.5"
+      bind:playbackRate
       src={"/" + movie.filename}
       controls
     >
@@ -47,7 +47,15 @@
   </div>
   <div>
     <p>time={time}</p>
-    <p>playbackRate={playbackRate}</p>
+    <label for="playbackrate">playbackRate({playbackRate})</label>
+    <input
+      type="range"
+      id="playbackRate"
+      min="0.1"
+      max="2"
+      step="0.01"
+      bind:value={playbackRate}
+    />
   </div>
 </div>
 {#each currentSegments as s}
