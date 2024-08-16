@@ -1,5 +1,5 @@
 import { db } from "$lib/db";
-import { extractMp3, getDuration } from "$lib/ffmpeg";
+import { extractMp3, getDuration, getFramerate } from "$lib/ffmpeg";
 import type { Clip, Movie, Segment, Word } from "$lib/types";
 import { mp3Path1 } from "$lib/util/util";
 import { transcribe } from "$lib/whisper";
@@ -11,8 +11,12 @@ export async function load({ params }) {
   let row = db.prepare("select id from movies where filename= ?").get(filename);
   if (!row)
     db.prepare(
-      "INSERT OR IGNORE INTO movies (filename,duration) VALUES (?,?)",
-    ).run(filename, await getDuration(`static/${filename}`));
+      "INSERT OR IGNORE INTO movies (filename,duration,framerate) VALUES (?,?)",
+    ).run(
+      filename,
+      await getDuration(`static/${filename}`),
+      await getFramerate(`static/${filename}`),
+    );
   const { id } = db
     .prepare("select id from movies where filename=?")
     .get(filename) as { id: number };

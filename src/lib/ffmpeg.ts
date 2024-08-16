@@ -9,6 +9,17 @@ export async function getDuration(videoPath: string): Promise<number> {
   return Number(info.out);
 }
 
+export async function getFramerate(videoPath: string): Promise<number> {
+  let command = `ffprobe -v 0 -select_streams v:0 -show_entries stream=r_frame_rate -of default=noprint_wrappers=1:nokey=1 "${videoPath}"`;
+  const info = await exec(command);
+  // 30000/1001\n
+  const m = info.out.match(/(\d+)\/(\d+)\n/);
+  if (!m) {
+    throw `${info.out} does not match pattern`;
+  }
+  return Number(m[1]) / Number(m[2]);
+}
+
 export async function extractMp3(
   filename: string,
   start: number,

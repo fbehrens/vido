@@ -41,3 +41,5 @@ drop table words;
 DROP VIEW clips_v;
 CREATE VIEW clips_v AS
 select movie_id,c.id,c.segments,m.filename as m_filename from clips as c join movies as m on c.movie_id = m.id;
+--19
+alter table movies add column framerate REAL;
