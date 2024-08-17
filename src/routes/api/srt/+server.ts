@@ -2,12 +2,13 @@ import { db } from "$lib/db";
 import type { Segment } from "$lib/types";
 import { json, type RequestEvent } from "@sveltejs/kit";
 type Unit = "word" | "segment";
+type CaptionTyp = "srt" | "vtt";
 export async function GET(event: RequestEvent) {
   const id = event.url.searchParams.get("id");
   const clip_id = event.url.searchParams.get("clip_id");
   const unit = event.url.searchParams.get("unit") as Unit;
-  //   const filename = clip_id ? `${id}_${clip_id}.srt` : `${id}.srt`;
-  const filename = `${id}_${clip_id}_${unit}.srt`;
+  const typ = event.url.searchParams.get("typ") as CaptionTyp;
+  const filename = `${id}_${clip_id}_${unit}.${typ}`;
   const { segments } = (
     clip_id
       ? db
@@ -27,7 +28,7 @@ export async function GET(event: RequestEvent) {
           }))
       : segs.map(({ start, end, text }) => ({ start, end, text }));
   //   return json({ filename, ts: timestamps[0] });
-  const srt = createSrt(timestamps);
+  const srt = createCaption(typ, timestamps);
   const headers = new Headers();
   headers.append("Content-Type", "text/plain");
   headers.append("Content-Disposition", `attachment; filename="${filename}"`);
@@ -43,8 +44,18 @@ interface Subtitle {
   text: string;
 }
 
-function createSrt(timestamps: Subtitle[]): string {
-  let srtContent = "";
+function createCaption(typ: CaptionTyp, timestamps: Subtitle[]): string {
+  let [srtContent, fractionChar] =
+    typ === "vtt" ? ["WEBVTT\n\n", "."] : ["", ","];
+
+  function formatTime(seconds: number): string {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    const milliseconds = Math.floor((seconds % 1) * 1000);
+    return `${padZero(hours)}:${padZero(minutes)}:${padZero(remainingSeconds)}${fractionChar}${padZero(milliseconds, 3)}`;
+  }
+
   timestamps.forEach((subtitle, index) => {
     const sequenceNumber = index + 1;
     const startTime = formatTime(subtitle.start);
@@ -55,15 +66,6 @@ function createSrt(timestamps: Subtitle[]): string {
     srtContent += `${subtitle.text}\n\n`;
   });
   return srtContent;
-}
-
-function formatTime(seconds: number): string {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const remainingSeconds = Math.floor(seconds % 60);
-  const milliseconds = Math.floor((seconds % 1) * 1000);
-
-  return `${padZero(hours)}:${padZero(minutes)}:${padZero(remainingSeconds)},${padZero(milliseconds, 3)}`;
 }
 
 function padZero(num: number, length: number = 2): string {

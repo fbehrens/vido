@@ -1,20 +1,28 @@
 <script lang="ts">
-  let src = "/mov/zoom/24-07-03";
 </script>
 
-<video width="640" height="360" controls>
-  <source src="{src}.mp4" type="video/mp4" />
+<video autoplay width="640" height="360" controls>
+  <source src="/mov/test.mov" type="video/mp4" />
   <track
-    src="{src}.test.vtt"
+    default
+    src="/mov/test.vtt"
     kind="captions"
     srclang="test"
     label="testlabel"
   />
-  <track src="{src}.vtt" kind="subtitles" srclang="de" label="Deutsch" />
+  <track
+    src="/mov/chapters.vtt"
+    kind="captions"
+    srclang="de"
+    label="chapters"
+  />
 </video>
 
 <style>
+  ::cue {
+  }
   ::cue(v[voice="Test"]) {
+    font-size: 0.5em;
     color: #fff;
     background: #0095dd;
     outline: solid;
