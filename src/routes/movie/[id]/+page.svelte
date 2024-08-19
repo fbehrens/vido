@@ -15,14 +15,27 @@
   };
   const { data } = $props();
   let movie: Movie = data.movie;
-  let segments: Segment[] = JSON.parse(movie.segments);
+  const segments: Segment[] = JSON.parse(movie.segments);
+  const _segments_ = [
+    { start: -1, end: 0 },
+    ...segments,
+    { start: movie.duration, end: movie.duration + 1 },
+  ];
   let time = $state(0);
-  let currentSegments = $derived(
-    segments.filter((s) => s.start > time - 10 && s.end < time + 20),
-  );
+  let current = $state<number>(0);
+
   let playbackRate = $state(1);
   let paused = $state(true);
   let video: HTMLVideoElement;
+  $effect(() => {
+    while (time >= _segments_[current + 1].end) {
+      current++;
+    }
+    while (time < _segments_[current].end) {
+      current--;
+    }
+  });
+  let active = $derived(time >= segments[current].start);
 </script>
 
 <div class="flex">
@@ -58,8 +71,13 @@
     />
   </div>
 </div>
-{#each currentSegments as s}
-  <SegmentRow {...s} bind:time></SegmentRow>
+
+{#each segments as s, i}
+  {#if i == current && active}
+    <SegmentRow {...s} bind:time></SegmentRow>
+  {:else}
+    <div>{s.text}</div>
+  {/if}
 {/each}
 
 <style>
