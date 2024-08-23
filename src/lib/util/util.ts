@@ -22,7 +22,7 @@ export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export const mp3Path1 = (filename: string, clip_id: number): string => {
+export const mp3Path = (filename: string, clip_id: number): string => {
   const fileDir = getFileDir(filename);
   return `${fileDir}/mp3/${clip_id}.mp3`;
 };

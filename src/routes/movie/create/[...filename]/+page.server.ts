@@ -1,7 +1,7 @@
 import { db } from "$lib/db";
 import { extractMp3, getDuration, getFramerate } from "$lib/ffmpeg";
 import type { Clip, Movie, Segment, Word } from "$lib/types";
-import { mp3Path1 } from "$lib/util/util";
+import { mp3Path } from "$lib/util/util";
 import { transcribe } from "$lib/whisper";
 import { redirect } from "@sveltejs/kit";
 import * as fs from "fs";
@@ -11,7 +11,7 @@ export async function load({ params }) {
   let row = db.prepare("select id from movies where filename= ?").get(filename);
   if (!row)
     db.prepare(
-      "INSERT OR IGNORE INTO movies (filename,duration,framerate) VALUES (?,?)",
+      "INSERT OR IGNORE INTO movies (filename,duration,framerate) VALUES (?,?,?)",
     ).run(
       filename,
       await getDuration(`static/${filename}`),
@@ -35,7 +35,7 @@ export async function load({ params }) {
     let end: number;
     while (start < movie.duration) {
       end = start + maxClipLength + overlap;
-      const mp3file = "static/" + mp3Path1(movie.filename, clip_id);
+      const mp3file = "static/" + mp3Path(movie.filename, clip_id);
       await extractMp3(`static/${movie.filename}`, start, end, mp3file);
       const fileSize = fs.statSync(mp3file).size;
       db.prepare(
@@ -56,7 +56,7 @@ export async function load({ params }) {
   if (toTranscribe.length) {
     for (const c of toTranscribe) {
       console.log({ clip_id: c.id, action: `call whisper` });
-      const t = await transcribe("static/" + mp3Path1(movie.filename, c.id));
+      const t = await transcribe("static/" + mp3Path(movie.filename, c.id));
       const transcript = JSON.stringify(t);
       db.prepare(
         `UPDATE clips set transcript = @transcript where movie_id = @id and id= @clip_id`,

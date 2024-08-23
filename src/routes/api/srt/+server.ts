@@ -45,6 +45,7 @@ interface Subtitle {
 }
 
 function createCaption(typ: CaptionTyp, timestamps: Subtitle[]): string {
+  console.log(timestamps.slice(0, 9));
   let [srtContent, fractionChar] =
     typ === "vtt" ? ["WEBVTT\n\n", "."] : ["", ","];
 

@@ -1,8 +1,9 @@
 <script lang="ts">
-  import type { Segment, Movie } from "$lib/types.js";
+  import type { Segment, Movie, Word } from "$lib/types.js";
   import Icon from "$lib/components/Icon.svelte";
   import SegmentRow from "./SegmentRow.svelte";
   import Srt from "$lib/components/Srt.svelte";
+  import { onMount } from "svelte";
 
   const togglePaused = () => {
     if (paused) {
@@ -16,6 +17,7 @@
   const { data } = $props();
   let movie: Movie = data.movie;
   const segments: Segment[] = JSON.parse(movie.segments);
+  const words: Word[] = segments.flatMap((s) => s.words);
   const _segments_ = [
     { start: -1, end: 0 },
     ...segments,
@@ -34,6 +36,13 @@
     while (time < _segments_[current].end) {
       current--;
     }
+  });
+  onMount(() => {
+    let track = video.addTextTrack("captions", "Captions", "en");
+    track.mode = "showing";
+    words.forEach((w) => {
+      track.addCue(new VTTCue(w.start, w.end, w.word + w.sep));
+    });
   });
   let active = $derived(time >= segments[current].start);
 </script>
@@ -76,7 +85,7 @@
   {#if i == current && active}
     <SegmentRow {...s} bind:time></SegmentRow>
   {:else}
-    <div>{s.text}</div>
+    <div><button onclick={() => (time = s.start)}>{s.text}</button></div>
   {/if}
 {/each}
 

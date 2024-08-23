@@ -1,6 +1,6 @@
 import { db } from "$lib/db";
 import type { Segment } from "$lib/types.js";
-import { mp3Path1 } from "$lib/util/util";
+import { mp3Path } from "$lib/util/util";
 
 export function load({ params }) {
   const { id, clip_id } = params;
@@ -16,5 +16,5 @@ export function load({ params }) {
     ...clip1,
     segments: JSON.parse(clip1.segments) as Segment[],
   };
-  return { ...clip, filename: "/" + mp3Path1(clip.m_filename, clip.id) };
+  return { ...clip, filename: "/" + mp3Path(clip.m_filename, clip.id) };
 }

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
   import Icon from "$lib/components/Icon.svelte";
   let { data } = $props();
   let { files } = data;
@@ -43,7 +44,8 @@
                 {#if f.id}
                   {f.id}
                   <button
-                    onclick={async () => {
+                    onclick={async (e: MouseEvent) => {
+                      e.preventDefault();
                       const response = await fetch("/api/deleteMovie", {
                         method: "POST",
                         body: JSON.stringify({ id: f.id }),
@@ -52,9 +54,13 @@
                         },
                       });
                       if (response.ok) {
+                        console.log(await response.body);
+                        goto("/");
                       }
-                    }}><Icon name="delete" /></button
+                    }}
                   >
+                    <Icon name="delete" />
+                  </button>
                 {/if}
               </td>
               <td class=""> {f.duration} </td>
