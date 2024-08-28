@@ -14,7 +14,7 @@
   const textEvents = events.filter((e) => !e.aAppend);
   let current = $derived.by(() => {
     const i = textEvents.findIndex((e) => e.tStartMs + 100 > time * 1000);
-    return textEvents.slice(i ? i - 1 : i, i + 10);
+    return textEvents.slice(i ? i - 1 : i, i + 20);
   });
   const seek = (ms: number): void => player.seekTo(ms / 1000);
   //   assert();
@@ -37,11 +37,6 @@
     {title}<span class="text-xs">{time}</span>
     <YouTube bind:time bind:player videoId={id} />
   </div>
-  <div>
-    {#each current as te}
-      <TextEvent {seek} bind:time {...te} />
-    {/each}
-  </div>
 
   <div>
     <h3>Chapters</h3>
@@ -49,6 +44,11 @@
       <button onclick={() => seek(chapter.start_time * 1000)}
         >{chapter.title}</button
       ><br />
+    {/each}
+  </div>
+  <div class="h-80 overflow-y-scroll border border-gray-300 p-2">
+    {#each textEvents as te}
+      <TextEvent {seek} bind:time {...te} />
     {/each}
   </div>
 </div>
