@@ -40,9 +40,7 @@
 </script>
 
 <svelte:head>
-  <script
-    src="https://unpkg.com/imsc@1.1.0-beta.2/build/umd/imsc.all.min.js"
-  ></script>
+  <script src="https://unpkg.com/imsc@1.1.5/dist//imsc.all.min.js"></script>
 </svelte:head>
 <div id="videoContainer">
   <video
