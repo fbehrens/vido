@@ -1,7 +1,15 @@
 <script>
   import { onMount } from "svelte";
-
+  let imsc;
   onMount(async () => {
+    let imsc;
+    try {
+      // need readable-sream and alias in vite config
+      imsc = await import("imsc");
+    } catch (e) {
+      console.error("Error load imsc", e);
+    }
+    // console.log("after");
     const renderDiv = document.getElementById("render-div");
     const myVideo = document.getElementById("imscVideo");
     const myTrack = myVideo.textTracks[0];
@@ -11,7 +19,7 @@
     const text = await response.text();
     const imscDoc = imsc.fromXML(text);
     const timeEvents = imscDoc.getMediaTimeEvents();
-    console.log({ ttmlUrl, myTrack, text, timeEvents });
+    // console.log({ myVideo, ttmlUrl, myTrack, text, timeEvents });
     function clearSubFromScreen() {
       const subtitleActive = renderDiv.getElementsByTagName("div")[0];
       if (subtitleActive) {
@@ -24,7 +32,9 @@
       if (i < timeEvents.length - 1) {
         myCue = new VTTCue(timeEvents[i], timeEvents[i + 1], "");
       } else {
-        myCue = new VTTCue(timeEvents[i], myVideo.duration, "");
+        // console.log({ myVideo, duration: myVideo.duration });
+        myCue = new VTTCue(timeEvents[i], 30.1, "");
+        // hack video.duration is not ready yet
       }
       myCue.addEventListener("enter", function () {
         clearSubFromScreen();
@@ -39,9 +49,6 @@
   });
 </script>
 
-<svelte:head>
-  <script src="https://unpkg.com/imsc@1.1.5/dist//imsc.all.min.js"></script>
-</svelte:head>
 <div id="videoContainer">
   <video
     src="/ttml/coffee.mp4"

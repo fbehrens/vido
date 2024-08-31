@@ -39,7 +39,9 @@
     "better-sqlite3": "^11.2.1",
     "flowbite": "^2.5.1",
     "flowbite-svelte": "^0.46.15",
+    "imsc": "^1.1.5",
     "openai": "^4.57.0",
+    "readable-stream": "^4.5.2",
     "sqlite3": "^5.1.7"
   }
 }
