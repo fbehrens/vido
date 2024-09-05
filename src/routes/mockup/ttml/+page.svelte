@@ -1,6 +1,8 @@
 <script>
   import { onMount } from "svelte";
   let imsc;
+  let myVideo;
+  let renderDiv;
   onMount(async () => {
     let imsc;
     try {
@@ -9,9 +11,6 @@
     } catch (e) {
       console.error("Error load imsc", e);
     }
-    // console.log("after");
-    const renderDiv = document.getElementById("render-div");
-    const myVideo = document.getElementById("imscVideo");
     const myTrack = myVideo.textTracks[0];
     const ttmlUrl = myVideo.getElementsByTagName("track")[0].src;
     myTrack.mode = "hidden";
@@ -19,7 +18,6 @@
     const text = await response.text();
     const imscDoc = imsc.fromXML(text);
     const timeEvents = imscDoc.getMediaTimeEvents();
-    // console.log({ myVideo, ttmlUrl, myTrack, text, timeEvents });
     function clearSubFromScreen() {
       const subtitleActive = renderDiv.getElementsByTagName("div")[0];
       if (subtitleActive) {
@@ -32,17 +30,14 @@
       if (i < timeEvents.length - 1) {
         myCue = new VTTCue(timeEvents[i], timeEvents[i + 1], "");
       } else {
-        // console.log({ myVideo, duration: myVideo.duration });
         myCue = new VTTCue(timeEvents[i], 30.1, "");
         // hack video.duration is not ready yet
       }
       myCue.addEventListener("enter", function () {
         clearSubFromScreen();
         const myIsd = imsc.generateISD(imscDoc, this.startTime);
+        console.log({ myIsd });
         imsc.renderHTML(myIsd, renderDiv);
-      });
-      myCue.addEventListener("exit", function () {
-        clearSubFromScreen();
       });
       const r = myTrack.addCue(myCue);
     }
@@ -51,8 +46,8 @@
 
 <div id="videoContainer">
   <video
+    bind:this={myVideo}
     src="/ttml/coffee.mp4"
-    id="imscVideo"
     height="288px"
     width="512px"
     muted
@@ -67,7 +62,7 @@
     />
   </video>
 </div>
-<div id="render-div"></div>
+<div bind:this={renderDiv} id="render-div"></div>
 
 <style>
   #videoContainer {
