@@ -1,7 +1,6 @@
 import { createReadStream, createWriteStream, ReadStream } from "fs";
 import fs from "fs/promises";
 import * as lzma from "lzma-native";
-import * as readline from "readline";
 import { Readable } from "stream";
 
 const filmlisteUrl = "https://liste.mediathekview.de/Filmliste-akt.xz";
@@ -91,21 +90,63 @@ export function createReadable(str: string) {
   });
 }
 
-export function readFirstBytes(readStream: Readable, n: number) {
-  return new Promise((resolve, reject) => {
-    let chunk;
-    readStream.on("readable", function () {
-      chunk = readStream.read(n);
-      readStream.destroy();
-      resolve(chunk.toString());
-    });
-    readStream.on("error", (error) => {
-      reject(error);
-    });
-  });
-}
-
-export async function parseFilme() {
-  const fileStream = createReadStream(filmlisteJson, "utf8");
-  return readFirstBytes(fileStream, 1000);
+export async function parseFilme(path: string = filmlisteJson) {
+  let json = await fs.readFile(path, { encoding: "utf8" });
+  json = json.slice(1, -1);
+  const [_, liste, felder, ...filme] = json.split(/,?"(?:X|Filmliste)":/);
+  // ["Sender","Thema","Titel","Datum","Zeit","Dauer","Größe [MB]","Beschreibung","Url","Website","Url Untertitel","Url RTMP","Url Klein","Url RTMP Klein","Url HD","Url RTMP HD","DatumL","Url History","Geo","neu"]
+  let mapper = () => {
+    let sender = "",
+      thema = "";
+    return (line: string) => {
+      const [
+        s,
+        t,
+        titel,
+        datum,
+        zeit,
+        dauer,
+        mb,
+        beschreibung,
+        url,
+        website,
+        captions,
+        urlRtmp,
+        urlLD,
+        urlRtmpLD,
+        urlHD,
+        urlRtmpHD,
+        datumL,
+        urlHistory,
+        geo,
+        neu,
+      ] = JSON.parse(line);
+      sender = s || sender;
+      thema = t || thema;
+      return {
+        sender,
+        thema,
+        titel,
+        datum,
+        zeit,
+        dauer,
+        mb,
+        beschreibung,
+        url,
+        website,
+        captions,
+        urlRtmp,
+        urlLD,
+        urlRtmpLD,
+        urlHD,
+        urlRtmpHD,
+        datumL,
+        urlHistory,
+        geo,
+        neu,
+      };
+    };
+  };
+  console.log(felder);
+  return filme.map(mapper());
 }

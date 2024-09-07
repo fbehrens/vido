@@ -4,8 +4,6 @@ import {
   updateFilmliste,
   firstNFile,
   parseFilme,
-  createReadable,
-  readFirstBytes,
 } from "./mediathek";
 describe("mediathek", () => {
   test.skip("fresh filmliste is downloaded", async () => {
@@ -20,15 +18,13 @@ describe("mediathek", () => {
     }
   }, 30000);
 
-  test("parseFilme", async () => {
-    const filme = await parseFilme();
+  test.skip("parseFilmetest", async () => {
+    const filme = await parseFilme("static/test/filme.json");
     console.log(filme);
   });
-  test("readChunks", async () => {
-    const readStream = createReadable(
-      "Hallo Welt lorem Eiusmod non aliqua elit aute eiusmod duis velit duis.",
-    );
-    const r = await readFirstBytes(readStream, 3);
-    console.log(r);
+  test("parseFilme", async () => {
+    const filme = await parseFilme();
+    console.log(filme.length);
+    console.log(filme[1111]);
   });
 });
