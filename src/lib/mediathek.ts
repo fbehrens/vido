@@ -1,6 +1,8 @@
-import { createReadStream } from "fs";
+import { createReadStream, createWriteStream, ReadStream } from "fs";
 import fs from "fs/promises";
 import * as lzma from "lzma-native";
+import * as readline from "readline";
+import { Readable } from "stream";
 
 const filmlisteUrl = "https://liste.mediathekview.de/Filmliste-akt.xz";
 const filmlistePath = "static/mediathek/filme";
@@ -62,26 +64,48 @@ export async function updateFilmliste(checkFirstBytes: number = 30) {
     ) === 0;
   if (!equal) {
     await downloadFilmliste();
+    await decompressFilmeJson();
   }
   return !equal;
 }
 
-const decompressFilme = (): Promise<Buffer> => {
+const decompressFilmeJson = (): Promise<void> => {
   return new Promise((resolve, reject) => {
     const decompressor = lzma.createDecompressor();
     const input = createReadStream(filmlistePath);
-    const chunks: Buffer[] = [];
-
+    const output = createWriteStream(filmlisteJson);
     input
       .pipe(decompressor)
-      .on("data", (chunk: Buffer) => chunks.push(chunk))
-      .on("end", () => resolve(Buffer.concat(chunks)))
+      .pipe(output)
+      .on("end", () => resolve())
       .on("error", reject);
   });
 };
 
+export function createReadable(str: string) {
+  return new Readable({
+    read() {
+      this.push(str);
+      this.push(null);
+    },
+  });
+}
+
+export function readFirstBytes(readStream: Readable, n: number) {
+  return new Promise((resolve, reject) => {
+    let chunk;
+    readStream.on("readable", function () {
+      chunk = readStream.read(n);
+      readStream.destroy();
+      resolve(chunk.toString());
+    });
+    readStream.on("error", (error) => {
+      reject(error);
+    });
+  });
+}
+
 export async function parseFilme() {
-  const buffer = await decompressFilme();
-  const text = buffer.toString("utf-8");
-  return text.slice(0, 300);
+  const fileStream = createReadStream(filmlisteJson, "utf8");
+  return readFirstBytes(fileStream, 1000);
 }
