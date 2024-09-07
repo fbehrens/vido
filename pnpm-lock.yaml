@@ -23,6 +23,9 @@ importers:
       imsc:
         specifier: ^1.1.5
         version: 1.1.5
+      lzma-native:
+        specifier: ^8.0.6
+        version: 8.0.6
       openai:
         specifier: ^4.57.0
         version: 4.57.0(encoding@0.1.13)
@@ -48,6 +51,9 @@ importers:
       '@types/fluent-ffmpeg':
         specifier: ^2.1.26
         version: 2.1.26
+      '@types/lzma-native':
+        specifier: ^4.0.4
+        version: 4.0.4
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.4.41)
@@ -439,6 +445,9 @@ packages:
 
   '@types/fluent-ffmpeg@2.1.26':
     resolution: {integrity: sha512-0JVF3wdQG+pN0ImwWD0bNgJiKF2OHg/7CDBHw5UIbRTvlnkgGHK6V5doE54ltvhud4o31/dEiHm23CAlxFiUQg==}
+
+  '@types/lzma-native@4.0.4':
+    resolution: {integrity: sha512-9nwec86WAT3wUhjx9iV0AQ06xyDyiN/D9CAk3ZzNLb8zFjjo4EDBliN2uo7CFcBDJ64oXfX4sa+p6fpGpzy/4A==}
 
   '@types/node-fetch@2.6.11':
     resolution: {integrity: sha512-24xFj9R5+rfQJLRyM56qh+wnVSYhyXC2tkoBndtY0U+vubqNsYXGjufB2nn8Q6gt0LrARwL6UBtMCSVCwl4B1g==}
@@ -1089,6 +1098,11 @@ packages:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
 
+  lzma-native@8.0.6:
+    resolution: {integrity: sha512-09xfg67mkL2Lz20PrrDeNYZxzeW7ADtpYFbwSQh9U8+76RIzx5QsJBMy8qikv3hbUPfpy6hqwxt6FcGK81g9AA==}
+    engines: {node: '>=10.0.0'}
+    hasBin: true
+
   magic-string@0.30.11:
     resolution: {integrity: sha512-+Wri9p0QHMy+545hKww7YAu5NyzF8iomPL/RQazugQ9+Ez4Ic3mERMd8ZTX5rfK944j+560ZJi8iAwgak1Ac7A==}
 
@@ -1222,6 +1236,9 @@ packages:
     resolution: {integrity: sha512-bLn/fU/ALVBE9wj+p4Y21ZJWYFjUXLXPi/IewyLZkx3ApxKDNBWCKdReeKOtD8dWpOdDCeMyLh6ZewzcLsG2Nw==}
     engines: {node: '>=10'}
 
+  node-addon-api@3.2.1:
+    resolution: {integrity: sha512-mmcei9JghVNDYydghQmeDX8KoAm0FAiYyIcUt/N4nhyAipB17pllZQDOJD2fotxABnt4Mdz+dKTO7eftLg4d0A==}
+
   node-addon-api@7.1.1:
     resolution: {integrity: sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ==}
 
@@ -1237,6 +1254,10 @@ packages:
     peerDependenciesMeta:
       encoding:
         optional: true
+
+  node-gyp-build@4.8.2:
+    resolution: {integrity: sha512-IRUxE4BVsHWXkV/SFOut4qTlagw2aM8T5/vnTsmrHJvVoKueJHRc/JaFND7QDDc61kLYUJ6qlZM3sqTSyx2dTw==}
+    hasBin: true
 
   node-gyp@8.4.1:
     resolution: {integrity: sha512-olTJRgUtAb/hOXG0E93wZDs5YiJlgbXxTwQAFHyNlRsXQnYzUaF2aGgujZbw+hR8aF4ZG/rST57bWMWD16jr9w==}
@@ -2228,6 +2249,10 @@ snapshots:
     dependencies:
       '@types/node': 22.5.1
 
+  '@types/lzma-native@4.0.4':
+    dependencies:
+      '@types/node': 22.5.1
+
   '@types/node-fetch@2.6.11':
     dependencies:
       '@types/node': 22.5.1
@@ -2932,6 +2957,12 @@ snapshots:
       yallist: 4.0.0
     optional: true
 
+  lzma-native@8.0.6:
+    dependencies:
+      node-addon-api: 3.2.1
+      node-gyp-build: 4.8.2
+      readable-stream: 3.6.2
+
   magic-string@0.30.11:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.0
@@ -3067,6 +3098,8 @@ snapshots:
     dependencies:
       semver: 7.6.3
 
+  node-addon-api@3.2.1: {}
+
   node-addon-api@7.1.1: {}
 
   node-domexception@1.0.0: {}
@@ -3076,6 +3109,8 @@ snapshots:
       whatwg-url: 5.0.0
     optionalDependencies:
       encoding: 0.1.13
+
+  node-gyp-build@4.8.2: {}
 
   node-gyp@8.4.1:
     dependencies:
