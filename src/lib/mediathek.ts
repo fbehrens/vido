@@ -9,34 +9,25 @@ const filmlisteJson = "static/mediathek/filme.json";
 
 export async function firstNUrl(n: number) {
   const response = await fetch(filmlisteUrl),
-    reader = response.body!.getReader(),
-    chunks = [];
-  let bytesRead = 0;
-  while (bytesRead < n) {
+    reader = response.body!.getReader();
+  let hex = "";
+  while (hex.length < 2 * n) {
     const { done, value } = await reader.read();
     if (done) break;
-    chunks.push(value);
-    bytesRead += value.length;
-    if (bytesRead >= n) {
-      // If we've read more than 20 bytes, slice the last chunk
-      const lastChunk = chunks[chunks.length - 1];
-      chunks[chunks.length - 1] = lastChunk.slice(
-        0,
-        lastChunk.length - (bytesRead - n),
-      );
-      break;
-    }
-  }
-
-  // Concatenate all chunks into a single Uint8Array
-  const result = new Uint8Array(n);
-  let offset = 0;
-  for (const chunk of chunks) {
-    result.set(chunk, offset);
-    offset += chunk.length;
+    hex += Buffer.from(value).toString("hex");
   }
   reader.cancel(); // Cancel the download of the remaining content
-  return Buffer.from(result);
+  return hex.slice(0, 2 * n);
+}
+
+export async function firstNFile(n: number) {
+  const file = await fs.open(filmlistePath);
+  try {
+    const { buffer } = await file.read(Buffer.alloc(n), 0, n, 0);
+    return buffer.toString("hex");
+  } finally {
+    await file.close();
+  }
 }
 
 export async function downloadFilmliste() {
@@ -46,22 +37,13 @@ export async function downloadFilmliste() {
   await fs.writeFile(filmlistePath, Buffer.from(buffer));
 }
 
-export async function firstNFile(n: number): Promise<Buffer> {
-  const file = await fs.open(filmlistePath);
-  try {
-    const { buffer } = await file.read(Buffer.alloc(n), 0, n, 0);
-    return buffer;
-  } finally {
-    await file.close();
-  }
-}
-export async function updateFilmliste(checkFirstBytes: number = 30) {
+export async function updateFilmliste(
+  checkFirstBytes: number = 30,
+  force = false,
+) {
   const equal =
-    Buffer.compare(
-      await firstNUrl(checkFirstBytes),
-      await firstNFile(checkFirstBytes),
-    ) === 0;
-  if (!equal) {
+    (await firstNUrl(checkFirstBytes)) == (await firstNFile(checkFirstBytes));
+  if (!equal || force) {
     await downloadFilmliste();
     await decompressFilmeJson();
   }
@@ -81,20 +63,15 @@ const decompressFilmeJson = (): Promise<void> => {
   });
 };
 
-export function createReadable(str: string) {
-  return new Readable({
-    read() {
-      this.push(str);
-      this.push(null);
-    },
-  });
-}
-
 export async function parseFilme(path: string = filmlisteJson) {
   let json = await fs.readFile(path, { encoding: "utf8" });
+  if (json.charAt(json.length - 1) != "}") {
+    console.warn("Filmlist not ending with } (incomplete?) ");
+  }
   json = json.slice(1, -1);
   const [_, liste, felder, ...filme] = json.split(/,?"(?:X|Filmliste)":/);
   // ["Sender","Thema","Titel","Datum","Zeit","Dauer","Größe [MB]","Beschreibung","Url","Website","Url Untertitel","Url RTMP","Url Klein","Url RTMP Klein","Url HD","Url RTMP HD","DatumL","Url History","Geo","neu"]
+  //   console.log({ liste, felder });
   let mapper = () => {
     let sender = "",
       thema = "";
@@ -147,6 +124,5 @@ export async function parseFilme(path: string = filmlisteJson) {
       };
     };
   };
-  console.log(felder);
   return filme.map(mapper());
 }
