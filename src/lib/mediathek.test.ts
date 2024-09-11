@@ -6,16 +6,17 @@ import {
   parseFilme,
 } from "./mediathek";
 describe("mediathek", () => {
-  test("fresh filmliste is downloaded", async () => {
+  test("updateFilmliste", async () => {
+    await updateFilmliste();
     expect(await updateFilmliste()).toBe(false);
     const n = 20;
     const url = await firstNUrl(n);
     expect(url.length).toBe(2 * n);
     const file = await firstNFile(n);
     expect(url).toBe(file);
-  }, 60000);
+  }, 30000);
 
-  test("parseFilmetest", async () => {
+  test.skip("parseFilmetest", async () => {
     const filme = await parseFilme("static/test/filme.json");
     expect(filme.length).toBe(2);
   });

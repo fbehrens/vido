@@ -20,22 +20,42 @@ export async function firstNUrl(n: number) {
   return hex.slice(0, 2 * n);
 }
 
-export async function firstNFile(n: number) {
-  const file = await fs.open(filmlistePath);
+export async function firstNFile(n: number): Promise<string> {
+  let file;
   try {
+    file = await fs.open(filmlistePath);
     const { buffer } = await file.read(Buffer.alloc(n), 0, n, 0);
     return buffer.toString("hex");
+  } catch (e) {
+    console.log(`File does not exist ${e}`);
+    return "--".repeat(n);
   } finally {
-    await file.close();
+    if (file) {
+      await file.close();
+    }
   }
 }
 
-export async function downloadFilmliste() {
+export async function downloadFilmliste(): Promise<void> {
   console.log(`download ${filmlisteUrl}`);
   const response = await fetch(filmlisteUrl);
   const buffer = await response.arrayBuffer();
   await fs.writeFile(filmlistePath, Buffer.from(buffer));
 }
+
+const decompressFilmliste = (): Promise<void> => {
+  console.log(`decompress ${filmlistePath} -> ${filmlisteJson}`);
+  return new Promise((resolve, reject) => {
+    const decompressor = lzma.createDecompressor();
+    const input = createReadStream(filmlistePath);
+    const output = createWriteStream(filmlisteJson);
+    input
+      .pipe(decompressor)
+      .pipe(output)
+      .on("finish", () => resolve())
+      .on("error", reject);
+  });
+};
 
 export async function updateFilmliste(
   checkFirstBytes: number = 30,
@@ -45,23 +65,10 @@ export async function updateFilmliste(
     (await firstNUrl(checkFirstBytes)) == (await firstNFile(checkFirstBytes));
   if (!equal || force) {
     await downloadFilmliste();
-    await decompressFilmeJson();
+    await decompressFilmliste();
   }
   return !equal;
 }
-
-const decompressFilmeJson = (): Promise<void> => {
-  return new Promise((resolve, reject) => {
-    const decompressor = lzma.createDecompressor();
-    const input = createReadStream(filmlistePath);
-    const output = createWriteStream(filmlisteJson);
-    input
-      .pipe(decompressor)
-      .pipe(output)
-      .on("end", () => resolve())
-      .on("error", reject);
-  });
-};
 
 export async function parseFilme(path: string = filmlisteJson) {
   let json = await fs.readFile(path, { encoding: "utf8" });
@@ -71,7 +78,7 @@ export async function parseFilme(path: string = filmlisteJson) {
   json = json.slice(1, -1);
   const [_, liste, felder, ...filme] = json.split(/,?"(?:X|Filmliste)":/);
   // ["Sender","Thema","Titel","Datum","Zeit","Dauer","Größe [MB]","Beschreibung","Url","Website","Url Untertitel","Url RTMP","Url Klein","Url RTMP Klein","Url HD","Url RTMP HD","DatumL","Url History","Geo","neu"]
-  //   console.log({ liste, felder });
+  console.log({ liste });
   let mapper = () => {
     let sender = "",
       thema = "";
@@ -124,5 +131,7 @@ export async function parseFilme(path: string = filmlisteJson) {
       };
     };
   };
-  return filme.map(mapper());
+  const f = filme.map(mapper());
+  console.log(`${f.length} filme parsed`);
+  return f;
 }
