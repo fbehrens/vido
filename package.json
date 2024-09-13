@@ -36,6 +36,7 @@
     "vitest": "^2.0.5"
   },
   "dependencies": {
+    "@apache-arrow/ts": "^17.0.0",
     "@types/node": "^22.5.1",
     "better-sqlite3": "^11.2.1",
     "flowbite": "^2.5.1",
