@@ -5,8 +5,19 @@ import {
   firstNFile,
   parseFilme,
 } from "./mediathek";
+
+function count(arr, prop) {
+  return arr.reduce(
+    (acc, e) => {
+      acc[e[prop]] = (acc[e[prop]] || 0) + 1;
+      return acc;
+    },
+    {} as Record<number, number>,
+  );
+}
+
 describe("mediathek", () => {
-  test("updateFilmliste", async () => {
+  test.skip("updateFilmliste", async () => {
     await updateFilmliste();
     expect(await updateFilmliste()).toBe(false);
     const n = 20;
@@ -16,12 +27,17 @@ describe("mediathek", () => {
     expect(url).toBe(file);
   }, 30000);
 
-  test.skip("parseFilmetest", async () => {
-    const filme = await parseFilme("static/test/filme.json");
-    expect(filme.length).toBe(2);
+  test("parseFilme181", async () => {
+    // const filme = await parseFilme("static/test/filme181.json");
+    const filme = await parseFilme("static/mediathek/filme.json");
+    // console.log(filme[0]);
+    console.log(count(filme, "sender"));
   });
-  test("parseFilme", async () => {
+  test.skip("parseFilme", async () => {
     const filme = await parseFilme();
     expect(filme.length).toBeGreaterThan(700000);
+  });
+  test("import sql", () => {
+    console.log("hi");
   });
 });

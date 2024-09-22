@@ -1,7 +1,6 @@
 import { createReadStream, createWriteStream, ReadStream } from "fs";
 import fs from "fs/promises";
 import * as lzma from "lzma-native";
-import { Readable } from "stream";
 
 const filmlisteUrl = "https://liste.mediathekview.de/Filmliste-akt.xz";
 const filmlistePath = "static/mediathek/filme";
@@ -70,6 +69,29 @@ export async function updateFilmliste(
   return !equal;
 }
 
+interface Film {
+  sender: string;
+  thema: string;
+  titel: string;
+  datum: string;
+  zeit: string;
+  dauer: string;
+  mb: Number;
+  beschreibung: string;
+  url: string;
+  website: string;
+  captions: string;
+  urlRtmp: string;
+  urlLD: string;
+  urlRtmpLD: string;
+  urlHD: string;
+  urlRtmpHD: string;
+  datumL: number;
+  urlHistory: string;
+  geo: string;
+  neu: string;
+}
+
 export async function parseFilme(path: string = filmlisteJson) {
   let json = await fs.readFile(path, { encoding: "utf8" });
   if (json.charAt(json.length - 1) != "}") {
@@ -77,12 +99,12 @@ export async function parseFilme(path: string = filmlisteJson) {
   }
   json = json.slice(1, -1);
   const [_, liste, felder, ...filme] = json.split(/,?"(?:X|Filmliste)":/);
+  // ["07.09.2024, 09:35","07.09.2024, 07:35","3","MSearch [Vers.: 3.1.238]","22ae3b493eb73e562ffdadd00b71a743"]
   // ["Sender","Thema","Titel","Datum","Zeit","Dauer","Größe [MB]","Beschreibung","Url","Website","Url Untertitel","Url RTMP","Url Klein","Url RTMP Klein","Url HD","Url RTMP HD","DatumL","Url History","Geo","neu"]
-  console.log({ liste });
   let mapper = () => {
     let sender = "",
       thema = "";
-    return (line: string) => {
+    return (line: string): Film => {
       const [
         s,
         t,
@@ -114,7 +136,7 @@ export async function parseFilme(path: string = filmlisteJson) {
         datum,
         zeit,
         dauer,
-        mb,
+        mb: Number(mb),
         beschreibung,
         url,
         website,
@@ -124,7 +146,7 @@ export async function parseFilme(path: string = filmlisteJson) {
         urlRtmpLD,
         urlHD,
         urlRtmpHD,
-        datumL,
+        datumL: Number(datumL),
         urlHistory,
         geo,
         neu,

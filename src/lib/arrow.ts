@@ -44,7 +44,7 @@ export function toArrow(filme) {
   const ipc = tableToIPC<Film>(table, "file");
   writeFileSync("static/mediathek/filme.arrow", ipc);
   // console.log(table.slice(10,13).getChildAt(14)?.toArray())
-  console.log(table.schema.fields);
+//   console.log(table.schema.fields);
   // return table
 }
 

@@ -6,7 +6,8 @@ describe('arrow', () => {
       console.log(dictionaryVector2)
     });
     test('1',async ()=>{
-        const f = await parseFilme('static/mediathek/filmeArrow.json')
+        const f = await parseFilme('static/test/filme181.json')
+        expect(f.length).toBe(181)
         toArrow(f)
     })
 });
