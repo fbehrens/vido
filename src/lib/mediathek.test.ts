@@ -28,16 +28,15 @@ describe("mediathek", () => {
   }, 30000);
 
   test("parseFilme181", async () => {
-    // const filme = await parseFilme("static/test/filme181.json");
-    const filme = await parseFilme("static/mediathek/filme.json");
-    // console.log(filme[0]);
+    const filme = await parseFilme({
+      path: "static/test/filme181.json",
+      bulkSql: false,
+      step: 10,
+    });
     console.log(count(filme, "sender"));
   });
   test.skip("parseFilme", async () => {
-    const filme = await parseFilme();
-    expect(filme.length).toBeGreaterThan(700000);
-  });
-  test("import sql", () => {
-    console.log("hi");
+    const filme = await parseFilme({ bulkSql: false });
+    expect(filme!.length).toBeGreaterThan(700000);
   });
 });

@@ -1,6 +1,7 @@
-import { createReadStream, createWriteStream, ReadStream } from "fs";
+import { createReadStream, createWriteStream } from "fs";
 import fs from "fs/promises";
 import * as lzma from "lzma-native";
+import { db } from "./db";
 
 const filmlisteUrl = "https://liste.mediathekview.de/Filmliste-akt.xz";
 const filmlistePath = "static/mediathek/filme";
@@ -35,19 +36,25 @@ export async function firstNFile(n: number): Promise<string> {
   }
 }
 
-export async function downloadFilmliste(): Promise<void> {
-  console.log(`download ${filmlisteUrl}`);
-  const response = await fetch(filmlisteUrl);
+export async function downloadFilmliste(
+  url = filmlisteUrl,
+  path = filmlistePath,
+): Promise<void> {
+  console.log(`download ${url}`);
+  const response = await fetch(url);
   const buffer = await response.arrayBuffer();
-  await fs.writeFile(filmlistePath, Buffer.from(buffer));
+  await fs.writeFile(path, Buffer.from(buffer));
 }
 
-const decompressFilmliste = (): Promise<void> => {
-  console.log(`decompress ${filmlistePath} -> ${filmlisteJson}`);
+const decompressFilmliste = (
+  pathLzma = filmlistePath,
+  pathJson = filmlisteJson,
+): Promise<void> => {
+  console.log(`decompress ${pathLzma} -> ${pathJson}`);
   return new Promise((resolve, reject) => {
     const decompressor = lzma.createDecompressor();
-    const input = createReadStream(filmlistePath);
-    const output = createWriteStream(filmlisteJson);
+    const input = createReadStream(pathLzma);
+    const output = createWriteStream(pathJson);
     input
       .pipe(decompressor)
       .pipe(output)
@@ -65,6 +72,9 @@ export async function updateFilmliste(
   if (!equal || force) {
     await downloadFilmliste();
     await decompressFilmliste();
+    await parseFilme({});
+  } else {
+    console.log("Filmliste is up to date");
   }
   return !equal;
 }
@@ -92,7 +102,41 @@ interface Film {
   neu: string;
 }
 
-export async function parseFilme(path: string = filmlisteJson) {
+function createFilmsTable() {
+  db.exec(`DROP TABLE IF EXISTS films`);
+  db.exec(`
+  CREATE TABLE IF NOT EXISTS films (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sender TEXT,
+    thema TEXT,
+    titel TEXT,
+    datum TEXT,
+    zeit TEXT,
+    dauer TEXT,
+    mb REAL,
+    beschreibung TEXT,
+    url TEXT,
+    website TEXT,
+    captions TEXT,
+    urlRtmp TEXT,
+    urlLD TEXT,
+    urlRtmpLD TEXT,
+    urlHD TEXT,
+    urlRtmpHD TEXT,
+    datumL INTEGER,
+    urlHistory TEXT,
+    geo TEXT,
+    neu TEXT
+  )
+`);
+}
+
+export async function parseFilme({
+  path = filmlisteJson,
+  bulkSql = true,
+  step = 1000,
+}) {
+  if (bulkSql) createFilmsTable();
   let json = await fs.readFile(path, { encoding: "utf8" });
   if (json.charAt(json.length - 1) != "}") {
     console.warn("Filmlist not ending with } (incomplete?) ");
@@ -104,7 +148,10 @@ export async function parseFilme(path: string = filmlisteJson) {
   let mapper = () => {
     let sender = "",
       thema = "";
-    return (line: string): Film => {
+    return (line: string, i: number): Film | undefined => {
+      if (!(i % step)) {
+        process.stdout.write(i.toString() + " ");
+      }
       const [
         s,
         t,
@@ -129,7 +176,7 @@ export async function parseFilme(path: string = filmlisteJson) {
       ] = JSON.parse(line);
       sender = s || sender;
       thema = t || thema;
-      return {
+      const film = {
         sender,
         thema,
         titel,
@@ -151,9 +198,24 @@ export async function parseFilme(path: string = filmlisteJson) {
         geo,
         neu,
       };
+      if (bulkSql) {
+        db.prepare(
+          `
+    INSERT INTO films (
+      sender, thema, titel, datum, zeit, dauer, mb, beschreibung, url, website,
+      captions, urlRtmp, urlLD, urlRtmpLD, urlHD, urlRtmpHD, datumL, urlHistory, geo, neu
+    ) VALUES (
+      @sender, @thema, @titel, @datum, @zeit, @dauer, @mb, @beschreibung, @url, @website,
+      @captions, @urlRtmp, @urlLD, @urlRtmpLD, @urlHD, @urlRtmpHD, @datumL, @urlHistory, @geo, @neu
+    )
+  `,
+        ).run(film);
+        return undefined;
+      } else {
+        return film;
+      }
     };
   };
-  const f = filme.map(mapper());
-  console.log(`${f.length} filme parsed`);
+  const f = bulkSql ? filme.forEach(mapper()) : filme.map(mapper());
   return f;
 }
