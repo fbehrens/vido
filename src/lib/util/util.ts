@@ -48,3 +48,9 @@ export const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
     },
     {} as Record<K, T[]>,
   );
+
+export function nTimes(n: number, f: any, ...args: any[]) {
+  for (let i = 0; i < n; i++) {
+    f(...args);
+  }
+}
