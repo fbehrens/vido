@@ -20,30 +20,22 @@ describe("mediathek", async () => {
   test("profileParse", () => {
     nTimes(2_000_000, parseDate, d);
   });
-  test.skip("updateFilmliste", async () => {
-    await updateFilmliste();
-    expect(await updateFilmliste()).toBe(false);
-    const n = 20;
-    const url = await firstNUrl(n);
-    expect(url.length).toBe(2 * n);
-    const file = await firstNFile(n);
-    expect(url).toBe(file);
-  }, 30000);
-
-  test("parseFilme", () => {
-    const gen = parseFilme("static/test/filme181.json");
-    let i;
-    for (i of gen) {
-      console.log(i);
-    }
-    console.log(i);
-  });
-
   test("insertFilme", async () => {
     db.prepare("delete from mediathek").run();
     db.prepare("DELETE FROM sqlite_sequence WHERE name = ?").run("mediathek");
     const i = await insertFilme(parseFilme("static/test/filme181.json"), 100);
-    expect(i).toStrictEqual({ id: 1, count: 181 });
+    expect(i).toMatchInlineSnapshot(`
+{
+  "count": 181,
+  "counter": Map {
+    "3Sat" => Map {
+      "37 Grad" => 21,
+      "37 Grad Leben" => 6,
+      "3sat" => 154,
+    },
+  },
+  "id": 1,
+}`);
   });
 
   test("countFilms", () => {
@@ -51,6 +43,12 @@ describe("mediathek", async () => {
     c.count("zdf", "lanz");
     c.count("zdf", "lanz");
     c.count("zdf", "anstalt");
-    console.log(c.c);
+    expect(c.c).toMatchInlineSnapshot(`
+Map {
+  "zdf" => Map {
+    "lanz" => 2,
+    "anstalt" => 1,
+  },
+}`);
   });
 });
