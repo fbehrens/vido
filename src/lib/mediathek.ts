@@ -64,19 +64,13 @@ const decompressFilmliste = (
       .on("error", reject);
   });
 };
-export function sfoo() {
-  console.log("sfoo");
-}
-export async function afoo() {
-  console.log("afoo");
-}
 
 export async function updateFilmliste({
   refresh = false,
   filter = (e: any) => true,
 }) {
-  console.log("beginUpdate");
   const needsUpdate = (await firstNUrl()) != (await firstNFile());
+  console.log({ needsUpdate });
   if (needsUpdate) {
     await downloadFilmliste();
     await decompressFilmliste();
@@ -85,9 +79,7 @@ export async function updateFilmliste({
     const { id, count, counter } = await insertFilme(
       parseFilme(filmlisteJson, filter),
     );
-    console.log(`inserted ${count} films with id ${id}\n${counter.toString()}`);
-  } else {
-    console.log("Filmliste is up to date");
+    console.log(`${count} Filme loaded`);
   }
 }
 
@@ -188,11 +180,11 @@ export function* parseFilme(
       thema = "";
     return (line: string): any => {
       const vs = JSON.parse(line);
+      vs[6] = Number(vs[6]);
+      vs[16] = Number(vs[16]);
       sender = vs.shift() || sender;
       thema = vs.shift() || thema;
       counter.count(sender, thema);
-      vs[6] = Number(vs[6]);
-      vs[16] = Number(vs[16]);
       return [sender, thema, ...vs];
     };
   };
