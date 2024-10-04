@@ -4,19 +4,21 @@ import {
   updateFilmliste,
   firstNFile,
   parseFilme,
+  parseDate,
+  insertFilme,
 } from "./mediathek";
+import { nTimes } from "./util/util";
+import { db } from "./db";
 
-function count(arr, prop) {
-  return arr.reduce(
-    (acc, e) => {
-      acc[e[prop]] = (acc[e[prop]] || 0) + 1;
-      return acc;
-    },
-    {} as Record<number, number>,
-  );
-}
-
-describe("mediathek", () => {
+describe("mediathek", async () => {
+  const d = "07.09.2024, 09:35";
+  test("date", () => {
+    const date = parseDate(d);
+    console.log({ d, date });
+  });
+  test("profileParse", () => {
+    nTimes(2_000_000, parseDate, d);
+  });
   test.skip("updateFilmliste", async () => {
     await updateFilmliste();
     expect(await updateFilmliste()).toBe(false);
@@ -27,16 +29,10 @@ describe("mediathek", () => {
     expect(url).toBe(file);
   }, 30000);
 
-  test("parseFilme181", async () => {
-    const filme = await parseFilme({
-      path: "static/test/filme181.json",
-      bulkSql: false,
-      step: 10,
-    });
-    console.log(count(filme, "sender"));
-  });
-  test.skip("parseFilme", async () => {
-    const filme = await parseFilme({ bulkSql: false });
-    expect(filme!.length).toBeGreaterThan(700000);
+  test("insertFilme", async () => {
+    db.prepare("delete from mediathek").run();
+    db.prepare("DELETE FROM sqlite_sequence WHERE name = ?").run("mediathek");
+    const i = await insertFilme(parseFilme("static/test/filme181.json"), 100);
+    expect(i).toBe(1);
   });
 });

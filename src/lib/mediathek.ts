@@ -1,7 +1,10 @@
 import { createReadStream, createWriteStream } from "fs";
-import fs from "fs/promises";
+import fs_p from "fs/promises";
+import * as fs from "fs";
 import * as lzma from "lzma-native";
-import { db } from "./db";
+import { db, mdtk } from "./db";
+import { console } from "inspector";
+import { everyStep } from "./util/util";
 
 const filmlisteUrl = "https://liste.mediathekview.de/Filmliste-akt.xz";
 const filmlistePath = "static/mediathek/filme";
@@ -23,7 +26,7 @@ export async function firstNUrl(n: number) {
 export async function firstNFile(n: number): Promise<string> {
   let file;
   try {
-    file = await fs.open(filmlistePath);
+    file = await fs_p.open(filmlistePath);
     const { buffer } = await file.read(Buffer.alloc(n), 0, n, 0);
     return buffer.toString("hex");
   } catch (e) {
@@ -43,7 +46,7 @@ export async function downloadFilmliste(
   console.log(`download ${url}`);
   const response = await fetch(url);
   const buffer = await response.arrayBuffer();
-  await fs.writeFile(path, Buffer.from(buffer));
+  await fs_p.writeFile(path, Buffer.from(buffer));
 }
 
 const decompressFilmliste = (
@@ -67,16 +70,16 @@ export async function updateFilmliste(
   checkFirstBytes: number = 30,
   force = false,
 ) {
-  const equal =
+  const alreadyDownloaded =
     (await firstNUrl(checkFirstBytes)) == (await firstNFile(checkFirstBytes));
-  if (!equal || force) {
+  if (!alreadyDownloaded || force) {
     await downloadFilmliste();
     await decompressFilmliste();
-    await parseFilme({});
+    await insertFilme(parseFilme());
   } else {
     console.log("Filmliste is up to date");
   }
-  return !equal;
+  return !alreadyDownloaded;
 }
 
 interface Film {
@@ -102,7 +105,7 @@ interface Film {
   neu: string;
 }
 
-function createFilmsTable() {
+function createFilmsTable(db: any) {
   db.exec(`DROP TABLE IF EXISTS films`);
   db.exec(`
   CREATE TABLE IF NOT EXISTS films (
@@ -131,91 +134,78 @@ function createFilmsTable() {
 `);
 }
 
-export async function parseFilme({
-  path = filmlisteJson,
-  bulkSql = true,
-  step = 1000,
-}) {
-  if (bulkSql) createFilmsTable();
-  let json = await fs.readFile(path, { encoding: "utf8" });
+export function parseDate(s: string): Date {
+  const [datePart, timePart] = s.split(", ");
+  const [day, month, year] = datePart.split(".");
+  const [hours, minutes] = timePart.split(":");
+  return new Date(
+    Number(year),
+    Number(month) - 1,
+    Number(day),
+    Number(hours),
+    Number(minutes),
+  );
+}
+const fields =
+  // 0    1     2     3     4    5     6  7            8   9
+  "sender,thema,titel,datum,zeit,dauer,mb,beschreibung,url,website," +
+  //10      11      12    13        14    15        16     17         18  19
+  "captions,urlRtmp,urlLD,urlRtmpLD,urlHD,urlRtmpHD,datumL,urlHistory,geo,neu";
+
+export function* parseFilme(path = filmlisteJson) {
+  //   if (bulkSql) createFilmsTable();
+  let json = fs.readFileSync(path, { encoding: "utf8" });
   if (json.charAt(json.length - 1) != "}") {
     console.warn("Filmlist not ending with } (incomplete?) ");
   }
   json = json.slice(1, -1);
   const [_, liste, felder, ...filme] = json.split(/,?"(?:X|Filmliste)":/);
-  // ["07.09.2024, 09:35","07.09.2024, 07:35","3","MSearch [Vers.: 3.1.238]","22ae3b493eb73e562ffdadd00b71a743"]
-  // ["Sender","Thema","Titel","Datum","Zeit","Dauer","Größe [MB]","Beschreibung","Url","Website","Url Untertitel","Url RTMP","Url Klein","Url RTMP Klein","Url HD","Url RTMP HD","DatumL","Url History","Geo","neu"]
+  // Liste ["07.09.2024, 09:35","07.09.2024, 07:35","3","MSearch [Vers.: 3.1.238]","22ae3b493eb73e562ffdadd00b71a743"]
+  const [local_, utc_, nr, version, hash] = JSON.parse(liste);
+  yield {
+    local: parseDate(local_).toISOString(),
+    utc: parseDate(utc_).toISOString(),
+    nr,
+    version,
+    hash,
+  };
   let mapper = () => {
     let sender = "",
       thema = "";
-    return (line: string, i: number): Film | undefined => {
-      if (!(i % step)) {
-        process.stdout.write(i.toString() + " ");
-      }
-      const [
-        s,
-        t,
-        titel,
-        datum,
-        zeit,
-        dauer,
-        mb,
-        beschreibung,
-        url,
-        website,
-        captions,
-        urlRtmp,
-        urlLD,
-        urlRtmpLD,
-        urlHD,
-        urlRtmpHD,
-        datumL,
-        urlHistory,
-        geo,
-        neu,
-      ] = JSON.parse(line);
-      sender = s || sender;
-      thema = t || thema;
-      const film = {
-        sender,
-        thema,
-        titel,
-        datum,
-        zeit,
-        dauer,
-        mb: Number(mb),
-        beschreibung,
-        url,
-        website,
-        captions,
-        urlRtmp,
-        urlLD,
-        urlRtmpLD,
-        urlHD,
-        urlRtmpHD,
-        datumL: Number(datumL),
-        urlHistory,
-        geo,
-        neu,
-      };
-      if (bulkSql) {
-        db.prepare(
-          `
-    INSERT INTO films (
-      sender, thema, titel, datum, zeit, dauer, mb, beschreibung, url, website,
-      captions, urlRtmp, urlLD, urlRtmpLD, urlHD, urlRtmpHD, datumL, urlHistory, geo, neu
-    ) VALUES (
-      @sender, @thema, @titel, @datum, @zeit, @dauer, @mb, @beschreibung, @url, @website,
-      @captions, @urlRtmp, @urlLD, @urlRtmpLD, @urlHD, @urlRtmpHD, @datumL, @urlHistory, @geo, @neu
-    )
-  `,
-        ).run(film);
-        return undefined;
-      } else {
-        return film;
-      }
+    return (line: string): any => {
+      const vs = JSON.parse(line);
+      sender = vs.shift() || sender;
+      thema = vs.shift() || thema;
+      vs[6] = Number(vs[6]);
+      vs[16] = Number(vs[16]);
+      return [sender, thema, ...vs];
     };
   };
-  const f = bulkSql ? filme.forEach(mapper()) : filme.map(mapper());
-  return f;
+  let m = mapper();
+  for (let f of filme) {
+    yield m(f);
+  }
+  // ["Sender","Thema","Titel","Datum","Zeit","Dauer","Größe [MB]","Beschreibung","Url","Website","Url Untertitel","Url RTMP","Url Klein","Url RTMP Klein","Url HD","Url RTMP HD","DatumL","Url History","Geo","neu"]
+}
+export async function insertFilme(filme: any, step: number = 5000) {
+  const { value: liste } = filme.next();
+  console.log(liste);
+  db.prepare(
+    `INSERT INTO mediathek ( local , utc , nr , version , hash ) VALUES ( @local,@utc,@nr,@version,@hash )`,
+  ).run(liste);
+  const id = db
+    .prepare("SELECT id from mediathek where utc = @utc")
+    .pluck()
+    .get(liste) as Number;
+  const dbMdtk = mdtk(id);
+  createFilmsTable(dbMdtk);
+  const values = fields.replace(/\w+/g, "?");
+  const sql = dbMdtk.prepare(`
+    INSERT INTO films (${fields} ) VALUES (${values})`);
+  const stepper = everyStep(step);
+  for (let f of filme) {
+    sql.run(f);
+    stepper();
+  }
+  return id;
 }

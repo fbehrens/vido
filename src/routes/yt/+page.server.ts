@@ -30,7 +30,7 @@ export const actions = {
     const response = await fetch(json3Url);
     if (!response.ok) throw "Error fetching json3";
     const json3 = await response.text();
-    db.prepare("insert into youtube (id,info,lang,json3) values (?,?,?,?)").run(
+    db.prepare("insert into youtube   values (?,?,?,?)").run(
       id,
       info,
       lang,

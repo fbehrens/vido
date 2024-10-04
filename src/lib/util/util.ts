@@ -54,3 +54,13 @@ export function nTimes(n: number, f: any, ...args: any[]) {
     f(...args);
   }
 }
+
+export function everyStep(step: number) {
+  let counter = 0;
+  return () => {
+    counter++;
+    if (counter % step === 0) {
+      console.log(counter);
+    }
+  };
+}

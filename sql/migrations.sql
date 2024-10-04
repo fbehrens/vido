@@ -44,30 +44,12 @@ select movie_id,c.id,c.segments,m.filename as m_filename from clips as c join mo
 --19
 alter table movies add column framerate REAL;
 --20
+drop table mediathek;
 CREATE TABLE mediathek (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    sender: TEXT,
-  thema: TEXT,
-  titel: TEXT,
-  datum: TEXT,
-  zeit: TEXT,
-  dauer: REAL,
-  mb: REAL,
-  beschreibung: TEXT,
-  url: TEXT,
-  website: TEXT,
-  captions: TEXT,
-  urlRtmp: TEXT,
-  urlLD: TEXT,
-  urlRtmpLD: TEXT,
-  urlHD: TEXT,
-  urlRtmpHD: TEXT,
-  datumL: INTEGER,
-  urlHistory: TEXT,
-  geo: TEXT,
-  neu: INTEGER
-
-
-    filename TEXT UNIQUE NOT NULL
-, duration REAL, segments TEXT, framerate REAL);
-
+    "local" TEXT,
+    utc TEXT,
+    nr TEXT,
+    version TEXT,
+    hash TEXT)
+CREATE UNIQUE INDEX mediathek_utc ON mediathek(utc);
