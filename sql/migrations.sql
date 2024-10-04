@@ -53,3 +53,4 @@ CREATE TABLE mediathek (
     version TEXT,
     hash TEXT)
 CREATE UNIQUE INDEX mediathek_utc ON mediathek(utc);
+

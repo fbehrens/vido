@@ -3,14 +3,13 @@ import fs_p from "fs/promises";
 import * as fs from "fs";
 import * as lzma from "lzma-native";
 import { db, mdtk } from "./db";
-import { console } from "inspector";
 import { everyStep } from "./util/util";
 
 const filmlisteUrl = "https://liste.mediathekview.de/Filmliste-akt.xz";
 const filmlistePath = "static/mediathek/filme";
 const filmlisteJson = "static/mediathek/filme.json";
 
-export async function firstNUrl(n: number) {
+export async function firstNUrl(n: number = 30) {
   const response = await fetch(filmlisteUrl),
     reader = response.body!.getReader();
   let hex = "";
@@ -23,7 +22,7 @@ export async function firstNUrl(n: number) {
   return hex.slice(0, 2 * n);
 }
 
-export async function firstNFile(n: number): Promise<string> {
+export async function firstNFile(n: number = 30): Promise<string> {
   let file;
   try {
     file = await fs_p.open(filmlistePath);
@@ -65,45 +64,31 @@ const decompressFilmliste = (
       .on("error", reject);
   });
 };
+export function sfoo() {
+  console.log("sfoo");
+}
+export async function afoo() {
+  console.log("afoo");
+}
 
-export async function updateFilmliste(
-  checkFirstBytes: number = 30,
-  force = false,
-) {
-  const alreadyDownloaded =
-    (await firstNUrl(checkFirstBytes)) == (await firstNFile(checkFirstBytes));
-  if (!alreadyDownloaded || force) {
+export async function updateFilmliste({
+  refresh = false,
+  filter = (e: any) => true,
+}) {
+  console.log("beginUpdate");
+  const needsUpdate = (await firstNUrl()) != (await firstNFile());
+  if (needsUpdate) {
     await downloadFilmliste();
     await decompressFilmliste();
-    const { id, count } = await insertFilme(parseFilme());
-    console.log(`inserted ${count} films with id ${id}`);
+  }
+  if (refresh || needsUpdate) {
+    const { id, count, counter } = await insertFilme(
+      parseFilme(filmlisteJson, filter),
+    );
+    console.log(`inserted ${count} films with id ${id}\n${counter.toString()}`);
   } else {
     console.log("Filmliste is up to date");
   }
-  return !alreadyDownloaded;
-}
-
-interface Film {
-  sender: string;
-  thema: string;
-  titel: string;
-  datum: string;
-  zeit: string;
-  dauer: string;
-  mb: Number;
-  beschreibung: string;
-  url: string;
-  website: string;
-  captions: string;
-  urlRtmp: string;
-  urlLD: string;
-  urlRtmpLD: string;
-  urlHD: string;
-  urlRtmpHD: string;
-  datumL: number;
-  urlHistory: string;
-  geo: string;
-  neu: string;
 }
 
 function createFilmsTable(db: any) {
@@ -164,9 +149,24 @@ export function countFilms() {
       }
       s.set(thema, (s.get(thema) || 0) + 1);
     },
+    toString() {
+      let s = "";
+      for (const [sender, m] of this.c) {
+        s += sender + "\n";
+        for (const [thema, count] of m) {
+          s += `  ${thema}: ${count}\n`;
+        }
+      }
+      return s;
+    },
   };
 }
-export function* parseFilme(path = filmlisteJson) {
+
+// yields a record with timestamps of list and then all
+export function* parseFilme(
+  path = filmlisteJson,
+  filter = (e: unknown) => true,
+) {
   let json = fs.readFileSync(path, { encoding: "utf8" });
   if (json.charAt(json.length - 1) != "}") {
     console.warn("Filmlist not ending with } (incomplete?) ");
@@ -196,18 +196,24 @@ export function* parseFilme(path = filmlisteJson) {
       return [sender, thema, ...vs];
     };
   };
-  let m = mapper();
+  let m = mapper(),
+    a;
   for (let f of filme) {
-    yield m(f);
+    a = m(f);
+    if (filter(a)) yield a;
   }
-  return counter.c;
+  return counter;
 }
 export async function insertFilme(filme: any, step: number = 5000) {
   const { value: liste } = filme.next();
   console.log(liste);
-  db.prepare(
-    `INSERT INTO mediathek ( local , utc , nr , version , hash ) VALUES ( @local,@utc,@nr,@version,@hash )`,
-  ).run(liste);
+  try {
+    db.prepare(
+      `INSERT INTO mediathek ( local , utc , nr , version , hash ) VALUES ( @local,@utc,@nr,@version,@hash )`,
+    ).run(liste);
+  } catch (error) {
+    console.error(error);
+  }
   const id = db
     .prepare("SELECT id from mediathek where utc = @utc")
     .pluck()
