@@ -6,6 +6,7 @@ import {
   parseFilme,
   parseDate,
   insertFilme,
+  countFilms,
 } from "./mediathek";
 import { nTimes } from "./util/util";
 import { db } from "./db";
@@ -29,10 +30,27 @@ describe("mediathek", async () => {
     expect(url).toBe(file);
   }, 30000);
 
+  test("parseFilme", () => {
+    const gen = parseFilme("static/test/filme181.json");
+    let i;
+    for (i of gen) {
+      console.log(i);
+    }
+    console.log(i);
+  });
+
   test("insertFilme", async () => {
     db.prepare("delete from mediathek").run();
     db.prepare("DELETE FROM sqlite_sequence WHERE name = ?").run("mediathek");
     const i = await insertFilme(parseFilme("static/test/filme181.json"), 100);
     expect(i).toStrictEqual({ id: 1, count: 181 });
+  });
+
+  test("countFilms", () => {
+    const c = countFilms();
+    c.count("zdf", "lanz");
+    c.count("zdf", "lanz");
+    c.count("zdf", "anstalt");
+    console.log(c.c);
   });
 });

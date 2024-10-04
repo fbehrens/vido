@@ -153,8 +153,20 @@ const fields =
   //10      11      12    13        14    15        16     17         18  19
   "captions,urlRtmp,urlLD,urlRtmpLD,urlHD,urlRtmpHD,datumL,urlHistory,geo,neu";
 
+export function countFilms() {
+  return {
+    c: new Map(),
+    count(sender: string, thema: string) {
+      let s = this.c.get(sender);
+      if (!s) {
+        s = new Map();
+        this.c.set(sender, s);
+      }
+      s.set(thema, (s.get(thema) || 0) + 1);
+    },
+  };
+}
 export function* parseFilme(path = filmlisteJson) {
-  //   if (bulkSql) createFilmsTable();
   let json = fs.readFileSync(path, { encoding: "utf8" });
   if (json.charAt(json.length - 1) != "}") {
     console.warn("Filmlist not ending with } (incomplete?) ");
@@ -170,6 +182,7 @@ export function* parseFilme(path = filmlisteJson) {
     version,
     hash,
   };
+  const counter = countFilms();
   let mapper = () => {
     let sender = "",
       thema = "";
@@ -177,6 +190,7 @@ export function* parseFilme(path = filmlisteJson) {
       const vs = JSON.parse(line);
       sender = vs.shift() || sender;
       thema = vs.shift() || thema;
+      counter.count(sender, thema);
       vs[6] = Number(vs[6]);
       vs[16] = Number(vs[16]);
       return [sender, thema, ...vs];
@@ -186,7 +200,7 @@ export function* parseFilme(path = filmlisteJson) {
   for (let f of filme) {
     yield m(f);
   }
-  // ["Sender","Thema","Titel","Datum","Zeit","Dauer","Größe [MB]","Beschreibung","Url","Website","Url Untertitel","Url RTMP","Url Klein","Url RTMP Klein","Url HD","Url RTMP HD","DatumL","Url History","Geo","neu"]
+  return counter.c;
 }
 export async function insertFilme(filme: any, step: number = 5000) {
   const { value: liste } = filme.next();
@@ -204,9 +218,12 @@ export async function insertFilme(filme: any, step: number = 5000) {
   const sql = dbMdtk.prepare(`
     INSERT INTO films (${fields} ) VALUES (${values})`);
   const stepper = everyStep(step);
-  for (let f of filme) {
-    sql.run(f);
+  let n;
+  while (true) {
+    n = filme.next();
+    if (n.done) break;
+    sql.run(n.value);
     stepper.tick();
   }
-  return { id, count: stepper.count };
+  return { id, count: stepper.count, counter: n.value };
 }
