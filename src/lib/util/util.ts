@@ -56,11 +56,20 @@ export function nTimes(n: number, f: any, ...args: any[]) {
 }
 
 export function everyStep(step: number) {
-  let counter = 0;
-  return () => {
-    counter++;
-    if (counter % step === 0) {
-      console.log(counter);
-    }
+  return {
+    counter: 0,
+    get count() {
+      return this.counter;
+    },
+    start: performance.now(),
+    elapsed() {
+      return Math.round((performance.now() - this.start) / 1000);
+    },
+    tick() {
+      this.counter++;
+      if (this.counter % step === 0) {
+        console.log(`${this.counter} ${this.elapsed()}s`);
+      }
+    },
   };
 }

@@ -33,6 +33,6 @@ describe("mediathek", async () => {
     db.prepare("delete from mediathek").run();
     db.prepare("DELETE FROM sqlite_sequence WHERE name = ?").run("mediathek");
     const i = await insertFilme(parseFilme("static/test/filme181.json"), 100);
-    expect(i).toBe(1);
+    expect(i).toStrictEqual({ id: 1, count: 181 });
   });
 });

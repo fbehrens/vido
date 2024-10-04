@@ -75,7 +75,8 @@ export async function updateFilmliste(
   if (!alreadyDownloaded || force) {
     await downloadFilmliste();
     await decompressFilmliste();
-    await insertFilme(parseFilme());
+    const { id, count } = await insertFilme(parseFilme());
+    console.log(`inserted ${count} films with id ${id}`);
   } else {
     console.log("Filmliste is up to date");
   }
@@ -205,7 +206,7 @@ export async function insertFilme(filme: any, step: number = 5000) {
   const stepper = everyStep(step);
   for (let f of filme) {
     sql.run(f);
-    stepper();
+    stepper.tick();
   }
-  return id;
+  return { id, count: stepper.count };
 }
