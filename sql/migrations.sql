@@ -54,3 +54,52 @@ CREATE TABLE mediathek (
     hash TEXT)
 CREATE UNIQUE INDEX mediathek_utc ON mediathek(utc);
 
+
+DROP TABLE IF EXISTS films;
+CREATE TABLE IF NOT EXISTS films (
+id INTEGER PRIMARY KEY,
+sender TEXT,
+thema TEXT,
+titel TEXT,
+datum TEXT,
+zeit TEXT,
+dauer TEXT,
+mb REAL,
+beschreibung TEXT,
+url TEXT,
+website TEXT,
+captions TEXT,
+urlRtmp TEXT,
+urlLD TEXT,
+urlRtmpLD TEXT,
+urlHD TEXT,
+urlRtmpHD TEXT,
+datumL INTEGER,
+urlHistory TEXT,
+geo TEXT,
+neu TEXT
+);
+DROP TABLE IF EXISTS import;
+CREATE TABLE IF NOT EXISTS import (
+id INTEGER PRIMARY KEY,
+sender TEXT,
+thema TEXT,
+titel TEXT,
+datum TEXT,
+zeit TEXT,
+dauer TEXT,
+mb REAL,
+beschreibung TEXT,
+url TEXT,
+website TEXT,
+captions TEXT,
+urlRtmp TEXT,
+urlLD TEXT,
+urlRtmpLD TEXT,
+urlHD TEXT,
+urlRtmpHD TEXT,
+datumL INTEGER,
+urlHistory TEXT,
+geo TEXT,
+neu TEXT
+);
