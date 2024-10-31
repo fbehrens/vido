@@ -48,22 +48,14 @@ export const youtube = sqliteTable("youtube", {
   json3: text(),
 });
 
-export const mediathek = sqliteTable(
-  "mediathek",
-  {
-    id: integer().primaryKey({ autoIncrement: true }),
-    local: text(),
-    utc: text(),
-    nr: text(),
-    version: text(),
-    hash: text(),
-  },
-  (table) => {
-    return {
-      utc: uniqueIndex("mediathek_utc").on(table.utc),
-    };
-  },
-);
+export const mediathek = sqliteTable("mediathek", {
+  id: integer().primaryKey({ autoIncrement: true }),
+  local: text(),
+  utc: text().unique(),
+  nr: text(),
+  version: text(),
+  hash: text(),
+});
 
 export const clipsV = sqliteView("clips_v", {
   movieId: integer("movie_id"),
@@ -88,10 +80,10 @@ export const films = sqliteTable("films", {
   website: text(),
   captions: text(),
   urlRtmp: text(),
-  urlLd: text("urlLD"),
-  urlRtmpLd: text("urlRtmpLD"),
-  urlHd: text("urlHD"),
-  urlRtmpHd: text("urlRtmpHD"),
+  urlLd: text(),
+  urlRtmpLd: text(),
+  urlHd: text(),
+  urlRtmpHd: text(),
   datumL: integer(),
   urlHistory: text(),
   geo: text(),
