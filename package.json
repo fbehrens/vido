@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "db:push": "drizzle-kit push",
+    "db:push:test": "drizzle-kit push --config drizzle.config.test.ts",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "dev": "vite dev",
