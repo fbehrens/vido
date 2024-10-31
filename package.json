@@ -4,6 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "db:push": "drizzle-kit push",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
@@ -40,11 +43,13 @@
     "@napi-rs/lzma": "^1.4.1",
     "@types/node": "^22.8.5",
     "better-sqlite3": "^11.5.0",
+    "drizzle-kit": "^0.27.0",
+    "drizzle-orm": "^0.36.0",
     "flowbite": "^2.5.2",
     "flowbite-svelte": "^0.46.23",
     "imsc": "^1.1.5",
     "openai": "^4.69.0",
-    "readable-stream": "^4.5.2",
-    "sqlite3": "^5.1.7"
-  }
+    "readable-stream": "^4.5.2"
+  },
+  "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee"
 }

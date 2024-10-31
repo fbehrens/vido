@@ -1,7 +1,7 @@
 node_modules
 static/mediathek
 play
-db
+*.db
 *.mov
 *.mp4
 *.mp3
