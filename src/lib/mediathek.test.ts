@@ -13,11 +13,4 @@ describe("mediathek", async () => {
   test("profileParse", () => {
     nTimes(200_000, parseDate, d);
   });
-
-  describe("updateFilmliste", async () => {
-    beforeEach(() => {});
-    test("insertFilme", async () => {
-      await updateFilmliste();
-    }, 120_000);
-  });
 });

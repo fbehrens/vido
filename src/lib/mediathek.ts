@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { db, dbFilmsPath, dbFilms } from "$lib/db";
+import { db, dbPath } from "$lib/db";
 import { exec } from "$lib/util/util";
 
 const filmlisteUrl = "https://liste.mediathekview.de/Filmliste-akt.xz";
@@ -27,8 +27,10 @@ export async function updateFilmliste() {
   const response = await fetch(
     "https://liste.mediathekview.de/Filmliste-akt.xz",
   );
-  const etag = response.headers.get("etag")!;
-  if (etag === (await readEtag())) {
+  const etag = response.headers.get("etag")!,
+    oldEtag = await readEtag();
+  console.log({ etag, oldEtag });
+  if (etag === oldEtag) {
     console.log("no update");
     return;
   }
@@ -94,11 +96,12 @@ async function insertFilme(filme: any) {
     csv += f + "\n";
   }
   fs.writeFileSync(filmeCsv, csv);
-  dbFilms.exec(`delete from import`);
-  const insertCommand = `sqlite3 ${dbFilmsPath} ".import --csv ${filmeCsv} import"`;
+  const filmsImport = "films_import";
+  db.exec(`delete from ${filmsImport}`);
+  const insertCommand = `sqlite3 ${dbPath} ".import --csv ${filmeCsv} ${filmsImport}"`;
   console.log(`run ${insertCommand}`);
   await exec(insertCommand);
-  dbFilms.exec(`delete from films; insert into films select * from import`);
+  db.exec(`delete from films; insert into films select * from ${filmsImport}`);
 }
 
 export function parseDate(s: string): Date {
