@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "db:push": "drizzle-kit push",
-    "db:push:test": "drizzle-kit push --config drizzle.config.test.ts",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
+    "db:test:push": "DATABASE_URL=db/test.db drizzle-kit push",
+    "db:test:studio": "DATABASE_URL=db/test.db drizzle-kit studio",
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
