@@ -1,10 +1,10 @@
 import { describe, test, expect } from "vitest";
-import { db } from "./db";
+import { dbOld } from "./db";
 import type { Movie } from "./types";
 import { mp3Path } from "./util/util";
 import { extractMp3 } from "./ffmpeg";
 describe("all segments", async () => {
-  const movie = db
+  const movie = dbOld
     .prepare("SELECT * FROM movies where id =?")
     .get(381) as Movie;
   test.skip("it is found", () => {

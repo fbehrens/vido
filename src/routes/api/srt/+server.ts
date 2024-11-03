@@ -1,4 +1,4 @@
-import { db } from "$lib/db";
+import { dbOld } from "$lib/db";
 import type { Segment } from "$lib/types";
 import { json, type RequestEvent } from "@sveltejs/kit";
 type Unit = "word" | "segment";
@@ -11,10 +11,10 @@ export async function GET(event: RequestEvent) {
   const filename = `${id}_${clip_id}_${unit}.${typ}`;
   const { segments } = (
     clip_id
-      ? db
+      ? dbOld
           .prepare("select segments from clips where movie_id=? and id=?")
           .get(id, clip_id)
-      : db.prepare("select segments from movies where id=?").get(id)
+      : dbOld.prepare("select segments from movies where id=?").get(id)
   ) as { segments: string };
   const segs = JSON.parse(segments) as Segment[];
   const timestamps =

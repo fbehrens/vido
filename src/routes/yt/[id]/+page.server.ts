@@ -1,7 +1,7 @@
-import { db } from "$lib/db";
+import { dbOld } from "$lib/db";
 
 export async function load({ params }) {
-  const yt = db
+  const yt = dbOld
     .prepare(
       "select id,info,lang,json3 as 'json3text' from youtube where id=@id",
     )

@@ -1,4 +1,4 @@
-import { db } from "$lib/db";
+import { dbOld } from "$lib/db";
 import { extractMp3, getDuration, getFramerate } from "$lib/ffmpeg";
 import type { Clip, Movie, Segment, Word } from "$lib/types";
 import { mp3Path } from "$lib/util/util";
@@ -8,24 +8,28 @@ import * as fs from "fs";
 
 export async function load({ params }) {
   let { filename } = params;
-  let row = db.prepare("select id from movies where filename= ?").get(filename);
+  let row = dbOld
+    .prepare("select id from movies where filename= ?")
+    .get(filename);
   if (!row)
-    db.prepare(
-      "INSERT OR IGNORE INTO movies (filename,duration,framerate) VALUES (?,?,?)",
-    ).run(
-      filename,
-      await getDuration(`static/${filename}`),
-      await getFramerate(`static/${filename}`),
-    );
-  const { id } = db
+    dbOld
+      .prepare(
+        "INSERT OR IGNORE INTO movies (filename,duration,framerate) VALUES (?,?,?)",
+      )
+      .run(
+        filename,
+        await getDuration(`static/${filename}`),
+        await getFramerate(`static/${filename}`),
+      );
+  const { id } = dbOld
     .prepare("select id from movies where filename=?")
     .get(filename) as { id: number };
 
-  const movie = db
+  const movie = dbOld
     .prepare("select * from movies where id = ?")
     .get(id) as Movie;
   const getClips = () =>
-    db.prepare("select * from clips where movie_id = ?").all(id) as Clip[];
+    dbOld.prepare("select * from clips where movie_id = ?").all(id) as Clip[];
   let clips = getClips();
   if (clips.length == 0) {
     console.log("create clips");
@@ -38,15 +42,17 @@ export async function load({ params }) {
       const mp3file = "static/" + mp3Path(movie.filename, clip_id);
       await extractMp3(`static/${movie.filename}`, start, end, mp3file);
       const fileSize = fs.statSync(mp3file).size;
-      db.prepare(
-        `INSERT INTO clips (id, movie_id, start, end,  filesize) VALUES (@clip_id, @id, @start, @end, @fileSize)`,
-      ).run({
-        clip_id,
-        id,
-        start,
-        end,
-        fileSize,
-      });
+      dbOld
+        .prepare(
+          `INSERT INTO clips (id, movie_id, start, end,  filesize) VALUES (@clip_id, @id, @start, @end, @fileSize)`,
+        )
+        .run({
+          clip_id,
+          id,
+          start,
+          end,
+          fileSize,
+        });
       start += maxClipLength;
       clip_id++;
     }
@@ -58,9 +64,11 @@ export async function load({ params }) {
       console.log({ clip_id: c.id, action: `call whisper` });
       const t = await transcribe("static/" + mp3Path(movie.filename, c.id));
       const transcript = JSON.stringify(t);
-      db.prepare(
-        `UPDATE clips set transcript = @transcript where movie_id = @id and id= @clip_id`,
-      ).run({ transcript, id, clip_id: c.id });
+      dbOld
+        .prepare(
+          `UPDATE clips set transcript = @transcript where movie_id = @id and id= @clip_id`,
+        )
+        .run({ transcript, id, clip_id: c.id });
     }
     clips = getClips();
   }
@@ -70,9 +78,9 @@ export async function load({ params }) {
     toSegments.forEach((c) => {
       console.log({ clip_id: c.id, action: `calculate segments for ` });
       const segments = calcSegments(c);
-      db.prepare(
-        "update clips set segments = ? where id = ? and movie_id = ?",
-      ).run(JSON.stringify(segments), c.id, id);
+      dbOld
+        .prepare("update clips set segments = ? where id = ? and movie_id = ?")
+        .run(JSON.stringify(segments), c.id, id);
     });
     console.log("loaded");
     clips = getClips();
@@ -108,7 +116,7 @@ function joinClips(cut: number[], movie_id: number) {
       }
     };
   };
-  const clips = db
+  const clips = dbOld
     .prepare("select id,segments from clips where movie_id = ? order by id")
     .all(movie_id)
     .map((s: any, index) => {
@@ -128,10 +136,9 @@ function joinClips(cut: number[], movie_id: number) {
   });
   const segments = clips.flatMap((c) => c);
   console.log(segments.length);
-  db.prepare("update movies set segments= ? where id = ?").run(
-    JSON.stringify(segments),
-    movie_id,
-  );
+  dbOld
+    .prepare("update movies set segments= ? where id = ?")
+    .run(JSON.stringify(segments), movie_id);
 }
 
 function calcSegments({

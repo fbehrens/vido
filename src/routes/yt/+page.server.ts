@@ -1,9 +1,9 @@
-import { db } from "$lib/db";
+import { dbOld } from "$lib/db";
 import { ytGetId, ytGetInfo } from "$lib/yt";
 
 export async function load({ params }) {
   const yts = (
-    db.prepare("select id,info from youtube").all() as {
+    dbOld.prepare("select id,info from youtube").all() as {
       id: string;
       info: string;
     }[]
@@ -30,11 +30,8 @@ export const actions = {
     const response = await fetch(json3Url);
     if (!response.ok) throw "Error fetching json3";
     const json3 = await response.text();
-    db.prepare("insert into youtube   values (?,?,?,?)").run(
-      id,
-      info,
-      lang,
-      json3,
-    );
+    dbOld
+      .prepare("insert into youtube   values (?,?,?,?)")
+      .run(id, info, lang, json3);
   },
 };

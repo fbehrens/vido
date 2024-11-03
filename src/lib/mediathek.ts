@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { db, dbPath } from "$lib/db";
+import { dbOld, dbPath } from "$lib/db";
 import { exec } from "$lib/util/util";
 
 const filmlisteUrl = "https://liste.mediathekview.de/Filmliste-akt.xz";
@@ -84,9 +84,11 @@ export function* parseFilme({ path = "", bytes = Buffer.alloc(0) }) {
 async function insertFilme(filme: any) {
   const { value: liste } = filme.next();
   try {
-    db.prepare(
-      `INSERT INTO mediathek ( local , utc , nr , version , hash ) VALUES ( ?,?,?,?,? )`,
-    ).run(liste);
+    dbOld
+      .prepare(
+        `INSERT INTO mediathek ( local , utc , nr , version , hash ) VALUES ( ?,?,?,?,? )`,
+      )
+      .run(liste);
   } catch (e) {
     console.log(e);
   }
@@ -97,11 +99,13 @@ async function insertFilme(filme: any) {
   }
   fs.writeFileSync(filmeCsv, csv);
   const filmsImport = "films_import";
-  db.exec(`delete from ${filmsImport}`);
+  dbOld.exec(`delete from ${filmsImport}`);
   const insertCommand = `sqlite3 ${dbPath} ".import --csv ${filmeCsv} ${filmsImport}"`;
   console.log(`run ${insertCommand}`);
   await exec(insertCommand);
-  db.exec(`delete from films; insert into films select * from ${filmsImport}`);
+  dbOld.exec(
+    `delete from films; insert into films select * from ${filmsImport}`,
+  );
 }
 
 export function parseDate(s: string): Date {

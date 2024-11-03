@@ -1,10 +1,10 @@
-import { db } from "$lib/db";
+import { dbOld } from "$lib/db";
 import type { Segment } from "$lib/types.js";
 import { mp3Path } from "$lib/util/util";
 
 export function load({ params }) {
   const { id, clip_id } = params;
-  const clip1 = db
+  const clip1 = dbOld
     .prepare("Select * from clips_v where movie_id=? and id=?")
     .get(id, clip_id) as {
     id: number;
