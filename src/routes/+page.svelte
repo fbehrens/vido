@@ -66,7 +66,7 @@
               <td class=""> {f.duration} </td>
               <td
                 >{#each f.clips as c}
-                  <a href="/movie/{f.id}/{c}">{c}</a>&nbsp;
+                  <a href="/movie/{f.id}/{c.id}">{c.id}</a>&nbsp;
                 {/each}
               </td>
             </tr>

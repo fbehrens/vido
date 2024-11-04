@@ -3,6 +3,7 @@ import { join } from "path";
 import { db } from "$lib/server/db/index.js";
 import { clips, movies } from "$lib/server/db/schema.js";
 import { sql } from "drizzle-orm";
+import { concat } from "drizzle-orm/mysql-core/expressions";
 
 export interface MyFile {
   filename: string;
@@ -11,7 +12,7 @@ export interface MyFile {
 
 const dir = process.cwd() + "/static/";
 
-function getAllFiles(dirPath: string, arrayOfFiles: MyFile[] = []): MyFile[] {
+function getAllFiles(dirPath: string, arrayOfFiles: MyFile[] = []) {
   const files = readdirSync(dirPath);
   files.forEach((file) => {
     const filePath = join(dirPath, file);
@@ -32,27 +33,37 @@ export async function load({}) {
   const files = getAllFiles(dir).filter((f) =>
     /\.(mov|mp4|mkv)$/i.test(f.filename),
   );
-  const movies_ = await db
-    .select({
-      filename: movies.filename,
-      id: movies.id,
-      duration: movies.duration,
-      create: sql<number>`CASE WHEN segments IS NULL THEN 1 ELSE 0 END`,
-    })
-    .from(movies);
-  const clips_ = await db
-    .select({ id: clips.id, movieId: clips.movieId })
-    .from(clips);
-  const fns = [...movies_, ...files].map(({ filename }) => filename);
+  const mc = await db.query.movies.findMany({
+    columns: {
+      id: true,
+      filename: true,
+      duration: true,
+    },
+    extras: {
+      create: sql<boolean>`CASE WHEN segments IS NULL THEN 1 ELSE 0 END`.as(
+        "create",
+      ),
+    },
+    with: {
+      clips: {
+        columns: {
+          id: true,
+        },
+      },
+    },
+  });
+  type MovieWithExtras = typeof movies.$inferSelect & {
+    create: boolean;
+    clips: {
+      id: number;
+    }[];
+  };
 
-  const join = [...new Set(fns)]
-    .map((fn) => ({
-      ...files.find((f) => f.filename === fn),
-      ...movies_.find((f) => f.filename === fn),
-    }))
-    .map((m) => ({
-      ...m,
-      clips: clips_.filter((c: any) => c.movieId === m.id).map((c) => c.id),
-    }));
+  type FileWithMovie = MyFile & Partial<MovieWithExtras>;
+
+  const join: FileWithMovie[] = files.map((m) => {
+    const mc_ = mc.find((e) => e.filename === m.filename) || {};
+    return { ...m, ...mc_ };
+  });
   return { files: join };
 }

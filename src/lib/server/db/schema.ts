@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   sqliteTable,
   text,
@@ -23,7 +23,7 @@ export const clips = sqliteTable(
     movieId: integer("movie_id").references(() => movies.id, {
       onDelete: "cascade",
     }),
-    id: integer(),
+    id: integer().notNull(),
     start: real(),
     end: real(),
     text: text(),
@@ -65,6 +65,17 @@ export const clipsV = sqliteView("clips_v", {
 }).as(
   sql`select movie_id,c.id,c.segments,m.filename as m_filename from clips as c join movies as m on c.movie_id = m.id`,
 );
+
+export const clipsRelations = relations(clips, ({ one }) => ({
+  movie: one(movies, {
+    fields: [clips.movieId],
+    references: [movies.id],
+  }),
+}));
+
+export const moviesRelations = relations(movies, ({ many }) => ({
+  clips: many(clips),
+}));
 
 export const films = sqliteTable("films", {
   id: integer().primaryKey(),
