@@ -33,7 +33,7 @@
           {#each selected as f}
             <tr>
               <td>
-                {#if f.id && !f.create}
+                {#if f.id && f.has_segments}
                   <a href="movie/{f.id}">{f.filename}</a>
                 {:else}
                   <a href="movie/create/{f.filename}">{f.filename}</a>

@@ -40,9 +40,8 @@ export async function load({}) {
       duration: true,
     },
     extras: {
-      create: sql<boolean>`CASE WHEN segments IS NULL THEN 1 ELSE 0 END`.as(
-        "create",
-      ),
+      has_segments:
+        sql<boolean>`CASE WHEN segments IS NULL THEN 0 ELSE 1 END`.as("create"),
     },
     with: {
       clips: {
@@ -53,16 +52,18 @@ export async function load({}) {
     },
   });
   type MovieWithExtras = typeof movies.$inferSelect & {
-    create: boolean;
-    clips: {
-      id: number;
-    }[];
+    has_segments: boolean;
   };
 
-  type FileWithMovie = MyFile & Partial<MovieWithExtras>;
+  type FileWithMovie = MyFile &
+    Partial<MovieWithExtras> & {
+      clips: {
+        id: number;
+      }[];
+    };
 
   const join: FileWithMovie[] = files.map((m) => {
-    const mc_ = mc.find((e) => e.filename === m.filename) || {};
+    const mc_ = mc.find((e) => e.filename === m.filename) || { clips: [] };
     return { ...m, ...mc_ };
   });
   return { files: join };
