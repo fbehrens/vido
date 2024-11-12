@@ -4,6 +4,7 @@ import { db } from "$lib/server/db/index.js";
 import { clips, movies } from "$lib/server/db/schema.js";
 import { sql } from "drizzle-orm";
 import { concat } from "drizzle-orm/mysql-core/expressions";
+import { redirect, type Actions } from "@sveltejs/kit";
 
 export interface MyFile {
   filename: string;
@@ -30,6 +31,7 @@ function getAllFiles(dirPath: string, arrayOfFiles: MyFile[] = []) {
 }
 
 export async function load({}) {
+  console.log({ load: new Date() });
   const files = getAllFiles(dir).filter((f) =>
     /\.(mov|mp4|mkv)$/i.test(f.filename),
   );
@@ -68,3 +70,13 @@ export async function load({}) {
   });
   return { files: join };
 }
+export const actions = {
+  insert: async ({ cookies, request }) => {
+    const data = await request.formData();
+    const filename = <string>data.get("filename");
+    console.log({ v: 3, filename });
+    // redirect(303, "/");
+    // console.log({ v: "after" });
+    return { success: true };
+  },
+} satisfies Actions;

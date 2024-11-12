@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
   import Icon from "$lib/components/Icon.svelte";
   let { data } = $props();
@@ -9,10 +10,35 @@
       e.filename.toLowerCase().includes(searchString.toLowerCase()),
     ),
   );
+  function handleSubmit(filename: string) {
+    return (e: MouseEvent) => {
+      e.preventDefault();
+      const formData = new FormData();
+      formData.append("filename", filename);
+      fetch("?/insert", {
+        method: "POST",
+        body: formData,
+      });
+    };
+  }
 </script>
 
 <main>
-  <form action="|" method="POST">
+  <form
+    method="POST"
+    use:enhance={() => {
+      console.log(1);
+      return async (result) => {
+        // `result` is an `ActionResult` object
+        console.log({ result });
+        // if (result.type === 'redirect') {
+        // 	goto(result.location);
+        // } else {
+        // 	await applyAction(result);
+        // }
+      };
+    }}
+  >
     <div class="relative overflow-x-auto">
       <table class="table-auto">
         <thead class="">
@@ -37,6 +63,7 @@
                   <a href="movie/{f.id}">{f.filename}</a>
                 {:else}
                   <a href="movie/create/{f.filename}">{f.filename}</a>
+                  <button onclick={handleSubmit(f.filename)}>insert</button>
                 {/if}
               </td>
               <td> {f.size} </td>

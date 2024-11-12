@@ -1,7 +1,9 @@
 CREATE TABLE movies (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    filename TEXT UNIQUE NOT NULL
-, duration REAL, segments TEXT, framerate REAL);
+    filename TEXT UNIQUE NOT NULL,
+    duration REAL,
+    segments TEXT,
+    framerate REAL);
 CREATE TABLE sqlite_sequence(name,seq);
 CREATE TABLE clips (
   movie_id INTEGER,

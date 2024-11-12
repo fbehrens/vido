@@ -8,19 +8,16 @@ import * as fs from "fs";
 
 export async function load({ params }) {
   let { filename } = params;
-  let row = dbOld
-    .prepare("select id from movies where filename= ?")
-    .get(filename);
-  if (!row)
-    dbOld
-      .prepare(
-        "INSERT OR IGNORE INTO movies (filename,duration,framerate) VALUES (?,?,?)",
-      )
-      .run(
-        filename,
-        await getDuration(`static/${filename}`),
-        await getFramerate(`static/${filename}`),
-      );
+  dbOld
+    .prepare(
+      "INSERT OR IGNORE INTO movies (filename,duration,framerate) VALUES (?,?,?)",
+    )
+    .run(
+      filename,
+      await getDuration(`static/${filename}`),
+      await getFramerate(`static/${filename}`),
+    );
+  throw "ff";
   const { id } = dbOld
     .prepare("select id from movies where filename=?")
     .get(filename) as { id: number };
