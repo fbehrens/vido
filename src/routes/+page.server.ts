@@ -71,7 +71,7 @@ export async function load({}) {
   return { files: join };
 }
 export const actions = {
-  insert: async ({ cookies, request }) => {
+  default: async ({ cookies, request }) => {
     const data = await request.formData();
     const filename = <string>data.get("filename");
     console.log({ v: 3, filename });
