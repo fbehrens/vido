@@ -1,19 +1,24 @@
 <script lang="ts">
   import type { Segment, Word } from "$lib/types";
+  import { error } from "console";
 
   let { data } = $props();
-  let { movie, clips } = data;
-  const overlaps = clips //
+  let { movie, clps } = data;
+  let ok = clps.every((c) => c.segments);
+  if (!ok) {
+    throw error(500, { message: "No segments found" });
+  }
+  const overlaps = clps //
     .map((clip, index) => {
       if (!index) return;
-      const prev = clips[index - 1];
+      const prev = clps[index - 1];
       return {
         start: clip.start,
         end: prev.end,
-        seg: (JSON.parse(prev.segments) as Segment[]).filter(
+        seg: (JSON.parse(prev.segments!) as Segment[]).filter(
           (s) => s.end >= clip.start,
         ),
-        nxt: (JSON.parse(clip.segments) as Segment[]).filter(
+        nxt: (JSON.parse(clip.segments!) as Segment[]).filter(
           (s) => s.start <= prev.end,
         ),
       };

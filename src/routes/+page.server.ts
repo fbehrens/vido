@@ -2,9 +2,9 @@ import { readdirSync, statSync } from "fs";
 import { join } from "path";
 import { db } from "$lib/server/db/index.js";
 import { clips, movies } from "$lib/server/db/schema.js";
-import { sql } from "drizzle-orm";
-import { concat } from "drizzle-orm/mysql-core/expressions";
-import { redirect, type Actions } from "@sveltejs/kit";
+import { sql, eq } from "drizzle-orm";
+import { createMovie, createTranscription } from "$lib/util/transcribe";
+import type { Actions } from "@sveltejs/kit";
 
 export interface MyFile {
   filename: string;
@@ -31,30 +31,45 @@ function getAllFiles(dirPath: string, arrayOfFiles: MyFile[] = []) {
 }
 
 export async function load({}) {
-  console.log({ load: new Date() });
+  console.log("+page.server.ts(load)");
   const files = getAllFiles(dir).filter((f) =>
     /\.(mov|mp4|mkv)$/i.test(f.filename),
   );
-  const mc = await db.query.movies.findMany({
-    columns: {
-      id: true,
-      filename: true,
-      duration: true,
-    },
-    extras: {
-      has_segments:
-        sql<boolean>`CASE WHEN segments IS NULL THEN 0 ELSE 1 END`.as("create"),
-    },
-    with: {
-      clips: {
-        columns: {
-          id: true,
+  const mc = (
+    await db.query.movies.findMany({
+      columns: {
+        id: true,
+        filename: true,
+        duration: true,
+      },
+      extras: {
+        has_segments:
+          sql<boolean>`CASE WHEN segments IS NULL THEN 0 ELSE 1 END`.as(
+            "create",
+          ),
+      },
+      with: {
+        clips: {
+          columns: {
+            id: true,
+          },
+          extras: {
+            has_segments:
+              sql<boolean>`CASE WHEN segments IS NULL THEN 0 ELSE 1 END`.as(
+                "create",
+              ),
+          },
         },
       },
-    },
+    })
+  ).map((m) => {
+    const everyClipHasSegments = m.clips.every((c) => c.has_segments);
+    return { ...m, everyClipHasSegments };
   });
+  //   console.log(mc.find((m) => m.id === 743));
   type MovieWithExtras = typeof movies.$inferSelect & {
     has_segments: boolean;
+    everyClipHasSegments: boolean;
   };
 
   type FileWithMovie = MyFile &
@@ -70,13 +85,24 @@ export async function load({}) {
   });
   return { files: join };
 }
+
 export const actions = {
-  default: async ({ cookies, request }) => {
+  create: async ({ cookies, request }) => {
     const data = await request.formData();
     const filename = <string>data.get("filename");
-    console.log({ v: 3, filename });
-    // redirect(303, "/");
-    // console.log({ v: "after" });
+    const id = <number | null>data.get("id");
+    const movie = id
+      ? await db.select().from(movies).where(eq(movies.id, id)).get()!
+      : await createMovie(filename);
+    await createTranscription(movie);
     return { success: true };
+  },
+  delete: async ({ request }) => {
+    const data = await request.formData();
+    const id = <number | null>data.get("id");
+    if (id === null) return { success: false };
+    console.log("delete Movies and clips (", id, ")");
+    await db.delete(movies).where(eq(movies.id, id));
+    await db.delete(clips).where(eq(clips.movieId, id));
   },
 } satisfies Actions;

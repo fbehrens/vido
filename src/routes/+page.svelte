@@ -35,39 +35,30 @@
             <td>
               {#if f.id && f.has_segments}
                 <a href="movie/{f.id}">{f.filename}</a>
-              {:else if f.id}
-                <a href="movie/create/{f.filename}">{f.filename}</a>
               {:else}
-                <form method="POST">
-                  <input name="filename" hidden={true} value={f.filename} />
-                  {f.filename}
-                  <button type="submit">insert</button>
-                </form>
+                {f.filename}
               {/if}
             </td>
             <td> {f.size} </td>
             <td>
-              {#if f.id}
-                {f.id}
-                <button
-                  onclick={async (e: MouseEvent) => {
-                    e.preventDefault();
-                    const response = await fetch("/api/deleteMovie", {
-                      method: "POST",
-                      body: JSON.stringify({ id: f.id }),
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                    });
-                    if (response.ok) {
-                      console.log(await response.body);
-                      goto("/");
-                    }
-                  }}
-                >
-                  <Icon name="delete" />
-                </button>
-              {/if}
+              <form method="POST" class="flex">
+                <input name="filename" hidden={true} value={f.filename} />
+                <input name="id" hidden={true} value={f.id} />
+                {#if f.id}
+                  {f.id}
+                  <button type="submit" formaction="?/delete">
+                    <Icon name="delete" />
+                  </button>
+                {/if}
+                {#if f.id && !f.has_segments && f.everyClipHasSegments}
+                  <a href="movie/cut/{f.id}"> <Icon name="cut" /> </a>
+                {/if}
+                {#if !f.id || (!f.has_segments && !f.everyClipHasSegments)}
+                  <button type="submit" formaction="?/create"
+                    ><Icon name="create" /></button
+                  >
+                {/if}
+              </form>
             </td>
             <td class=""> {f.duration} </td>
             <td

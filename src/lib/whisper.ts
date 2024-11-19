@@ -17,6 +17,8 @@ export async function transcribe(filename: string) {
     timestamp_granularities: ["word", "segment"],
   });
   const { text, segments, words } = transcription as ExtendedTranscription;
-  console.log({ text });
+  console.log(
+    `done: ${text.length} characters, ${words.length} words , ${segments.length} segments `,
+  );
   return { text, segments, words };
 }

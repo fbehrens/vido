@@ -20,14 +20,17 @@ export const movies = sqliteTable("movies", {
 export const clips = sqliteTable(
   "clips",
   {
-    movieId: integer("movie_id").references(() => movies.id, {
-      onDelete: "cascade",
-    }),
+    movieId: integer("movie_id")
+      .notNull()
+      .references(() => movies.id, {
+        onDelete: "cascade",
+      }),
     id: integer().notNull(),
-    start: real(),
-    end: real(),
+    start: real().notNull(),
+    end: real().notNull(),
     text: text(),
     filesize: real(),
+    filename: text(),
     transcript: text(),
     segments: text(),
   },
@@ -56,15 +59,6 @@ export const mediathek = sqliteTable("mediathek", {
   version: text(),
   hash: text(),
 });
-
-export const clipsV = sqliteView("clips_v", {
-  movieId: integer("movie_id"),
-  id: integer(),
-  segments: text(),
-  mFilename: text("m_filename"),
-}).as(
-  sql`select movie_id,c.id,c.segments,m.filename as m_filename from clips as c join movies as m on c.movie_id = m.id`,
-);
 
 export const clipsRelations = relations(clips, ({ one }) => ({
   movie: one(movies, {
