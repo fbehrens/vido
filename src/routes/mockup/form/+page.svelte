@@ -50,3 +50,6 @@ form: {JSON.stringify(form, null, 2)}
   <input type="text" name="name" />
   <button formaction="?/b1">b1</button>
 </form>
+<form method="POST" action="?/redirect">
+  <button>redirect</button>
+</form>

@@ -39,4 +39,10 @@ export const actions = {
       ac: "b1",
     };
   },
+  redirect: async ({ request }) => {
+    return {
+      success: false,
+      ac: "redirect",
+    };
+  },
 } satisfies Actions;
