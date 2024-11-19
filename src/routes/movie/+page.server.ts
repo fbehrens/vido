@@ -4,7 +4,7 @@ import { db } from "$lib/server/db/index.js";
 import { clips, movies } from "$lib/server/db/schema.js";
 import { sql, eq } from "drizzle-orm";
 import { createMovie, createTranscription } from "$lib/util/transcribe";
-import type { Actions } from "@sveltejs/kit";
+import { redirect, type Actions } from "@sveltejs/kit";
 
 export interface MyFile {
   filename: string;
@@ -94,7 +94,11 @@ export const actions = {
     const movie = id
       ? await db.select().from(movies).where(eq(movies.id, id)).get()!
       : await createMovie(filename);
-    await createTranscription(movie);
+    const ready = await createTranscription(movie);
+    if (ready) {
+      redirect(303, `/movie/${movie.id}`);
+    }
+
     return { success: true };
   },
   delete: async ({ request }) => {

@@ -69,6 +69,9 @@ export async function createTranscription(m: typeof movies.$inferSelect) {
       .update(movies)
       .set({ segments: c.segments })
       .where(eq(movies.id, c.movieId));
+    return true;
+  } else {
+    return false; // cutt is required
   }
 }
 
