@@ -5,8 +5,6 @@ import {
   integer,
   real,
   primaryKey,
-  uniqueIndex,
-  sqliteView,
 } from "drizzle-orm/sqlite-core";
 
 export const movies = sqliteTable("movies", {

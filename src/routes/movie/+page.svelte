@@ -23,9 +23,9 @@
               bind:value={searchString}
             /></th
           >
-          <th scope="col" class="align-top"> size </th>
+          <th scope="col" class="align-top"> MB </th>
           <th scope="col" class="align-top"> id </th>
-          <th scope="col" class="align-top"> duration </th>
+          <th scope="col" class="align-top"> min </th>
           <th scope="col" class="align-top"> clips </th>
         </tr>
       </thead>
@@ -39,7 +39,7 @@
                 {f.filename}
               {/if}
             </td>
-            <td> {f.size} </td>
+            <td> {Math.round(f.size / 1_000_000)} </td>
             <td>
               <form method="POST" class="flex">
                 <input name="filename" hidden={true} value={f.filename} />
@@ -60,7 +60,10 @@
                 {/if}
               </form>
             </td>
-            <td class=""> {f.duration} </td>
+            <td>
+              {#if f.duration}{Math.round(f.duration / 6) / 10}
+              {/if}
+            </td>
             <td
               >{#each f.clips as c}
                 <a href="/movie/{f.id}/{c.id}">{c.id}</a>&nbsp;

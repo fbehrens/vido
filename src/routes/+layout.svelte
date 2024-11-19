@@ -6,7 +6,7 @@
 <header class="bg-blue-500 p-4 text-white">
   <div class="flex-container">
     <div class="flex"><p class="text-xl">video transcripting</p></div>
-    <a class="text-xs" href="/">home</a>
+    <a class="text-xs" href="/movie">movie</a>
     <a class="text-xs" href="/yt">youtube</a>
     <a class="text-xs" href="/mockup">mockup</a>
   </div>
