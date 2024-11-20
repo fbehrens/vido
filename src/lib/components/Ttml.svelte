@@ -4,8 +4,14 @@
   let imsc;
   let myVideo;
   let renderDiv;
-  onMount(async () => {
-    let imsc;
+  function clearSubFromScreen() {
+    const subtitleActive = renderDiv.getElementsByTagName("div")[0];
+    if (subtitleActive) {
+      renderDiv.removeChild(subtitleActive);
+    }
+  }
+  async function videoReady(e) {
+    console.log({ videoReady: myVideo.duration });
     try {
       // need readable-sream and alias in vite config
       imsc = await import("imsc");
@@ -18,20 +24,13 @@
     const text = await response.text();
     const imscDoc = imsc.fromXML(text);
     const timeEvents = imscDoc.getMediaTimeEvents();
-    function clearSubFromScreen() {
-      const subtitleActive = renderDiv.getElementsByTagName("div")[0];
-      if (subtitleActive) {
-        renderDiv.removeChild(subtitleActive);
-      }
-    }
 
     for (let i = 0; i < timeEvents.length; i++) {
       let myCue;
       if (i < timeEvents.length - 1) {
         myCue = new VTTCue(timeEvents[i], timeEvents[i + 1], "");
       } else {
-        myCue = new VTTCue(timeEvents[i], 30.1, "");
-        // hack video.duration is not ready yet
+        myCue = new VTTCue(timeEvents[i], myVideo.duration, "");
       }
       myCue.addEventListener("enter", function () {
         clearSubFromScreen();
@@ -40,6 +39,14 @@
         imsc.renderHTML(myIsd, renderDiv);
       });
       const r = myTrack.addCue(myCue);
+    }
+  }
+
+  onMount(async () => {
+    if (myVideo.readyState >= 2) {
+      videoReady();
+    } else {
+      myVideo.addEventListener("loadedmetadata", videoReady);
     }
   });
 </script>
