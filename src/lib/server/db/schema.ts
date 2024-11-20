@@ -11,8 +11,9 @@ export const movies = sqliteTable("movies", {
   id: integer().primaryKey({ autoIncrement: true }),
   filename: text().notNull(),
   duration: real(),
-  segments: text(),
   framerate: real(),
+  cut: text(), //json
+  segments: text(), //json
 });
 
 export const clips = sqliteTable(
@@ -29,8 +30,8 @@ export const clips = sqliteTable(
     text: text(),
     filesize: real(),
     filename: text(),
-    transcript: text(),
-    segments: text(),
+    transcript: text(), //json
+    segments: text(), //json
   },
   (table) => {
     return {

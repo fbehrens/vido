@@ -1,13 +1,9 @@
 <script lang="ts">
   import type { Segment, Word } from "$lib/types";
-  import { error } from "console";
-
   let { data } = $props();
   let { movie, clps } = data;
-  let ok = clps.every((c) => c.segments);
-  if (!ok) {
-    throw error(500, { message: "No segments found" });
-  }
+
+  let seconds = $state(10); //
   const overlaps = clps //
     .map((clip, index) => {
       if (!index) return;
@@ -25,7 +21,6 @@
     })
     .filter((c) => c !== undefined);
 
-  let seconds = $state(10); //
   let cut = $state(overlaps.map(({ start, end }) => (start + end) / 2));
 
   let rOverlaps = $derived(
@@ -83,7 +78,7 @@
     }),
   );
   $effect(() => {
-    // console.log(rOverlaps[0]);
+    console.log(rOverlaps[0]);
     // console.table(rOverlaps[0].segPos);
     // console.table(rOverlaps[0].segWords);
   });
