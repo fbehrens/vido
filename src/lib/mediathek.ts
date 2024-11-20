@@ -9,6 +9,9 @@ const filmlisteJson = "static/mediathek/filme.json";
 
 //  deno --allow-net --allow-write --allow-read --allow-env --allow-ffi --allow-run src/mediathek.ts
 import { decompress } from "@napi-rs/lzma/xz";
+import { db } from "./server/db";
+import { films, filmsImport, mediathek } from "./server/db/schema";
+import { count } from "drizzle-orm";
 
 const fileDir = "static/mediathek/",
   filmeJson = fileDir + "filmliste.json",
@@ -83,12 +86,9 @@ export function* parseFilme({ path = "", bytes = Buffer.alloc(0) }) {
 
 async function insertFilme(filme: any) {
   const { value: liste } = filme.next();
+  const [local, utc, nr, version, hash] = liste;
   try {
-    dbOld
-      .prepare(
-        `INSERT INTO mediathek ( local , utc , nr , version , hash ) VALUES ( ?,?,?,?,? )`,
-      )
-      .run(liste);
+    db.insert(mediathek).values({ local, utc, nr, version, hash });
   } catch (e) {
     console.log(e);
   }
@@ -98,14 +98,14 @@ async function insertFilme(filme: any) {
     csv += f + "\n";
   }
   fs.writeFileSync(filmeCsv, csv);
-  const filmsImport = "films_import";
-  dbOld.exec(`delete from ${filmsImport}`);
-  const insertCommand = `sqlite3 ${dbPath} ".import --csv ${filmeCsv} ${filmsImport}"`;
+  await db.delete(filmsImport);
+  const insertCommand = `sqlite3 ${dbPath} ".import --csv ${filmeCsv} films_import"`;
   console.log(`run ${insertCommand}`);
   await exec(insertCommand);
-  dbOld.exec(
-    `delete from films; insert into films select * from ${filmsImport}`,
-  );
+  await db.delete(films);
+  await db.insert(films).select(db.select().from(filmsImport));
+  const c = await db.select({ count: count() }).from(films).get();
+  console.log(`imported ${c!.count} films`);
 }
 
 export function parseDate(s: string): Date {
