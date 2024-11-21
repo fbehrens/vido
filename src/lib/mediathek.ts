@@ -14,7 +14,6 @@ import { count } from "drizzle-orm";
 
 const fileDir = "static/mediathek/",
   filmeJson = fileDir + "filmliste.json",
-  filmeCsv = fileDir + "filmliste.csv",
   filmeEtag = fileDir + "etag",
   readEtag = async () => {
     try {
@@ -24,26 +23,54 @@ const fileDir = "static/mediathek/",
       return "";
     }
   };
-
-export async function updateFilmliste() {
-  const response = await fetch(
-    "https://liste.mediathekview.de/Filmliste-akt.xz",
-  );
-  const etag = response.headers.get("etag")!,
-    oldEtag = await readEtag();
-  console.log({ etag, oldEtag });
-  if (etag === oldEtag) {
-    console.log("no update");
-    return;
+let filmeCsv = fileDir + "filmliste.csv";
+export async function updateFilmliste({ force = false, test = false }) {
+  if (!test) {
+    const response = await fetch(
+      "https://liste.mediathekview.de/Filmliste-akt.xz",
+    );
+    const etag = response.headers.get("etag")!,
+      oldEtag = await readEtag();
+    console.log({ etag, oldEtag });
+    if (etag === oldEtag) {
+      console.log("no update");
+      if (!force) return;
+    }
+    await fs.writeFileSync(filmeEtag, etag, "utf-8");
+    console.log(`download new etag ${etag}`);
+    const buffer = new Uint8Array(await response.arrayBuffer());
+    console.log(`decompress xz`);
+    const bytes = await decompress(buffer);
+    //   await Deno.writeFile(filmeJson, bytes);
+    const filme = parseFilme({ bytes });
+    const { value: liste } = filme.next();
+    const [local, utc, nr, version, hash] = <any[]>liste;
+    try {
+      db.insert(mediathek).values({ local, utc, nr, version, hash });
+    } catch (e) {
+      console.log(e);
+    }
+    console.log(`create ${filmeCsv}`);
+    let csv = "";
+    for (const f of filme) {
+      csv += f + "\n";
+    }
+    fs.writeFileSync(filmeCsv, csv);
+  } else {
+    console.log(`test mode`);
+    const _filmeCsv = filmeCsv;
+    filmeCsv = filmeCsv.replace(".csv", ".test.csv");
+    await exec(`head -n 100 ${_filmeCsv} > ${filmeCsv}`);
   }
-  await fs.writeFileSync(filmeEtag, etag, "utf-8");
-  console.log(`download new etag ${etag}`);
-  const buffer = new Uint8Array(await response.arrayBuffer());
-  console.log(`decompress xz`);
-  const bytes = await decompress(buffer);
-  //   await Deno.writeFile(filmeJson, bytes);
-  const filme = parseFilme({ bytes });
-  await insertFilme(filme);
+  // import
+  await db.delete(filmsImport);
+  const insertCommand = `sqlite3 ${dbPath} ".import --csv ${filmeCsv} films_import"`;
+  console.log(`run ${insertCommand}`);
+  await exec(insertCommand);
+  await db.delete(films);
+  await db.insert(films).select(db.select().from(filmsImport));
+  const c = await db.select({ count: count() }).from(films).get();
+  console.log(`imported ${c!.count} films`);
 }
 
 // yields a record with timestamps of list and then all
@@ -81,30 +108,6 @@ export function* parseFilme({ path = "", bytes = Buffer.alloc(0) }) {
   for (const f of filme) {
     yield m(f);
   }
-}
-
-async function insertFilme(filme: any) {
-  const { value: liste } = filme.next();
-  const [local, utc, nr, version, hash] = liste;
-  try {
-    db.insert(mediathek).values({ local, utc, nr, version, hash });
-  } catch (e) {
-    console.log(e);
-  }
-  console.log(`create ${filmeCsv}`);
-  let csv = "";
-  for (const f of filme) {
-    csv += f + "\n";
-  }
-  fs.writeFileSync(filmeCsv, csv);
-  await db.delete(filmsImport);
-  const insertCommand = `sqlite3 ${dbPath} ".import --csv ${filmeCsv} films_import"`;
-  console.log(`run ${insertCommand}`);
-  await exec(insertCommand);
-  await db.delete(films);
-  await db.insert(films).select(db.select().from(filmsImport));
-  const c = await db.select({ count: count() }).from(films).get();
-  console.log(`imported ${c!.count} films`);
 }
 
 export function parseDate(s: string): Date {
