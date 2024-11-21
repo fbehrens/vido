@@ -55,8 +55,6 @@
     "vitest": "^2.1.5"
   },
   "dependencies": {
-    "@apache-arrow/ts": "^17.0.0",
-    "@libsql/client": "^0.14.0",
     "@napi-rs/lzma": "^1.4.1",
     "@types/node": "^22.9.1",
     "better-sqlite3": "^11.5.0",
