@@ -1,5 +1,4 @@
 import * as fs from "fs";
-import { dbOld, dbPath } from "$lib/db";
 import { exec } from "$lib/util/util";
 
 const filmlisteUrl = "https://liste.mediathekview.de/Filmliste-akt.xz";
@@ -9,7 +8,7 @@ const filmlisteJson = "static/mediathek/filme.json";
 
 //  deno --allow-net --allow-write --allow-read --allow-env --allow-ffi --allow-run src/mediathek.ts
 import { decompress } from "@napi-rs/lzma/xz";
-import { db } from "./server/db";
+import { db, dbPath } from "./server/db";
 import { films, filmsImport, mediathek } from "./server/db/schema";
 import { count } from "drizzle-orm";
 
