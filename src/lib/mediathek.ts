@@ -24,43 +24,49 @@ const fileDir = "static/mediathek/",
     }
   };
 let filmeCsv = fileDir + "filmliste.csv";
-export async function updateFilmliste({ force = false, test = false }) {
-  if (!test) {
-    const response = await fetch(
-      "https://liste.mediathekview.de/Filmliste-akt.xz",
-    );
-    const etag = response.headers.get("etag")!,
-      oldEtag = await readEtag();
-    console.log({ etag, oldEtag });
-    if (etag === oldEtag) {
-      console.log("no update");
-      if (!force) return;
+export async function updateFilmliste({
+  force = false,
+  test = false,
+  skipDownload = false,
+}) {
+  if (!skipDownload) {
+    if (!test) {
+      const response = await fetch(
+        "https://liste.mediathekview.de/Filmliste-akt.xz",
+      );
+      const etag = response.headers.get("etag")!,
+        oldEtag = await readEtag();
+      console.log({ etag, oldEtag });
+      if (etag === oldEtag) {
+        console.log("no update");
+        if (!force) return;
+      }
+      await fs.writeFileSync(filmeEtag, etag, "utf-8");
+      console.log(`download new etag ${etag}`);
+      const buffer = new Uint8Array(await response.arrayBuffer());
+      console.log(`decompress xz`);
+      const bytes = await decompress(buffer);
+      //   await Deno.writeFile(filmeJson, bytes);
+      const filme = parseFilme({ bytes });
+      const { value: liste } = filme.next();
+      const [local, utc, nr, version, hash] = <any[]>liste;
+      try {
+        db.insert(mediathek).values({ local, utc, nr, version, hash });
+      } catch (e) {
+        console.log(e);
+      }
+      console.log(`create ${filmeCsv}`);
+      let csv = "";
+      for (const f of filme) {
+        csv += f + "\n";
+      }
+      fs.writeFileSync(filmeCsv, csv);
+    } else {
+      console.log(`test mode`);
+      const _filmeCsv = filmeCsv;
+      filmeCsv = filmeCsv.replace(".csv", ".test.csv");
+      await exec(`head -n 100 ${_filmeCsv} > ${filmeCsv}`);
     }
-    await fs.writeFileSync(filmeEtag, etag, "utf-8");
-    console.log(`download new etag ${etag}`);
-    const buffer = new Uint8Array(await response.arrayBuffer());
-    console.log(`decompress xz`);
-    const bytes = await decompress(buffer);
-    //   await Deno.writeFile(filmeJson, bytes);
-    const filme = parseFilme({ bytes });
-    const { value: liste } = filme.next();
-    const [local, utc, nr, version, hash] = <any[]>liste;
-    try {
-      db.insert(mediathek).values({ local, utc, nr, version, hash });
-    } catch (e) {
-      console.log(e);
-    }
-    console.log(`create ${filmeCsv}`);
-    let csv = "";
-    for (const f of filme) {
-      csv += f + "\n";
-    }
-    fs.writeFileSync(filmeCsv, csv);
-  } else {
-    console.log(`test mode`);
-    const _filmeCsv = filmeCsv;
-    filmeCsv = filmeCsv.replace(".csv", ".test.csv");
-    await exec(`head -n 100 ${_filmeCsv} > ${filmeCsv}`);
   }
   // import
   await db.delete(filmsImport);
