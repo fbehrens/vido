@@ -45,7 +45,7 @@ export async function updateFilmliste({
       console.log(`download new etag ${etag}`);
       const buffer = new Uint8Array(await response.arrayBuffer());
       console.log(`decompress xz`);
-      const bytes = await decompress(buffer);
+      const bytes = (await decompress(buffer)) as Buffer<ArrayBuffer>;
       //   await Deno.writeFile(filmeJson, bytes);
       const filme = parseFilme({ bytes });
       const { value: liste } = filme.next();
@@ -76,7 +76,7 @@ export async function updateFilmliste({
   await db.delete(films);
   await db.insert(films).select(db.select().from(filmsImport));
   const c = await db.select({ count: count() }).from(films).get();
-  console.log(`imported ${c!.count} films`);
+  console.log(`imported ${c?.count} films`);
 }
 
 // yields a record with timestamps of list and then all
