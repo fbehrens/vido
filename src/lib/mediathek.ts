@@ -1,11 +1,6 @@
 import * as fs from "fs";
 import { exec } from "$lib/util/util";
 
-const filmlisteUrl = "https://liste.mediathekview.de/Filmliste-akt.xz";
-
-const filmlistePath = "static/mediathek/filme";
-const filmlisteJson = "static/mediathek/filme.json";
-
 //  deno --allow-net --allow-write --allow-read --allow-env --allow-ffi --allow-run src/mediathek.ts
 import { decompress } from "@napi-rs/lzma/xz";
 import { db, dbPath } from "./server/db";
@@ -31,9 +26,8 @@ export async function updateFilmliste({
 }) {
   if (!skipDownload) {
     if (!test) {
-      const response = await fetch(
-        "https://liste.mediathekview.de/Filmliste-akt.xz",
-      );
+      const filmlisteXz = "https://liste.mediathekview.de/Filmliste-akt.xz";
+      const response = await fetch(filmlisteXz);
       const etag = response.headers.get("etag")!,
         oldEtag = await readEtag();
       console.log({ etag, oldEtag });
@@ -42,7 +36,7 @@ export async function updateFilmliste({
         if (!force) return;
       }
       await fs.writeFileSync(filmeEtag, etag, "utf-8");
-      console.log(`download new etag ${etag}`);
+      console.log(`download ${filmlisteXz} [etag=${etag}]`);
       const buffer = new Uint8Array(await response.arrayBuffer());
       console.log(`decompress xz`);
       const bytes = (await decompress(buffer)) as Buffer<ArrayBuffer>;
@@ -55,7 +49,7 @@ export async function updateFilmliste({
       } catch (e) {
         console.log(e);
       }
-      console.log(`create ${filmeCsv}`);
+      console.log(`writeFile ${filmeCsv}`);
       let csv = "";
       for (const f of filme) {
         csv += f + "\n";
@@ -69,13 +63,16 @@ export async function updateFilmliste({
     }
   }
   // import
+  await db.delete(films);
+  await db.insert(films).select(db.select().from(filmsImport));
+  console.log("films_import -> films");
+
   await db.delete(filmsImport);
   const insertCommand = `sqlite3 ${dbPath} ".import --csv ${filmeCsv} films_import"`;
   console.log(`run ${insertCommand}`);
   await exec(insertCommand);
-  await db.delete(films);
-  await db.insert(films).select(db.select().from(filmsImport));
-  const c = await db.select({ count: count() }).from(films).get();
+
+  const c = await db.select({ count: count() }).from(filmsImport).get();
   console.log(`imported ${c?.count} films`);
 }
 
