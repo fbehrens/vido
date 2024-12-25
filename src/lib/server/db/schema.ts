@@ -45,9 +45,9 @@ export const clips = sqliteTable(
 
 export const youtube = sqliteTable("youtube", {
   id: text().primaryKey(),
-  info: text(),
-  lang: text(),
-  json3: text(),
+  info: text().notNull(),
+  lang: text().notNull(),
+  json3: text().notNull(),
 });
 
 export const mediathek = sqliteTable("mediathek", {

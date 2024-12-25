@@ -1,18 +1,18 @@
 import { dbOld } from "$lib/db";
+import { db } from "$lib/server/db";
+import { youtube } from "$lib/server/db/schema.js";
 import { ytGetId, ytGetInfo } from "$lib/yt";
 
 export async function load({ params }) {
   const yts = (
-    dbOld.prepare("select id,info from youtube").all() as {
-      id: string;
-      info: string;
-    }[]
+    await db.select({ id: youtube.id, info: youtube.info }).from(youtube)
   ).map((yt) => {
     const info = JSON.parse(yt.info);
     const { title, description, duration } = info;
     return { ...yt, title, description, duration };
   });
-  yts.forEach((yt) => console.log(yt.title));
+
+  console.log(yts[0].title);
   return { yts };
 }
 
@@ -30,8 +30,11 @@ export const actions = {
     const response = await fetch(json3Url);
     if (!response.ok) throw "Error fetching json3";
     const json3 = await response.text();
-    dbOld
-      .prepare("insert into youtube   values (?,?,?,?)")
-      .run(id, info, lang, json3);
+    await db.insert(youtube).values({
+      id,
+      info,
+      lang,
+      json3,
+    });
   },
 };

@@ -5,7 +5,6 @@ import { youtube } from "$lib/server/db/schema.js";
 
 export async function load({ params }) {
   const yt = db.select().from(youtube).where(eq(youtube.id, params.id)).get()!;
-  console.log(yt);
   const info = JSON.parse(yt.info!);
   //   console.log(info);
   let { title, description, duration, chapters, automatic_captions } = info;

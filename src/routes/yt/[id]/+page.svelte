@@ -8,7 +8,7 @@
   let player = $state<YT.Player>();
   let { description, duration, id, info, title, chapters,  json3 } = data;
 
-  const js = JSON.parse(json3!);
+  const js = JSON.parse(json3);
   const es = js.events;
   const [e1, ...events] = es as [Json3Event1, Json3Event];
   const textEvents = events.filter((e) => !e.aAppend);
