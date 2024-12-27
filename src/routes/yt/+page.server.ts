@@ -1,18 +1,15 @@
 import { dbOld } from "$lib/db";
 import { db } from "$lib/server/db";
 import { youtube } from "$lib/server/db/schema.js";
-import { ytGetId, ytGetInfo } from "$lib/yt";
+import { ytGetId, ytGetInfo, YtInfo } from "$lib/yt";
 
 export async function load({ params }) {
-  const yts = (
-    await db.select({ id: youtube.id, info: youtube.info }).from(youtube)
-  ).map((yt) => {
-    const info = JSON.parse(yt.info);
-    const { title, description, duration } = info;
-    return { ...yt, title, description, duration };
-  });
-
-  console.log(yts[0].title);
+  const yts = (await db.select({ info: youtube.info }).from(youtube)).map(
+    ({ info }) => {
+      const { id, title, description, duration } = new YtInfo(info).json;
+      return { id, title, description, duration };
+    },
+  );
   return { yts };
 }
 
@@ -23,10 +20,11 @@ export const actions = {
     const id = ytGetId(url);
     if (!id) return;
     const info = await ytGetInfo(id);
-    const { automatic_captions } = JSON.parse(info);
+    const yt = new YtInfo(info).json;
 
     const lang = "en";
-    const json3Url = automatic_captions[lang].find((c) => c.ext == "json3").url;
+    const captions = yt.automatic_captions[lang];
+    const json3Url: string = captions.find((c) => c.ext == "json3")!.url;
     const response = await fetch(json3Url);
     if (!response.ok) throw "Error fetching json3";
     const json3 = await response.text();

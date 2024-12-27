@@ -34,10 +34,13 @@ importers:
         version: 1.1.5
       openai:
         specifier: ^4.77.0
-        version: 4.77.0(encoding@0.1.13)
+        version: 4.77.0(encoding@0.1.13)(zod@3.24.1)
       readable-stream:
         specifier: ^4.6.0
         version: 4.6.0
+      zod:
+        specifier: ^3.24.1
+        version: 3.24.1
     devDependencies:
       '@storybook/addon-essentials':
         specifier: ^8.4.7
@@ -3506,6 +3509,9 @@ packages:
   zimmerframe@1.1.2:
     resolution: {integrity: sha512-rAbqEGa8ovJy4pyBxZM70hg4pE6gDgaQ0Sl9M3enG3I0d6H4XSAM3GeNGLKnsBpuijUow064sf7ww1nutC5/3w==}
 
+  zod@3.24.1:
+    resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
+
 snapshots:
 
   '@adobe/css-tools@4.4.1': {}
@@ -5940,7 +5946,7 @@ snapshots:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
-  openai@4.77.0(encoding@0.1.13):
+  openai@4.77.0(encoding@0.1.13)(zod@3.24.1):
     dependencies:
       '@types/node': 18.19.68
       '@types/node-fetch': 2.6.12
@@ -5949,6 +5955,8 @@ snapshots:
       form-data-encoder: 1.7.2
       formdata-node: 4.4.1
       node-fetch: 2.7.0(encoding@0.1.13)
+    optionalDependencies:
+      zod: 3.24.1
     transitivePeerDependencies:
       - encoding
 
@@ -6779,3 +6787,5 @@ snapshots:
   yaml@2.6.1: {}
 
   zimmerframe@1.1.2: {}
+
+  zod@3.24.1: {}
