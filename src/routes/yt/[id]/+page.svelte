@@ -6,7 +6,7 @@
   let { data } = $props();
   let time = $state(0);
   let player = $state<YT.Player>();
-  let { description, duration, id, info, title, chapters,  json3 } = data;
+  let { description, duration, id, title, chapters,  json3 } = data;
 
   const js = JSON.parse(json3);
   const es = js.events;
@@ -31,7 +31,7 @@
     );
   }
 </script>
-
+<h1>1</h1>
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-1">
   <div>
     {title}<span class="text-xs">{time}</span>

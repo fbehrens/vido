@@ -99,3 +99,36 @@ export class YtInfo {
     this.json = schema.parse(o); //
   }
 }
+
+
+const js3Event1 = z.object({
+  tStartMs: z.number(),
+  dDurationMs: z.number(),
+  id: z.number(),
+  wpWinPosId: z.number(),
+  wsWinStyleId: z.number(),
+});
+
+const js3Seg = z.object({
+  utf8: z.string(),
+  tOffsetMs: z.number().optional(),
+  acAsrConf: z.number().optional(),
+});
+
+const js3Event = z.object({
+  tStartMs: z.number(),
+  dDurationMs: z.number().optional(),
+  wWinId: z.number(),
+  aAppend: z.number().optional(),
+  segs: z.array(js3Seg),
+});
+
+const js3 = z.object({
+  wireMagic: z.string(),
+  events: z.tuple([js3Event1]).rest(js3Event),
+});
+
+export function json3(s: string): z.infer<typeof js3> {
+  const o = JSON.parse(s);
+  return js3.parse(o);
+}

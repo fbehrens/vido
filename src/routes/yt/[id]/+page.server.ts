@@ -12,8 +12,7 @@ export async function load({ params }) {
     .get()!;
 
   const info = new YtInfo(yt.info!).json;
-  let { title, description, duration, chapters, automatic_captions } = info;
+  let { id, title, description, duration, chapters, automatic_captions } = info;
   chapters = chapters || [];
-  const cc = Object.entries(automatic_captions).map(([k, v]) => k);
-  return { json3: yt.json3, title, description, duration, chapters };
+  return { json3: yt.json3, id, title, description, duration, chapters };
 }
