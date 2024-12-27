@@ -1,7 +1,8 @@
 import { dbOld } from "$lib/db";
 import { db } from "$lib/server/db";
 import { youtube } from "$lib/server/db/schema.js";
-import { ytGetId, ytGetInfo, YtInfo } from "$lib/yt";
+import { ytGetId, YtInfo } from "$lib/yt";
+import { ytGetInfo } from "$lib/server/yt";
 
 export async function load({ params }) {
   const yts = (await db.select({ info: youtube.info }).from(youtube)).map(

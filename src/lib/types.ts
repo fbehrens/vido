@@ -29,24 +29,3 @@ export interface Segment extends Duration {
   text: string;
   words: Word[];
 }
-
-export type Json3Seg = {
-  utf8: string;
-  tOffsetMs?: number;
-  acAsrConf: number;
-};
-
-export type Json3Event1 = {
-  tStartMs: number;
-  dDurationMs: number;
-  id: number; // 1
-  wpWinPosId: number;
-  wsWinStyleId: number;
-};
-export type Json3Event = {
-  tStartMs: number;
-  dDurationMs: number;
-  wWinId: number; // 1
-  segs: Json3Seg[];
-  aAppend?: number; // all odd 1 => segs[0].utf8 = '\n'
-};

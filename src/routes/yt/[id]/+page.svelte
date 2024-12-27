@@ -2,15 +2,16 @@
   import TextEvent from "$lib/components/TextEvent.svelte";
   import YouTube from "$lib/components/YouTube.svelte";
   import type { Json3Event, Json3Event1 } from "$lib/types.js";
+    import { json3 } from "$lib/yt.js";
 
   let { data } = $props();
   let time = $state(0);
   let player = $state<YT.Player>();
-  let { description, duration, id, title, chapters,  json3 } = data;
+  let {  id, title, chapters, json3:json4 } = data;
 
-  const js = JSON.parse(json3);
+  const js = json3(json4);
   const es = js.events;
-  const [e1, ...events] = es as [Json3Event1, Json3Event];
+  const [e1, ...events] = es ;
   const textEvents = events.filter((e) => !e.aAppend);
   let current = $derived.by(() => {
     const i = textEvents.findIndex((e) => e.tStartMs + 100 > time * 1000);

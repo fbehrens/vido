@@ -1,13 +1,4 @@
-import { json } from "stream/consumers";
-import { exec } from "./util/util";
 import { z } from "zod";
-
-export async function ytGetInfo(id: string): Promise<string> {
-  const info = await exec(
-    `yt-dlp --skip-download --dump-json https://www.youtube.com/watch?v=${id}`,
-  );
-  return info.out;
-}
 
 export function ytGetId(url: string): string | null {
   try {
@@ -72,11 +63,13 @@ const caption = z.object({
 });
 
 const automatic_captions = z.record(z.string(), z.array(caption));
+
 const chapter = z.object({
   start_time: z.number(),
   title: z.string(),
   end_time: z.number(),
 });
+
 const schema = z.object({
   id: z.string(),
   title: z.string(),
@@ -87,19 +80,23 @@ const schema = z.object({
   fulltitle: z.string(),
   duration: z.number(), // seconds
   duration_string: z.string(),
-  chapters: z.array(chapter),
+  chapters: z.array(chapter).nullable(),
   epoch: z.number(),
-  automatic_captions,
+  //   automatic_captions,
 });
 
 export class YtInfo {
   json: z.infer<typeof schema>;
   constructor(s: string) {
     const o = JSON.parse(s);
-    this.json = schema.parse(o); //
+    try {
+      this.json = schema.parse(o);
+    } catch (error) {
+      this.json = {} as z;
+      console.log({ error, o });
+    }
   }
 }
-
 
 const js3Event1 = z.object({
   tStartMs: z.number(),
@@ -120,7 +117,7 @@ const js3Event = z.object({
   dDurationMs: z.number().optional(),
   wWinId: z.number(),
   aAppend: z.number().optional(),
-  segs: z.array(js3Seg),
+  segs: z.array(js3Seg).optional(),
 });
 
 const js3 = z.object({
