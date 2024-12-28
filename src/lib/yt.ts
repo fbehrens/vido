@@ -70,10 +70,11 @@ const chapter = z.object({
   end_time: z.number(),
 });
 
-const schema = z.object({
+const ytInfoSchema = z.object({
   id: z.string(),
   title: z.string(),
   //   formats: z.array(format),
+  language: z.string(),
   description: z.string(),
   channel: z.string(),
   like_count: z.number(),
@@ -86,11 +87,11 @@ const schema = z.object({
 });
 
 export class YtInfo {
-  json: z.infer<typeof schema>;
+  json: z.infer<typeof ytInfoSchema>;
   constructor(s: string) {
     const o = JSON.parse(s);
     try {
-      this.json = schema.parse(o);
+      this.json = ytInfoSchema.parse(o);
     } catch (error) {
       this.json = {} as z;
       console.log({ error, o });
