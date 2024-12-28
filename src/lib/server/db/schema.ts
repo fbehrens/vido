@@ -44,6 +44,17 @@ export const clips = sqliteTable(
   },
 );
 
+export const captions = sqliteTable("captions", {
+  id: integer().primaryKey({ autoIncrement: true }),
+  movieId: integer("movie_id")
+    .notNull()
+    .references(() => movies.id, {
+      onDelete: "cascade",
+    }),
+  typ: text(),
+  data: text(), //json
+});
+
 export const youtube = sqliteTable("youtube", {
   id: text().primaryKey(),
   info: text().notNull(),
@@ -52,6 +63,17 @@ export const youtube = sqliteTable("youtube", {
 });
 
 //relations
+export const moviesRelations = relations(movies, ({ many }) => ({
+  clips: many(clips),
+  captions: many(captions),
+}));
+
+export const captionssRelations = relations(captions, ({ one }) => ({
+  movie: one(movies, {
+    fields: [captions.movieId],
+    references: [movies.id],
+  }),
+}));
 export const clipsRelations = relations(clips, ({ one }) => ({
   movie: one(movies, {
     fields: [clips.movieId],
@@ -59,9 +81,6 @@ export const clipsRelations = relations(clips, ({ one }) => ({
   }),
 }));
 
-export const moviesRelations = relations(movies, ({ many }) => ({
-  clips: many(clips),
-}));
 // mediathek
 export const mediathek = sqliteTable("mediathek", {
   id: integer().primaryKey({ autoIncrement: true }),
