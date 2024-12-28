@@ -5,6 +5,7 @@ import {
   integer,
   real,
   primaryKey,
+  index,
 } from "drizzle-orm/sqlite-core";
 
 export const movies = sqliteTable("movies", {
@@ -50,15 +51,7 @@ export const youtube = sqliteTable("youtube", {
   json3: text().notNull(),
 });
 
-export const mediathek = sqliteTable("mediathek", {
-  id: integer().primaryKey({ autoIncrement: true }),
-  local: text(),
-  utc: text().unique(),
-  nr: text(),
-  version: text(),
-  hash: text(),
-});
-
+//relations
 export const clipsRelations = relations(clips, ({ one }) => ({
   movie: one(movies, {
     fields: [clips.movieId],
@@ -69,30 +62,47 @@ export const clipsRelations = relations(clips, ({ one }) => ({
 export const moviesRelations = relations(movies, ({ many }) => ({
   clips: many(clips),
 }));
-
-export const films = sqliteTable("films", {
-  id: integer().primaryKey(),
-  sender: text(),
-  thema: text(),
-  titel: text(),
-  datum: text(),
-  zeit: text(),
-  dauer: text(),
-  mb: real(),
-  beschreibung: text(),
-  url: text(),
-  website: text(),
-  captions: text(),
-  urlRtmp: text(),
-  urlLd: text(),
-  urlRtmpLd: text(),
-  urlHd: text(),
-  urlRtmpHd: text(),
-  datumL: integer(),
-  urlHistory: text(),
-  geo: text(),
-  neu: text(),
+// mediathek
+export const mediathek = sqliteTable("mediathek", {
+  id: integer().primaryKey({ autoIncrement: true }),
+  local: text(),
+  utc: text().unique(),
+  nr: text(),
+  version: text(),
+  hash: text(),
 });
+
+export const films = sqliteTable(
+  "films",
+  {
+    id: integer().primaryKey(),
+    sender: text(),
+    thema: text(),
+    titel: text(),
+    datum: text(),
+    zeit: text(),
+    dauer: text(),
+    mb: real(),
+    beschreibung: text(),
+    url: text(),
+    website: text(),
+    captions: text(),
+    urlRtmp: text(),
+    urlLd: text(),
+    urlRtmpLd: text(),
+    urlHd: text(),
+    urlRtmpHd: text(),
+    datumL: integer(),
+    urlHistory: text(),
+    geo: text(),
+    neu: text(),
+  },
+  (table) => {
+    return {
+      nameIdx: index("clips_movie_id_id_pk").on(table.sender, table.thema),
+    };
+  },
+);
 
 export const filmsImport = sqliteTable("films_import", {
   id: integer().primaryKey(),
