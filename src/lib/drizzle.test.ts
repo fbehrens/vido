@@ -3,11 +3,11 @@ import { eq, lt, gte, ne, sql } from "drizzle-orm";
 import { db } from "./server/db";
 import { movies } from "./server/db/schema";
 describe("drizzle", () => {
-  test("h", async () => {
+  test("where", async () => {
     const m = await db.select().from(movies).where(eq(movies.id, 372)).get()!;
     expect(m.filename).toBe("mov/sword.mp4");
   });
-  test("hi", async () => {
+  test("findFirst", async () => {
     const c = await db.query.movies.findFirst({
       where: (movies, { eq }) => eq(movies.id, 372),
       columns: {
@@ -28,6 +28,5 @@ describe("drizzle", () => {
         },
       },
     });
-    console.log(c);
   });
 });
