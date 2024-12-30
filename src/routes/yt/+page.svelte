@@ -24,7 +24,7 @@
   <div>id</div>
   <div>title</div>
   {#each yts as yt}
-    <div>{yt.id}</div>
+    <div>{yt.youtubeId}</div>
     <div><a href="yt/{yt.id}">{yt.title}</a></div>
   {/each}
 </div>

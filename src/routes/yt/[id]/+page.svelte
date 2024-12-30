@@ -1,17 +1,13 @@
 <script lang="ts">
   import TextEvent from "$lib/components/TextEvent.svelte";
   import YouTube from "$lib/components/YouTube.svelte";
-  import type { Json3Event, Json3Event1 } from "$lib/types.js";
-    import { json3 } from "$lib/yt.js";
-
+  console.log('page')
   let { data } = $props();
   let time = $state(0);
   let player = $state<YT.Player>();
-  let {  id, title, chapters, json3:json4 } = data;
+  let { id, youtubeId, title, chapters, json3 } = data;
 
-  const js = json3(json4);
-  const es = js.events;
-  const [e1, ...events] = es ;
+  const [e1, ...events] = json3!.events;
   const textEvents = events.filter((e) => !e.aAppend);
   let current = $derived.by(() => {
     const i = textEvents.findIndex((e) => e.tStartMs + 100 > time * 1000);
@@ -36,12 +32,12 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-1">
   <div>
     {title}<span class="text-xs">{time}</span>
-    <YouTube bind:time bind:player videoId={id} />
+    <YouTube bind:time bind:player videoId={youtubeId} />
   </div>
 
   <div>
     <h3>Chapters</h3>
-    {#each chapters as chapter}
+    {#each chapters! as chapter}
       <button onclick={() => seek(chapter.start_time * 1000)}
         >{chapter.title}</button
       ><br />

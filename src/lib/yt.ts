@@ -71,21 +71,26 @@ const chapter = z.object({
   end_time: z.number(),
 });
 
-const ytInfoSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  //   formats: z.array(format),
-  language: z.string(),
-  description: z.string(),
-  channel: z.string(),
-  like_count: z.number(),
-  fulltitle: z.string(),
-  duration: z.number(), // seconds
-  duration_string: z.string(),
-  chapters: z.array(chapter).nullable(),
-  epoch: z.number(),
-  automatic_captions,
-});
+const ytInfoSchema = z
+  .object({
+    id: z.string(),
+    title: z.string(),
+    //   formats: z.array(format),
+    language: z.string(),
+    description: z.string(),
+    channel: z.string(),
+    like_count: z.number(),
+    fulltitle: z.string(),
+    duration: z.number(), // seconds
+    duration_string: z.string(),
+    chapters: z.array(chapter).nullable(),
+    epoch: z.number(),
+    automatic_captions,
+  })
+  .transform((o) => ({
+    ...o,
+    chapters: o.chapters ?? [],
+  }));
 
 export class YtInfo {
   json: z.infer<typeof ytInfoSchema>;

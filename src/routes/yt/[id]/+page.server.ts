@@ -1,18 +1,45 @@
 import { dbOld } from "$lib/db";
 import { db } from "$lib/server/db/index.js";
 import { eq } from "drizzle-orm";
-import { youtube } from "$lib/server/db/schema.js";
-import { YtInfo } from "$lib/yt.js";
+import { movies, youtube } from "$lib/server/db/schema.js";
+import { json3 as json3Schema, YtInfo } from "$lib/yt.js";
 
 export async function load({ params }) {
-  const yt = db
-    .select({ info: youtube.info, json3: youtube.json3 })
-    .from(youtube)
-    .where(eq(youtube.id, params.id))
-    .get()!;
-
-  const info = new YtInfo(yt.info!).json;
-  let { id, title, description, duration, chapters, automatic_captions } = info;
-  chapters = chapters || [];
-  return { json3: yt.json3, id, title, description, duration, chapters };
+  const id = Number(params.id);
+  const movie = await db.query.movies.findFirst({
+    columns: {
+      id: true,
+      youtubeId: true,
+      title: true,
+      data: true,
+    },
+    where: eq(movies.id, id),
+    with: {
+      captions: {
+        columns: {
+          id: true,
+          data: true,
+          typ: true,
+        },
+      },
+    },
+  });
+  if (!movie) {
+    return {
+      status: 404,
+      body: {
+        error: "not found",
+      },
+    };
+  }
+  console.log(movie.captions[0].typ);
+  const ytInfo = new YtInfo(movie.data!).json;
+  const json3 = json3Schema(movie.captions[0].data!);
+  return {
+    id: movie.id,
+    title: movie.title,
+    youtubeId: movie.youtubeId,
+    chapters: ytInfo.chapters,
+    json3,
+  };
 }

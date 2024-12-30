@@ -3,14 +3,13 @@ import { db } from "$lib/server/db";
 import { captions, movies, youtube } from "$lib/server/db/schema.js";
 import { ytGetId, YtInfo } from "$lib/yt";
 import { ytGetInfo } from "$lib/server/yt";
+import { isNotNull } from "drizzle-orm";
 
 export async function load({ params }) {
-  const yts = (await db.select({ info: youtube.info }).from(youtube)).map(
-    ({ info }) => {
-      const { id, title, description, duration } = new YtInfo(info).json;
-      return { id, title, description, duration };
-    },
-  );
+  const yts = await db
+    .select({ id: movies.id, youtubeId: movies.youtubeId, title: movies.title })
+    .from(movies)
+    .where(isNotNull(movies.youtubeId));
   return { yts };
 }
 
