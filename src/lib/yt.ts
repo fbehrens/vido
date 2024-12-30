@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export function ytGetId(url: string): string | null {
+  if (url.length === 11) return url;
   try {
     const urlObj = new URL(url);
     const hostname = urlObj.hostname;
@@ -83,7 +84,7 @@ const ytInfoSchema = z.object({
   duration_string: z.string(),
   chapters: z.array(chapter).nullable(),
   epoch: z.number(),
-  //   automatic_captions,
+  automatic_captions,
 });
 
 export class YtInfo {

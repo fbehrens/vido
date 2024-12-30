@@ -1,4 +1,5 @@
-import { relations, sql } from "drizzle-orm";
+import { channel } from "diagnostics_channel";
+import { desc, relations, sql } from "drizzle-orm";
 import {
   sqliteTable,
   text,
@@ -10,7 +11,13 @@ import {
 
 export const movies = sqliteTable("movies", {
   id: integer().primaryKey({ autoIncrement: true }),
-  filename: text().notNull(),
+  filename: text(),
+  youtubeId: text(),
+  data: text(),
+  title: text(),
+  language: text(),
+  channel: text(),
+  description: text(),
   duration: real(),
   framerate: real(),
   cut: text(), //json

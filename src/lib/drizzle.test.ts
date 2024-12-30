@@ -1,8 +1,17 @@
 import { describe, test, expect } from "vitest";
 import { eq, lt, gte, ne, sql } from "drizzle-orm";
 import { db } from "./server/db";
-import { movies } from "./server/db/schema";
+import { captions, movies } from "./server/db/schema";
 describe("drizzle", () => {
+
+  test("return id", async () => {
+    const { id } = await db
+      .insert(captions)
+      .values({ movieId: 367 })
+      .returning({ id: captions.id })
+      .get();
+    expect(id).toBe(5);
+  });
   test("where", async () => {
     const m = await db.select().from(movies).where(eq(movies.id, 372)).get()!;
     expect(m.filename).toBe("mov/sword.mp4");
