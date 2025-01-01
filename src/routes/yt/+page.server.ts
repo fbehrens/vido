@@ -1,7 +1,7 @@
 import { dbOld } from "$lib/db";
 import { db } from "$lib/server/db";
-import { captions, movies, youtube } from "$lib/server/db/schema.js";
-import { ytGetId, YtInfo } from "$lib/yt";
+import { captions, movies } from "$lib/server/db/schema.js";
+import { ytGetId, ytInfo } from "$lib/yt";
 import { ytGetInfo } from "$lib/server/yt";
 import { isNotNull } from "drizzle-orm";
 
@@ -20,7 +20,7 @@ export const actions = {
     const youtubeId = ytGetId(url);
     if (!youtubeId) return;
     const info = await ytGetInfo(youtubeId);
-    const yt = new YtInfo(info).json;
+    const yt = ytInfo(info);
     const { movie_id: movieId } = await db
       .insert(movies)
       .values({

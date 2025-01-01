@@ -92,17 +92,9 @@ const ytInfoSchema = z
     chapters: o.chapters ?? [],
   }));
 
-export class YtInfo {
-  json: z.infer<typeof ytInfoSchema>;
-  constructor(s: string) {
-    const o = JSON.parse(s);
-    try {
-      this.json = ytInfoSchema.parse(o);
-    } catch (error) {
-      this.json = {} as z;
-      console.log({ error, o });
-    }
-  }
+export function ytInfo(s: string): z.infer<typeof ytInfoSchema> {
+  const o = JSON.parse(s);
+  return ytInfoSchema.parse(o);
 }
 
 const js3Event1 = z.object({

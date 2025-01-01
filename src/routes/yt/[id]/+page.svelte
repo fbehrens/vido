@@ -28,7 +28,6 @@
     );
   }
 </script>
-<h1>1</h1>
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-1">
   <div>
     {title}<span class="text-xs">{time}</span>

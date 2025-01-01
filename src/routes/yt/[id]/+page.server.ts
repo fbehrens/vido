@@ -2,7 +2,7 @@ import { dbOld } from "$lib/db";
 import { db } from "$lib/server/db/index.js";
 import { eq } from "drizzle-orm";
 import { movies, youtube } from "$lib/server/db/schema.js";
-import { json3 as json3Schema, YtInfo } from "$lib/yt.js";
+import { json3 as json3Schema, ytInfo } from "$lib/yt.js";
 
 export async function load({ params }) {
   const id = Number(params.id);
@@ -33,13 +33,13 @@ export async function load({ params }) {
     };
   }
   console.log(movie.captions[0].typ);
-  const ytInfo = new YtInfo(movie.data!).json;
+  const yt = ytInfo(movie.data!);
   const json3 = json3Schema(movie.captions[0].data!);
   return {
     id: movie.id,
     title: movie.title,
     youtubeId: movie.youtubeId,
-    chapters: ytInfo.chapters,
+    chapters: yt.chapters,
     json3,
   };
 }
