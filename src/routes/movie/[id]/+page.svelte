@@ -4,6 +4,7 @@
   import SegmentRow from "./SegmentRow.svelte";
   import Srt from "$lib/components/Srt.svelte";
   import { onMount } from "svelte";
+    import { whisperApi } from "$lib/zod-schema";
 
   const togglePaused = () => {
     if (paused) {
@@ -15,13 +16,14 @@
     }
   };
   const { data } = $props();
-  let movie: Movie = data.movie;
-  const segments: Segment[] = JSON.parse(movie.segments);
-  const words: Word[] = segments.flatMap((s) => s.words);
+  let movie= data.movie!;
+  const d = movie!.captions[0]!.data!
+  const segments = whisperApi(d);
+
   const _segments_ = [
     { start: -1, end: 0 },
     ...segments,
-    { start: movie.duration, end: movie.duration + 1 },
+    { start: movie.duration, end: movie.duration! + 1 },
   ];
   let time = $state(0);
   let current = $state<number>(0);
@@ -40,9 +42,11 @@
   onMount(() => {
     let track = video.addTextTrack("captions", "Captions", "en");
     track.mode = "showing";
-    words.forEach((w) => {
-      track.addCue(new VTTCue(w.start, w.end, w.word + w.sep));
-    });
+    segments.forEach((s) => {
+        s.words.forEach((w) => {
+            track.addCue(new VTTCue(w.start, w.end, w.word + w.sep));
+        });
+    })
   });
   let active = $derived(time >= segments[current].start);
 </script>
