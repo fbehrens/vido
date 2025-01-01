@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "@napi-rs/lzma": "^1.4.1",
-    "@types/node": "^22.10.2",
+    "@types/node": "^22.10.3",
     "better-sqlite3": "^11.7.0",
     "drizzle-kit": "^0.27.2",
     "drizzle-orm": "^0.36.4",
