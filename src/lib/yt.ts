@@ -119,20 +119,25 @@ const js3Seg = z.object({
   acAsrConf: z.number().optional(),
 });
 
-const js3Event = z.object({
-  tStartMs: z.number(),
-  dDurationMs: z.number().optional(),
-  wWinId: z.number(),
-  aAppend: z.number().optional(),
-  segs: z.array(js3Seg).optional(),
-});
+const js3Event = z
+  .object({
+    tStartMs: z.number(),
+    dDurationMs: z.number().optional(),
+    wWinId: z.number(),
+    aAppend: z.number().optional(),
+    segs: z.array(js3Seg).optional(),
+  })
+  .transform((o) => ({
+    ...o,
+    segs: o.segs ?? [],
+  }));
 
-const js3 = z.object({
+const js3Schema = z.object({
   wireMagic: z.string(),
   events: z.tuple([js3Event1]).rest(js3Event),
 });
 
-export function json3(s: string): z.infer<typeof js3> {
+export function json3(s: string): z.infer<typeof js3Schema> {
   const o = JSON.parse(s);
-  return js3.parse(o);
+  return js3Schema.parse(o);
 }
