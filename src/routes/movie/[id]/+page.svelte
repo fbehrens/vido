@@ -52,9 +52,6 @@
 </script>
 
 <div class="flex">
-  <a href="/api/debug?id={movie.id}">
-    <Icon name="debug"></Icon>
-  </a>
   <input class="bg-gray-200" readonly name="filename" value={movie.filename} />
 </div>
 <Srt id={movie.id} />
