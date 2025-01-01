@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { enhance } from "$app/forms";
-  import { goto } from "$app/navigation";
   import Icon from "$lib/components/Icon.svelte";
   let { data } = $props();
   let { files } = data;
@@ -33,7 +31,7 @@
         {#each selected as f}
           <tr>
             <td>
-              {#if f.id && f.has_segments}
+              {#if f.id }
                 <a href="movie/{f.id}">{f.filename}</a>
               {:else}
                 {f.filename}
@@ -65,8 +63,8 @@
               {/if}
             </td>
             <td
-              >{#each f.clips as c}
-                <a href="/movie/{f.id}/{c.id}">{c.id}</a>&nbsp;
+              >{#each f.captions as c}
+                {c.typ}&nbsp;
               {/each}
             </td>
           </tr>

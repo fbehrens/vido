@@ -35,54 +35,26 @@ export async function load({}) {
   const files = getAllFiles(dir).filter((f) =>
     /\.(mov|mp4|mkv)$/i.test(f.filename),
   );
-  const mc = (
-    await db.query.movies.findMany({
-      columns: {
-        id: true,
-        filename: true,
-        duration: true,
-      },
-      extras: {
-        has_segments:
-          sql<boolean>`CASE WHEN segments IS NULL THEN 0 ELSE 1 END`.as(
-            "create",
-          ),
-      },
-      with: {
-        clips: {
-          columns: {
-            id: true,
-          },
-          extras: {
-            has_segments:
-              sql<boolean>`CASE WHEN segments IS NULL THEN 0 ELSE 1 END`.as(
-                "create",
-              ),
-          },
+  const mc = await db.query.movies.findMany({
+    columns: {
+      id: true,
+      filename: true,
+      duration: true,
+    },
+    with: {
+      captions: {
+        columns: {
+          typ: true,
         },
       },
-    })
-  ).map((m) => {
-    const everyClipHasSegments = m.clips.every((c) => c.has_segments);
-    return { ...m, everyClipHasSegments };
+    },
   });
   //   console.log(mc.find((m) => m.id === 743));
-  type MovieWithExtras = typeof movies.$inferSelect & {
-    has_segments: boolean;
-    everyClipHasSegments: boolean;
-  };
-
-  type FileWithMovie = MyFile &
-    Partial<MovieWithExtras> & {
-      clips: {
-        id: number;
-      }[];
-    };
-
   const join: FileWithMovie[] = files.map((m) => {
     const mc_ = mc.find((e) => e.filename === m.filename) || { clips: [] };
     return { ...m, ...mc_ };
   });
+  console.log(join[0]);
   return { files: join };
 }
 
