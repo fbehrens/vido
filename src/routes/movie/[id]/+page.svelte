@@ -55,7 +55,6 @@
   <input class="bg-gray-200" readonly name="filename" value={movie.filename} />
 </div>
 <Srt id={movie.id} />
-<div class="grid grid-cols-[30%,1fr]">
   <div class="p-1">
     <!-- svelte-ignore a11y_media_has_caption -->
     <video
@@ -69,8 +68,7 @@
     </video>
   </div>
   <div>
-    <p>time={time}</p>
-    <label for="playbackrate">playbackRate({playbackRate})</label>
+    <label for="playbackrate">playbackRate:</label>
     <input
       type="range"
       id="playbackRate"
@@ -79,8 +77,8 @@
       step="0.01"
       bind:value={playbackRate}
     />
+    ({playbackRate})
   </div>
-</div>
 
 {#each segments as s, i}
   {#if i == current && active}

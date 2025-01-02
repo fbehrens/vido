@@ -4,9 +4,6 @@
   let {
     time = $bindable(),
     words,
-  }: {
-    time: number;
-    words: Word[];
   } = $props();
   let wordCurrent = (w: any) => time >= w.start && time <= w.end;
 </script>
