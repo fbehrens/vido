@@ -38,7 +38,7 @@ export const moviesRelations = relations(movies, ({ many }) => ({
   captions: many(captions),
 }));
 
-export const captionssRelations = relations(captions, ({ one }) => ({
+export const captionsRelations = relations(captions, ({ one }) => ({
   movie: one(movies, {
     fields: [captions.movieId],
     references: [movies.id],
@@ -48,11 +48,13 @@ export const captionssRelations = relations(captions, ({ one }) => ({
 // mediathek
 export const mediathek = sqliteTable("mediathek", {
   id: integer().primaryKey({ autoIncrement: true }),
+  createdAt: integer(),
   local: text(),
-  utc: text().unique(),
+  utc: text(),
   nr: text(),
   version: text(),
   hash: text(),
+  etag: text(),
 });
 
 export const films = sqliteTable(

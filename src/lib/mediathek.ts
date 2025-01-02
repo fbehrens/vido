@@ -5,19 +5,10 @@ import { exec } from "$lib/util/util";
 import { decompress } from "@napi-rs/lzma/xz";
 import { db, dbPath } from "./server/db";
 import { films, filmsImport, mediathek } from "./server/db/schema";
-import { count } from "drizzle-orm";
+import { count, desc } from "drizzle-orm";
 
 const fileDir = "static/mediathek/",
-  filmeJson = fileDir + "filmliste.json",
-  filmeEtag = fileDir + "etag",
-  readEtag = async () => {
-    try {
-      const etag = await fs.readFileSync(filmeEtag, "utf-8");
-      return etag;
-    } catch {
-      return "";
-    }
-  };
+  filmeJson = fileDir + "filmliste.json";
 let filmeCsv = fileDir + "filmliste.csv";
 export async function updateFilmliste({
   force = false,
@@ -28,14 +19,17 @@ export async function updateFilmliste({
     if (!test) {
       const filmlisteXz = "https://liste.mediathekview.de/Filmliste-akt.xz";
       const response = await fetch(filmlisteXz);
-      const etag = response.headers.get("etag")!,
-        oldEtag = await readEtag();
+      const { etag: oldEtag } = await db
+        .select()
+        .from(mediathek)
+        .orderBy(desc(mediathek.id))
+        .get()!;
+      const etag = response.headers.get("etag")!;
       console.log({ etag, oldEtag });
       if (etag === oldEtag) {
         console.log("no update");
         if (!force) return;
       }
-      await fs.writeFileSync(filmeEtag, etag, "utf-8");
       console.log(`download ${filmlisteXz} [etag=${etag}]`);
       const buffer = new Uint8Array(await response.arrayBuffer());
       console.log(`decompress xz`);
@@ -43,12 +37,16 @@ export async function updateFilmliste({
       //   await Deno.writeFile(filmeJson, bytes);
       const filme = parseFilme({ bytes });
       const { value: liste } = filme.next();
-      const [local, utc, nr, version, hash] = <any[]>liste;
-      try {
-        db.insert(mediathek).values({ local, utc, nr, version, hash });
-      } catch (e) {
-        console.log(e);
-      }
+      const [local, utc, nr, version, hash] = <string[]>liste;
+      await db.insert(mediathek).values({
+        local,
+        utc,
+        nr,
+        version,
+        hash,
+        etag,
+        createdAt: Date.now(),
+      });
       console.log(`writeFile ${filmeCsv}`);
       let csv = "";
       for (const f of filme) {
