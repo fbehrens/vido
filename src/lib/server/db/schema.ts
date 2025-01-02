@@ -20,36 +20,7 @@ export const movies = sqliteTable("movies", {
   description: text(),
   duration: real(),
   framerate: real(),
-  cut: text(), //json
-  segments: text(), //json
 });
-
-export const clips = sqliteTable(
-  "clips",
-  {
-    movieId: integer("movie_id")
-      .notNull()
-      .references(() => movies.id, {
-        onDelete: "cascade",
-      }),
-    id: integer().notNull(),
-    start: real().notNull(),
-    end: real().notNull(),
-    text: text(),
-    filesize: real(),
-    filename: text(),
-    transcript: text(), //json
-    segments: text(), //json
-  },
-  (table) => {
-    return {
-      pk0: primaryKey({
-        columns: [table.movieId, table.id],
-        name: "clips_movie_id_id_pk",
-      }),
-    };
-  },
-);
 
 export const captions = sqliteTable("captions", {
   id: integer().primaryKey({ autoIncrement: true }),
@@ -62,28 +33,14 @@ export const captions = sqliteTable("captions", {
   data: text(), //json
 });
 
-export const youtube = sqliteTable("youtube", {
-  id: text().primaryKey(),
-  info: text().notNull(),
-  lang: text().notNull(),
-  json3: text().notNull(),
-});
-
 //relations
 export const moviesRelations = relations(movies, ({ many }) => ({
-  clips: many(clips),
   captions: many(captions),
 }));
 
 export const captionssRelations = relations(captions, ({ one }) => ({
   movie: one(movies, {
     fields: [captions.movieId],
-    references: [movies.id],
-  }),
-}));
-export const clipsRelations = relations(clips, ({ one }) => ({
-  movie: one(movies, {
-    fields: [clips.movieId],
     references: [movies.id],
   }),
 }));

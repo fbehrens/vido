@@ -1,7 +1,7 @@
 import { readdirSync, statSync } from "fs";
 import { join } from "path";
 import { db } from "$lib/server/db/index.js";
-import { clips, movies } from "$lib/server/db/schema.js";
+import { captions, clips, movies } from "$lib/server/db/schema.js";
 import { sql, eq } from "drizzle-orm";
 import { createMovie, createTranscription } from "$lib/util/transcribe";
 import { redirect, type Actions } from "@sveltejs/kit";
@@ -79,6 +79,6 @@ export const actions = {
     if (id === null) return { success: false };
     console.log("delete Movies and clips (", id, ")");
     await db.delete(movies).where(eq(movies.id, id));
-    await db.delete(clips).where(eq(clips.movieId, id));
+    await db.delete(captions).where(eq(captions.movieId, id));
   },
 } satisfies Actions;
