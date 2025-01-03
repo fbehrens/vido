@@ -1,38 +1,36 @@
 import { dbOld } from "$lib/db";
+import { db } from "$lib/server/db";
 import type { Segment } from "$lib/types";
+import { whisperApi } from "$lib/zod-schema";
 import { json, type RequestEvent } from "@sveltejs/kit";
-type Unit = "word" | "segment";
 type CaptionTyp = "srt" | "vtt";
 export async function GET(event: RequestEvent) {
-  const id = event.url.searchParams.get("id");
-  const clip_id = event.url.searchParams.get("clip_id");
-  const unit = event.url.searchParams.get("unit") as Unit;
-  const typ = event.url.searchParams.get("typ") as CaptionTyp;
-  const filename = `${id}_${clip_id}_${unit}.${typ}`;
-  const { segments } = (
-    clip_id
-      ? dbOld
-          .prepare("select segments from clips where movie_id=? and id=?")
-          .get(id, clip_id)
-      : dbOld.prepare("select segments from movies where id=?").get(id)
-  ) as { segments: string };
-  const segs = JSON.parse(segments) as Segment[];
-  const timestamps =
-    unit === "word"
-      ? segs
-          .flatMap((s) => s.words)
-          .map(({ start, end, word, sep }) => ({
-            start,
-            end,
-            text: word + sep,
-          }))
-      : segs.map(({ start, end, text }) => ({ start, end, text }));
-  //   return json({ filename, ts: timestamps[0] });
-  const srt = createCaption(typ, timestamps);
+  const id = event.url.searchParams.get("id")!;
+  const captionTyp = event.url.searchParams.get("typ") as CaptionTyp;
+  const m = (await db.query.movies.findFirst({
+    columns: {
+      id: true,
+      filename: true,
+    },
+    where: (movies, { eq }) => eq(movies.id, parseInt(id)),
+    with: {
+      captions: {
+        where: (captions, { eq }) => eq(captions.typ, "whisper_api"),
+        columns: {
+          typ: true,
+          data: true,
+        },
+      },
+    },
+  }))!;
+  const wa = whisperApi(m.captions[0]!.data!);
+  const timestamps = wa.map(({ start, end, text }) => ({ start, end, text }));
+  const captions = createCaption(captionTyp, timestamps);
+  const filename = m.filename!.replace(/\.[^/.]+$/, `.${captionTyp}`);
   const headers = new Headers();
   headers.append("Content-Type", "text/plain");
   headers.append("Content-Disposition", `attachment; filename="${filename}"`);
-  return new Response(srt, {
+  return new Response(captions, {
     status: 200,
     headers: headers,
   });
