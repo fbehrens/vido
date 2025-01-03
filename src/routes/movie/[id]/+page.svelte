@@ -51,8 +51,8 @@
   let active = $derived(time >= segments[current].start);
 </script>
 
-<div class="flex">
-  <input class="bg-gray-200" readonly name="filename" value={movie.filename} />
+<div >
+  <input class="bg-gray-200 w-full" readonly name="filename" value={movie.filename} />
 </div>
 <Srt id={movie.id} />
   <div class="p-1">
