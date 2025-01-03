@@ -35,8 +35,17 @@ export const actions = {
       .returning({ movie_id: movies.id })
       .get();
 
-    const captions_url = yt.automatic_captions[yt.language];
-    const json3Url: string = captions_url.find((c) => c.ext == "json3")!.url;
+    const languages = Object.keys(yt.automatic_captions);
+    const language = languages.includes(yt.language!)
+      ? yt.language!
+      : languages[0]!;
+    const cs = yt.automatic_captions[language];
+    const csJson3 = cs.find((c) => c.ext == "json3");
+    if (!csJson3) {
+      console.log({ err: `Do not have json3 in lang=${language}`, cs });
+      return;
+    }
+    const json3Url: string = csJson3.url;
     const response = await fetch(json3Url);
     if (!response.ok) throw "Error fetching json3";
     const data = await response.text();

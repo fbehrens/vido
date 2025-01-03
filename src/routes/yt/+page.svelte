@@ -2,6 +2,7 @@
   let { data } = $props();
   let { yts } = data;
   let value = $state("");
+  // https://youtu.be/EbqSVYt7PxI @ WDR
   // https://youtu.be/OXGznpKZ_sA?si=xm8IitoTrgV0IYHT
 </script>
 

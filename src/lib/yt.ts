@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ytInfoSchema } from "./zod-schema";
 
 export function ytGetId(url: string): string | null {
   if (url.length === 11) return url;
@@ -26,75 +27,17 @@ export function ytGetId(url: string): string | null {
   }
 }
 
-const format = z.object({
-  format_id: z.string(),
-  format_note: z.string(),
-  ext: z.string(),
-  protocol: z.string(),
-  acodec: z.string(),
-  vcodec: z.string(),
-  url: z.string(),
-  width: z.number(),
-  height: z.number(),
-  fps: z.number(),
-  rows: z.number(),
-  columns: z.number(),
-  fragments: z.array(z.object({ url: z.string(), duration: z.number() })),
-  resolution: z.string(),
-  aspect_ratio: z.number(),
-  filesize_approx: z.null(),
-  http_headers: z.object({
-    "User-Agent": z.string(),
-    Accept: z.string(),
-    "Accept-Language": z.string(),
-    "Sec-Fetch-Mode": z.string(),
-  }),
-  audio_ext: z.string(),
-  video_ext: z.string(),
-  vbr: z.number(),
-  abr: z.number(),
-  tbr: z.null(),
-  format: z.string(),
-});
-
-const caption = z.object({
-  ext: z.string(),
-  url: z.string(),
-  name: z.string(),
-});
-
-const automatic_captions = z.record(z.string(), z.array(caption));
-
-const chapter = z.object({
-  start_time: z.number(),
-  title: z.string(),
-  end_time: z.number(),
-});
-
-const ytInfoSchema = z
-  .object({
-    id: z.string(),
-    title: z.string(),
-    //   formats: z.array(format),
-    language: z.string(),
-    description: z.string(),
-    channel: z.string(),
-    like_count: z.number(),
-    fulltitle: z.string(),
-    duration: z.number(), // seconds
-    duration_string: z.string(),
-    chapters: z.array(chapter).nullable(),
-    epoch: z.number(),
-    automatic_captions,
-  })
-  .transform((o) => ({
-    ...o,
-    chapters: o.chapters ?? [],
-  }));
-
-export function ytInfo(s: string): z.infer<typeof ytInfoSchema> {
+function applySchema(s: string, schema: z.ZodSchema<any>) {
   const o = JSON.parse(s);
-  return ytInfoSchema.parse(o);
+  try {
+    return schema.parse(o);
+  } catch (e) {
+    console.log({ err: `error parsing zodSchema ${schema}`, s });
+    throw e;
+  }
+}
+export function ytInfo(s: string): z.infer<typeof ytInfoSchema> {
+  return applySchema(s, ytInfoSchema);
 }
 
 const js3Event1 = z.object({
