@@ -1,4 +1,5 @@
 <script lang="ts">
+    import {Button} from '$lib/components/ui/button'
   let { data } = $props();
   let { yts } = data;
   let value = $state("");
@@ -16,9 +17,9 @@
       size="50"
     />
   </label>
-  <button
-    class="p-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300 ease-in-out"
-    >Submit</button
+  <Button
+    class=""
+    >Submit</Button
   ><br />
 </form>
 <div class="container">
