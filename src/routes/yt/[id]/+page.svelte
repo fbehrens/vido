@@ -5,7 +5,7 @@
   let { data } = $props();
   let time = $state(0);
   let player = $state<YT.Player>();
-  let { id, youtubeId, title, chapters, json3 } = data;
+  let { movie, ytInfo, json3 } = data;
 
   const [e1, ...events] = json3 ? json3.events : [];
   const textEvents = events.filter((e) => !e.aAppend);
@@ -27,16 +27,24 @@
       "ever odd event is a appendEvent",
     );
   }
+  const languagesDisplay=Object.keys(ytInfo?.automatic_captions||{}).filter((e)=> e.includes('en') || e.includes('de') || e.includes('orig') )
 </script>
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-1">
   <div>
-    {title}<span class="text-xs">{time}</span>
-    <YouTube bind:time bind:player videoId={youtubeId} />
+    @{ytInfo?.channel} <b>/</b>
+    {movie!.title}
+    <span class="text-xs">
+        <br>{ytInfo?.description}
+        <br/>time:{time}
+        <br/>language:{ytInfo!.language}
+        <br/>languags:{ languagesDisplay}
+    </span>
+    <YouTube bind:time bind:player videoId={movie!.youtubeId} />
   </div>
 
   <div>
     <h3>Chapters</h3>
-    {#each chapters! as chapter}
+    {#each ytInfo!.chapters as chapter}
       <button onclick={() => seek(chapter.start_time * 1000)}
         >{chapter.title}</button
       ><br />

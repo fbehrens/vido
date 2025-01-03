@@ -16,6 +16,7 @@ export async function load({ params }) {
     where: eq(movies.id, id),
     with: {
       captions: {
+        where: (captions, { eq }) => eq(captions.typ, "json3"),
         columns: {
           id: true,
           data: true,
@@ -36,10 +37,8 @@ export async function load({ params }) {
   const caption = movie.captions[0];
   const json3 = caption ? json3Schema(caption.data!) : null;
   return {
-    id: movie.id,
-    title: movie.title,
-    youtubeId: movie.youtubeId,
-    chapters: yt.chapters,
+    movie,
+    ytInfo: yt,
     json3,
   };
 }
