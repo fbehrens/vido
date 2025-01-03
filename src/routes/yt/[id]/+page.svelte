@@ -7,7 +7,7 @@
   let player = $state<YT.Player>();
   let { id, youtubeId, title, chapters, json3 } = data;
 
-  const [e1, ...events] = json3!.events;
+  const [e1, ...events] = json3 ? json3.events : [];
   const textEvents = events.filter((e) => !e.aAppend);
   let current = $derived.by(() => {
     const i = textEvents.findIndex((e) => e.tStartMs + 100 > time * 1000);

@@ -32,9 +32,9 @@ export async function load({ params }) {
       },
     };
   }
-  console.log(movie.captions[0].typ);
   const yt = ytInfo(movie.data!);
-  const json3 = json3Schema(movie.captions[0].data!);
+  const caption = movie.captions[0];
+  const json3 = caption ? json3Schema(caption.data!) : null;
   return {
     id: movie.id,
     title: movie.title,
