@@ -1,6 +1,7 @@
-import { renderSnippet } from "$lib/components/ui/data-table";
+import { renderComponent, renderSnippet } from "$lib/components/ui/data-table";
 import type { ColumnDef } from "@tanstack/table-core";
 import { createRawSnippet } from "svelte";
+import DataTableActions from "./data-table-actions.svelte";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -61,6 +62,13 @@ export const columns: ColumnDef<Payment>[] = [
         amountCellSnippet,
         formatter.format(parseFloat(row.getValue("amount"))),
       );
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      // You can pass whatever you need from `row.original` to the component
+      return renderComponent(DataTableActions, { id: row.original.id });
     },
   },
 ];
