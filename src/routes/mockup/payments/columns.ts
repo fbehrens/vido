@@ -3,6 +3,7 @@ import type { ColumnDef } from "@tanstack/table-core";
 import { createRawSnippet } from "svelte";
 import DataTableActions from "./data-table-actions.svelte";
 import DataTableEmailButton from "./data-table-email-button.svelte";
+import { Checkbox } from "$lib/components/ui/checkbox/index.js";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -30,6 +31,26 @@ export const payments: Payment[] = [
 ];
 
 export const columns: ColumnDef<Payment>[] = [
+  {
+    id: "select",
+    header: ({ table }) =>
+      renderComponent(Checkbox, {
+        checked: table.getIsAllPageRowsSelected(),
+        indeterminate:
+          table.getIsSomePageRowsSelected() &&
+          !table.getIsAllPageRowsSelected(),
+        onCheckedChange: (value) => table.toggleAllPageRowsSelected(!!value),
+        "aria-label": "Select all",
+      }),
+    cell: ({ row }) =>
+      renderComponent(Checkbox, {
+        checked: row.getIsSelected(),
+        onCheckedChange: (value) => row.toggleSelected(!!value),
+        "aria-label": "Select row",
+      }),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "status",
     header: "Status",

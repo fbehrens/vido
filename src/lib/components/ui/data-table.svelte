@@ -4,6 +4,7 @@
     type SortingState,
     type ColumnFiltersState,
     type VisibilityState,
+    type RowSelectionState,
     getCoreRowModel,
     getSortedRowModel,
     getFilteredRowModel,
@@ -26,6 +27,7 @@
   let sorting = $state<SortingState>([]);
   let columnFilters = $state<ColumnFiltersState>([]);
   let columnVisibility = $state<VisibilityState>({});
+  let rowSelection = $state<RowSelectionState>({});
 
   const table = createSvelteTable({
     get data() {
@@ -56,6 +58,13 @@
         columnVisibility = updater;
       }
     },
+    onRowSelectionChange: (updater) => {
+      if (typeof updater === "function") {
+        rowSelection = updater(rowSelection);
+      } else {
+        rowSelection = updater;
+      }
+    },
     state: {
       get sorting() {
         return sorting;
@@ -65,6 +74,9 @@
       },
       get columnVisibility() {
         return columnVisibility;
+      },
+      get rowSelection() {
+        return rowSelection;
       },
     },
   });
@@ -143,5 +155,9 @@
         {/each}
       </Table.Body>
     </Table.Root>
+  </div>
+  <div class="text-muted-foreground flex-1 text-sm">
+    {table.getFilteredSelectedRowModel().rows.length} of{" "}
+    {table.getFilteredRowModel().rows.length} row(s) selected.
   </div>
 </div>
