@@ -3,6 +3,7 @@
     type ColumnDef,
     type SortingState,
     type ColumnFiltersState,
+    type VisibilityState,
     getCoreRowModel,
     getSortedRowModel,
     getFilteredRowModel,
@@ -11,7 +12,9 @@
     createSvelteTable,
     FlexRender,
   } from "$lib/components/ui/data-table/index.js";
+  import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
   import { Input } from "$lib/components/ui/input/index.js";
+  import { Button } from "$lib/components/ui/button/index.js";
   import * as Table from "$lib/components/ui/table/index.js";
 
   type DataTableProps<TData, TValue> = {
@@ -22,6 +25,7 @@
   let { data, columns }: DataTableProps<TData, TValue> = $props();
   let sorting = $state<SortingState>([]);
   let columnFilters = $state<ColumnFiltersState>([]);
+  let columnVisibility = $state<VisibilityState>({});
 
   const table = createSvelteTable({
     get data() {
@@ -45,12 +49,22 @@
         columnFilters = updater;
       }
     },
+    onColumnVisibilityChange: (updater) => {
+      if (typeof updater === "function") {
+        columnVisibility = updater(columnVisibility);
+      } else {
+        columnVisibility = updater;
+      }
+    },
     state: {
       get sorting() {
         return sorting;
       },
       get columnFilters() {
         return columnFilters;
+      },
+      get columnVisibility() {
+        return columnVisibility;
       },
     },
   });
@@ -69,6 +83,26 @@
       }}
       class="max-w-sm"
     />
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>
+        {#snippet child({ props })}
+          <Button {...props} variant="outline" class="ml-auto">Columns</Button>
+        {/snippet}
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content align="end">
+        {#each table
+          .getAllColumns()
+          .filter((col) => col.getCanHide()) as column (column.id)}
+          <DropdownMenu.CheckboxItem
+            class="capitalize"
+            bind:checked={() => column.getIsVisible(),
+            (v) => column.toggleVisibility(!!v)}
+          >
+            {column.id}
+          </DropdownMenu.CheckboxItem>
+        {/each}
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
   </div>
   <div class="rounded-md border">
     <Table.Root>
