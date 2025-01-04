@@ -1,5 +1,5 @@
 <script lang="ts" generics="TData, TValue">
- import { type ColumnDef, getCoreRowModel } from "@tanstack/table-core";
+ import { type ColumnDef, type SortingState, getCoreRowModel, getSortedRowModel } from "@tanstack/table-core";
  import {
   createSvelteTable,
   FlexRender,
@@ -12,6 +12,7 @@
  };
 
  let { data, columns }: DataTableProps<TData, TValue> = $props();
+ let sorting = $state<SortingState>([]);
 
  const table = createSvelteTable({
   get data() {
@@ -19,6 +20,19 @@
   },
   columns,
   getCoreRowModel: getCoreRowModel(),
+  getSortedRowModel: getSortedRowModel(),
+    onSortingChange: (updater) => {
+      if (typeof updater === "function") {
+        sorting = updater(sorting);
+      } else {
+        sorting = updater;
+      }
+    },
+    state: {
+      get sorting() {
+        return sorting;
+      },
+    },
  });
 </script>
 
