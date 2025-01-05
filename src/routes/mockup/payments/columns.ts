@@ -14,21 +14,25 @@ export type Payment = {
   email: string;
 };
 
-export const payments: Payment[] = [
+function randomAmount(){
+    return Math.floor(Math.random() * 101);
+}
+
+export const getPayments = (): Payment[] => {
+    return [
   {
     id: "728ed52f",
-    amount: 100,
+    amount: randomAmount(),
     status: "pending",
     email: "m@example.com",
   },
   {
     id: "489e1d42",
-    amount: 125,
+    amount: randomAmount(),
     status: "processing",
     email: "example@gmail.com",
   },
-  // ...
-];
+]};
 
 export const columns: ColumnDef<Payment>[] = [
   {

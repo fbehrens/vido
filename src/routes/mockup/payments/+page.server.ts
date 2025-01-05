@@ -1,8 +1,15 @@
-import { payments } from "./columns";
+import { getPayments } from "./columns";
 
 export async function load() {
-  // logic to fetch payments data here
+    const payments = getPayments();
+    console.log(payments[0]!.amount);
   return {
-    payments,
+    payments
   };
 }
+export const actions = {
+  foo: async ({ request }) => {
+    const data = await request.formData();
+    console.log({ data });
+  },
+};
