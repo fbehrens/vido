@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Icon from "$lib/components/Icon.svelte";
+  import Trash2 from "lucide-svelte/icons/trash-2";
   let { data } = $props();
   let { files } = data;
   let searchString = $state("");
@@ -31,7 +31,7 @@
         {#each selected as f}
           <tr>
             <td>
-              {#if f.id }
+              {#if f.id}
                 <a href="movie/{f.id}">{f.filename}</a>
               {:else}
                 {f.filename}
@@ -45,7 +45,7 @@
                 {#if f.id}
                   {f.id}
                   <button type="submit" formaction="?/delete">
-                    <Icon name="delete" />
+                    <Trash2 class="size-4" />
                   </button>
                 {/if}
                 {#if f.id && !f.has_segments && f.everyClipHasSegments}

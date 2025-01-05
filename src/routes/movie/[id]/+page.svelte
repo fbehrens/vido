@@ -1,10 +1,9 @@
 <script lang="ts">
   import type { Segment, Movie, Word } from "$lib/types.js";
-  import Icon from "$lib/components/Icon.svelte";
   import SegmentRow from "./SegmentRow.svelte";
   import Srt from "$lib/components/Srt.svelte";
   import { onMount } from "svelte";
-    import { whisperApi } from "$lib/zod-schema";
+  import { whisperApi } from "$lib/zod-schema";
 
   const togglePaused = () => {
     if (paused) {
@@ -16,8 +15,8 @@
     }
   };
   const { data } = $props();
-  let movie= data.movie!;
-  const d = movie!.captions[0]!.data!
+  let movie = data.movie!;
+  const d = movie!.captions[0]!.data!;
   const segments = whisperApi(d);
 
   const _segments_ = [
@@ -43,42 +42,47 @@
     let track = video.addTextTrack("captions", "Captions", "en");
     track.mode = "showing";
     segments.forEach((s) => {
-        s.words.forEach((w) => {
-            track.addCue(new VTTCue(w.start, w.end, w.word + w.sep));
-        });
-    })
+      s.words.forEach((w) => {
+        track.addCue(new VTTCue(w.start, w.end, w.word + w.sep));
+      });
+    });
   });
   let active = $derived(time >= segments[current].start);
 </script>
 
-<div >
-  <input class="bg-gray-200 w-full" readonly name="filename" value={movie.filename} />
+<div>
+  <input
+    class="bg-gray-200 w-full"
+    readonly
+    name="filename"
+    value={movie.filename}
+  />
 </div>
 <Srt id={movie.id} />
-  <div class="p-1">
-    <!-- svelte-ignore a11y_media_has_caption -->
-    <video
-      bind:this={video}
-      bind:paused
-      bind:currentTime={time}
-      bind:playbackRate
-      src={"/" + movie.filename}
-      controls
-    >
-    </video>
-  </div>
-  <div>
-    <label for="playbackrate">playbackRate:</label>
-    <input
-      type="range"
-      id="playbackRate"
-      min="0.1"
-      max="2"
-      step="0.01"
-      bind:value={playbackRate}
-    />
-    ({playbackRate})
-  </div>
+<div class="p-1">
+  <!-- svelte-ignore a11y_media_has_caption -->
+  <video
+    bind:this={video}
+    bind:paused
+    bind:currentTime={time}
+    bind:playbackRate
+    src={"/" + movie.filename}
+    controls
+  >
+  </video>
+</div>
+<div>
+  <label for="playbackrate">playbackRate:</label>
+  <input
+    type="range"
+    id="playbackRate"
+    min="0.1"
+    max="2"
+    step="0.01"
+    bind:value={playbackRate}
+  />
+  ({playbackRate})
+</div>
 
 {#each segments as s, i}
   {#if i == current && active}
