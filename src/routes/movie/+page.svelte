@@ -1,5 +1,7 @@
 <script lang="ts">
   import Trash2 from "lucide-svelte/icons/trash-2";
+  import Scissors from "lucide-svelte/icons/scissors";
+  import Plus from "lucide-svelte/icons/plus";
   let { data } = $props();
   let { files } = data;
   let searchString = $state("");
@@ -49,11 +51,11 @@
                   </button>
                 {/if}
                 {#if f.id && !f.has_segments && f.everyClipHasSegments}
-                  <a href="movie/cut/{f.id}"> <Icon name="cut" /> </a>
+                  <a href="movie/cut/{f.id}"> <Scissors class="size-4" /> </a>
                 {/if}
                 {#if !f.id || (!f.has_segments && !f.everyClipHasSegments)}
                   <button type="submit" formaction="?/create"
-                    ><Icon name="create" /></button
+                    ><Plus class="size-4" /></button
                   >
                 {/if}
               </form>
