@@ -5,25 +5,19 @@
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
 
   let { id }: { id: string } = $props();
-  const handleSubmit = async () => {
+  const handleSubmit = async (action: string) => {
     const f = new FormData();
-    f.append("id", "25");
+    f.append("id", id);
+    f.append("action", action);
     try {
-      const response = await fetch("?/foo", {
+      const response = await fetch("?", {
         method: "POST",
         body: f,
         headers: {
           accept: "application/json",
         },
       });
-      const json = await response.json();
-      console.log({ json });
-      if (response.ok) {
-        await invalidateAll();
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Something went wrong");
-      }
+      await invalidateAll();
     } catch (error) {
       console.error("Submission error:", error);
     }
@@ -53,7 +47,11 @@
     </DropdownMenu.Group>
     <DropdownMenu.Separator />
     <DropdownMenu.Item>View customer</DropdownMenu.Item>
-    <DropdownMenu.Item>View payment details</DropdownMenu.Item>
-    <DropdownMenu.Item onclick={handleSubmit}>submit</DropdownMenu.Item>
+    <DropdownMenu.Item onclick={() => handleSubmit("drink")}
+      >drink</DropdownMenu.Item
+    >
+    <DropdownMenu.Item onclick={() => handleSubmit("cook")}
+      >cook</DropdownMenu.Item
+    >
   </DropdownMenu.Content>
 </DropdownMenu.Root>
