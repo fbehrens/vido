@@ -6,13 +6,17 @@
   const { pages } = data;
 </script>
 
-<div class="flex border-2 border-black">
+<div class="flex items-center gap-2 text-sm border-[1px] border-grey">
   {#each pages as p}
-    <div
-      class={cn("p-1", `/mockup/${p}` == page.route.id ? "bg-gray-300" : "")}
+    <a
+      class={cn(
+        "transition-colors hover:text-foreground/80",
+        `/mockup/${p}` == page.route.id
+          ? "text-foreground"
+          : "text-foreground/60",
+      )}
+      href={`/mockup/${p}`}>{p}</a
     >
-      <a href={`/mockup/${p}`}>{p}</a>
-    </div>
   {/each}
 </div>
 {@render children()}
