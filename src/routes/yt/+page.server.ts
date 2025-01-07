@@ -15,10 +15,14 @@ export async function load({ params }) {
 
 export const actions = {
   default: async ({ request }) => {
+    console.log({ page: `/yt?/default` });
     const formData = await request.formData();
     const url = formData.get("url") as string;
     const youtubeId = ytGetId(url);
-    if (!youtubeId) return;
+    if (!youtubeId) {
+      console.log({ err: `Do not have youtubeId`, url });
+      return;
+    }
     const info = await ytGetInfo(youtubeId);
     const yt = ytInfo(info);
     const { movie_id: movieId } = await db
