@@ -1,7 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import { extractMp3, getDuration, getFramerate } from "$lib/ffmpeg";
 import { db } from "$lib/server/db";
-import { clips, movies } from "$lib/server/db/schema";
+import { movies } from "$lib/server/db/schema";
 import { mp3Path } from "$lib/util/util.js";
 import * as fs from "fs";
 import { transcribe } from "$lib/whisper";
@@ -11,14 +11,14 @@ export async function createMovie(
   filename: string,
 ): Promise<typeof movies.$inferSelect> {
   let m = await db.query.movies.findFirst({
-    where: (movies, { eq }) => eq(movies.filename, filename),
+    where: (movies, { eq }) => eq(movies.title, filename),
   });
   let movie: typeof movies.$inferSelect;
   if (m) {
     movie = m;
   } else {
     movie = {
-      filename,
+      title: filename,
       duration: await getDuration(`static/${filename}`),
       framerate: await getFramerate(`static/${filename}`),
     } as typeof movies.$inferSelect;

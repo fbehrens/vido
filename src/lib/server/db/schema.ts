@@ -11,14 +11,13 @@ import {
 
 export const movies = sqliteTable("movies", {
   id: integer().primaryKey({ autoIncrement: true }),
-  filename: text(),
   youtubeId: text(),
   data: text(),
-  title: text(),
+  title: text().notNull(),
   language: text(),
   channel: text(),
   description: text(),
-  duration: real(),
+  duration: real().notNull(),
   framerate: real(),
 });
 
