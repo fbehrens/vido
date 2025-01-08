@@ -1,0 +1,5 @@
+### event for mockup/sse1
+POST http://localhost:5173/mockup/sse1 HTTP/1.1
+content-type: application/json
+
+{"request": "from Request"}
