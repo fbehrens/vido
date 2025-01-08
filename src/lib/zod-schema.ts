@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const whisperApiSchema = z.array(
   z.object({
-    clip_id: z.number(),
+    clip_id: z.number().optional(),
     start: z.number(),
     end: z.number(),
     text: z.string(),
