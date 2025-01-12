@@ -29,3 +29,9 @@ export interface Segment extends Duration {
   text: string;
   words: Word[];
 }
+
+export interface Toast {
+  id: string;
+  title: string;
+  message: string;
+}
