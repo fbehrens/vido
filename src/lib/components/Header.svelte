@@ -10,6 +10,15 @@
       <a
         class={cn(
           "transition-colors hover:text-foreground/80",
+          page.url.pathname.startsWith("/files")
+            ? "text-foreground"
+            : "text-foreground/60",
+        )}
+        href="/files">files</a
+      >
+      <a
+        class={cn(
+          "transition-colors hover:text-foreground/80",
           page.url.pathname.startsWith("/movie")
             ? "text-foreground"
             : "text-foreground/60",
