@@ -1,13 +1,11 @@
 <script lang="ts">
+  import { getToastState } from "$lib/toast-state.svelte";
   import Toast from "./Toast.svelte";
-
-  const toast = {
-    id: crypto.randomUUID(),
-    title: "Toast Title",
-    message: "Toast Message",
-  };
+  const toastState = getToastState();
 </script>
 
 <div class="absolute right-2 top-2 flex flex-col gap-2">
-  <Toast {toast} />
+  {#each toastState.toasts as toast (toast)}
+    <Toast {toast} />
+  {/each}
 </div>

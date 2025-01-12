@@ -1,9 +1,11 @@
 <script lang="ts">
   import { page } from "$app/state";
+  import { setToastState } from "$lib/toast-state.svelte.js";
   import { cn } from "$lib/utils";
 
   let { children, data } = $props();
   const { pages } = data;
+  setToastState();
 </script>
 
 <div class="flex items-center gap-2 text-sm border-[1px] border-grey">
