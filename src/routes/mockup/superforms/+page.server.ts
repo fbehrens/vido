@@ -6,7 +6,7 @@ import { message } from "sveltekit-superforms";
 import { fail } from "@sveltejs/kit";
 
 const schema = z.object({
-  name: z.string().default("Hello world!"),
+  name: z.string().min(3).default("Hello world!"),
   email: z.string().email(),
 });
 
