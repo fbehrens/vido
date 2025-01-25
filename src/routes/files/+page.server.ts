@@ -1,5 +1,5 @@
 import { readdirSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { extname, join } from "node:path";
 
 export interface MyFile {
   filename: string;
@@ -24,13 +24,11 @@ function getAllFiles(dirPath: string, arrayOfFiles: MyFile[] = []) {
   });
   return arrayOfFiles;
 }
-const extsVideo = [".mov", ".mp4", ".mkv"];
-export async function load({}) {
-  const files = getAllFiles(dir).filter((f) => extsVideo.includes(f.filename));
-  // const join: FileWithMovie[] = files.map((m) => {
-  //   const mc_ = mc.find((e) => e.filename === m.filename) || { clips: [] };
-  //   return { ...m, ...mc_ };
-  // });
+const extsVideo = [".mov", ".mp4", ".mkv", ".json"];
+export async function load({ params }) {
+  const files = getAllFiles(dir).filter((f) =>
+    extsVideo.includes(extname(f.filename)),
+  );
 
   return {
     files,
