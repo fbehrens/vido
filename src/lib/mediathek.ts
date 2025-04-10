@@ -19,11 +19,12 @@ export async function updateFilmliste({
     if (!test) {
       const filmlisteXz = "https://liste.mediathekview.de/Filmliste-akt.xz";
       const response = await fetch(filmlisteXz);
-      const { etag: oldEtag } = await db
+      const result = await db
         .select()
         .from(mediathek)
         .orderBy(desc(mediathek.id))
-        .get()!;
+        .get();
+      const oldEtag = result?.etag || "";
       const etag = response.headers.get("etag")!;
       console.log({ etag, oldEtag });
       if (etag === oldEtag) {
