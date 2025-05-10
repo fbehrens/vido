@@ -47,6 +47,7 @@
         "vitest": "^3.1.1"
     },
     "dependencies": {
+        "cmd": "workspace:*",
         "@napi-rs/lzma": "^1.4.1",
         "@tanstack/table-core": "^8.21.3",
         "@types/node": "^22.14.1",
