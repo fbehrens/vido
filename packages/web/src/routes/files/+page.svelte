@@ -4,7 +4,6 @@
 
   const { data } = $props();
   const { files } = data;
-  console.log(files);
 </script>
 
 <DataTable data={files} {columns} />

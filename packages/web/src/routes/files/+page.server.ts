@@ -26,6 +26,7 @@ function getAllFiles(dirPath: string, arrayOfFiles: MyFile[] = []) {
 }
 const extsVideo = [".mov", ".mp4", ".mkv", ".json"];
 export async function load({ params }) {
+  console.log({dir})
   const files = getAllFiles(dir).filter((f) =>
     extsVideo.includes(extname(f.filename)),
   );
