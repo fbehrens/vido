@@ -1,0 +1,13 @@
+{
+    "name": "@fbehrens/youtube-transcript",
+    "version": "1.0.2",
+    "exports": "./src/index.ts",
+    "license": "MIT",
+    "publish": {
+        "include": [
+            "LICENSE",
+            "README.md",
+            "src/*.ts"
+        ]
+    }
+}
