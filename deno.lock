@@ -153,6 +153,47 @@
             "npm:ai@4.3.15"
           ]
         }
+      },
+      "packages/web": {
+        "packageJson": {
+          "dependencies": [
+            "npm:@napi-rs/lzma@^1.4.1",
+            "npm:@sveltejs/adapter-node@^5.2.12",
+            "npm:@sveltejs/kit@^2.20.7",
+            "npm:@sveltejs/vite-plugin-svelte@^5.0.3",
+            "npm:@tanstack/table-core@^8.21.3",
+            "npm:@types/better-sqlite3@^7.6.13",
+            "npm:@types/lzma-native@^4.0.4",
+            "npm:@types/node@^22.14.1",
+            "npm:autoprefixer@^10.4.21",
+            "npm:better-sqlite3@^11.9.1",
+            "npm:bits-ui@1.0.0-next.77",
+            "npm:clsx@^2.1.1",
+            "npm:dotenv@^16.5.0",
+            "npm:drizzle-kit@~0.30.6",
+            "npm:drizzle-orm@~0.38.4",
+            "npm:imsc@^1.1.5",
+            "npm:lucide-svelte@0.474",
+            "npm:openai@^4.95.0",
+            "npm:postcss@^8.5.3",
+            "npm:prettier-plugin-svelte@^3.3.3",
+            "npm:prettier-plugin-tailwindcss@~0.6.11",
+            "npm:prettier@^3.5.3",
+            "npm:readable-stream@^4.7.0",
+            "npm:svelte-check@^4.1.6",
+            "npm:svelte@^5.27.2",
+            "npm:sveltekit-superforms@^2.24.1",
+            "npm:tailwind-merge@^2.6.0",
+            "npm:tailwind-variants@~0.3.1",
+            "npm:tailwindcss@^3.4.17",
+            "npm:tslib@^2.8.1",
+            "npm:typescript@^5.8.3",
+            "npm:vite-node@^3.1.1",
+            "npm:vite@^6.3.1",
+            "npm:vitest@^3.1.1",
+            "npm:zod@^3.24.3"
+          ]
+        }
       }
     }
   }

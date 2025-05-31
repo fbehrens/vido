@@ -1,5 +1,5 @@
 import { assertEquals } from "jsr:@std/assert";
-import { YoutubeTranscript } from "../src/index.ts";
+import { YoutubeTranscript } from "./youtube-transcript.ts";
 
 const videoId = "dQw4w9WgXcQ";
 Deno.test("fetchTranscript", async () => {

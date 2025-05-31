@@ -1,6 +1,6 @@
 import { generateText } from "ai";
 import { openai } from "@ai-sdk/openai";
-import { YoutubeTranscript } from "youtube-transcript";
+import { YoutubeTranscript } from "./youtube-transcript.ts";
 
 const model = openai("o3-mini");
 export async function chatCompletion(prompt: string) {

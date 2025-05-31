@@ -2,7 +2,7 @@
     "workspace": {
         "members": [
             "packages/cmd",
-            "packages/youtube-transcript"
+            "packages/web"
         ]
     }
 }
