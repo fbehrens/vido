@@ -1,0 +1,27 @@
+#!/usr/bin/env -S deno run -A
+import { parseArgs } from "@std/cli/parse-args";
+const options = {
+  string: ["format"],
+  alias: { format: ["f"] },
+  boolean: ["listFormats"],
+  default: { format: "text", listFormats: false },
+};
+const args = parseArgs(Deno.args, options);
+// console.log({ args });
+const { format, listFormats } = args;
+if (listFormats) {
+  console.log("json\ntext");
+  Deno.exit(0);
+}
+const videoId = args._[0] as string;
+if (!videoId) {
+  console.error(
+    "youtube-transcript <youtubeVideoId> [--format <format>] [--listFormats]"
+  );
+}
+
+import { YoutubeTranscript } from "../src/youtube-transcript.ts";
+const transcript = await YoutubeTranscript.fetchTranscript(videoId, {
+  textOnly: format === "text",
+});
+console.log(transcript);

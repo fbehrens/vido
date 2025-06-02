@@ -1,8 +1,7 @@
 {
     "workspace": {
         "members": [
-            "packages/cmd",
-            "packages/web"
+            "packages/cmd"
         ]
     }
 }
