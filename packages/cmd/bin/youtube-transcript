@@ -3,20 +3,26 @@ import { parseArgs } from "@std/cli/parse-args";
 const options = {
   string: ["format"],
   alias: { format: ["f"] },
-  boolean: ["listFormats"],
+  boolean: ["list-formats", "debug"],
   default: { format: "text", listFormats: false },
 };
 const args = parseArgs(Deno.args, options);
-// console.log({ args });
-const { format, listFormats } = args;
-if (listFormats) {
-  console.log("json\ntext");
+if (args.debug) {
+  console.log({ args });
   Deno.exit(0);
 }
+if (args["list-formats"]) {
+  console.log("json\twith timestamps\ntext\twithout timestamps");
+  Deno.exit(0);
+}
+
+type Format = "json" | "text";
+const format = args.format as Format;
+
 const videoId = args._[0] as string;
 if (!videoId) {
   console.error(
-    "youtube-transcript <youtubeVideoId> [--format <format>] [--listFormats]"
+    "youtube-transcript <youtubeVideoId> [--format <format>] [--list-formats]"
   );
 }
 
