@@ -1,0 +1,6 @@
+-- database: ./dev.db
+
+SELECT * FROM films_import
+WHERE thema = 'Markus Lanz'
+ORDER BY `datumL` DESC
+limit 1

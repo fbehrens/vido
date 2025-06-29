@@ -8,6 +8,7 @@ play
 *.mp4
 *.mp3
 mov
+__pycache__
 
 # Output
 .output

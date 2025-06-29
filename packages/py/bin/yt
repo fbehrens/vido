@@ -1,0 +1,17 @@
+#!/usr/bin/env -S uv run --script
+import sys
+
+import yt_dlp
+
+_, video_id, *rest = sys.argv
+print(video_id)
+# sys.exit(0)
+
+ydl_opts = {
+    "writeinfojson": True,
+    "skip_download": True,
+}
+
+with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+    ydl.download([video_id])
+    # ydl._write_info_json([video_id])
