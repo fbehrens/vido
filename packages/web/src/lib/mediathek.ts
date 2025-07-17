@@ -1,7 +1,6 @@
 import * as fs from "fs";
 import { exec } from "$lib/util/util";
 
-//  deno --allow-net --allow-write --allow-read --allow-env --allow-ffi --allow-run src/mediathek.ts
 import { decompress } from "@napi-rs/lzma/xz";
 import { db, dbPath } from "./server/db";
 import { films, filmsImport, mediathek } from "./server/db/schema";
