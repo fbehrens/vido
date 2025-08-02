@@ -4,7 +4,7 @@
   let { children } = $props();
 </script>
 
-<Header />
+<Header>theHeader</Header>
 <main>
   {@render children()}
 </main>

@@ -6,7 +6,7 @@ export default defineConfig({
     host: "127.0.0.1",
     allowedHosts: ["honolulu.kite-ling.ts.net"],
   },
-  plugins: [sveltekit()],
+  plugins: [tailwindcss(), sveltekit()],
   resolve: {
     alias: {
       stream: "readable-stream",
