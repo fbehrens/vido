@@ -1,0 +1,25 @@
+WEBVTT
+
+id:fred
+width:40%
+lines:3
+regionanchor:0%,100%
+viewportanchor:10%,90%
+scroll:up
+
+REGION
+id:bill
+width:40%
+lines:3
+regionanchor:100%,100%
+viewportanchor:90%,90%
+scroll:up
+
+0
+00:00:00.000 --> 00:00:03.000 region:fred align:left
+<v Fred>I am Fred
+Line 2
+
+1
+00:00:01.000 --> 00:00:05.000 region:bill align:right
+<v Bill>Frank: Hello, ich bin der Frank</v>

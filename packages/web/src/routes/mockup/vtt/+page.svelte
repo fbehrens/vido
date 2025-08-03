@@ -2,20 +2,9 @@
 </script>
 
 <video autoplay width="640" height="360" controls>
-  <source src="/mov/test.mov" type="video/mp4" />
-  <track
-    default
-    src="/mov/test.vtt"
-    kind="captions"
-    srclang="test"
-    label="testlabel"
-  />
-  <track
-    src="/mov/chapters.vtt"
-    kind="captions"
-    srclang="de"
-    label="chapters"
-  />
+  <source src="/test/opening.mkv" type="video/mp4" />
+  <track default src="/test/opening.vtt" kind="captions" srclang="test" label="testlabel" />
+  <track src="/test/chapters.vtt" kind="captions" srclang="de" label="chapters" />
 </video>
 
 <style>
