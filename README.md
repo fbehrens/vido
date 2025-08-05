@@ -1,5 +1,9 @@
 # vod
 
+* Subtitles
+    * [Advanced SubStation Alpha](https://www.nikse.dk/subtitleedit/formats/assa)
+    * [libass](https://github.com/libass/libass/wiki/ASS-File-Format-Guide)
+
 ## fyyd
 
 ```http
@@ -47,9 +51,6 @@ sqlite3 db/vod.db '.schema' > schema.sql
 
 ```bash
 # join videos
-
-
-
 ```
 
 ## yt-dlp
