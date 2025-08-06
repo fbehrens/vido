@@ -1,8 +1,131 @@
 # vod
 
-* Subtitles
-    * [Advanced SubStation Alpha](https://www.nikse.dk/subtitleedit/formats/assa)
-    * [libass](https://github.com/libass/libass/wiki/ASS-File-Format-Guide)
+## Subtitles
+
+* [Advanced SubStation Alpha](https://www.nikse.dk/subtitleedit/formats/assa)
+* [libass](https://github.com/libass/libass/wiki/ASS-File-Format-Guide)
+
+```bash
+
+General
+Complete name                            : /Volumes/T7/serien/Devs Season 1 Mp4 1080p/Devs S01E07.mp4
+Format                                   : MPEG-4
+Format profile                           : Base Media
+Codec ID                                 : isom (isom/iso2/avc1/mp41)
+File size                                : 1.41 GiB
+Duration                                 : 53 min 39 s
+Overall bit rate mode                    : Variable
+Overall bit rate                         : 3 749 kb/s
+Frame rate                               : 23.976 FPS
+Encoded date                             : 2020-04-10 07:04:00 UTC
+Tagged date                              : 2020-04-10 07:04:00 UTC
+Writing application                      : Lavf58.35.101
+
+Video
+ID                                       : 1
+Format                                   : AVC
+Format/Info                              : Advanced Video Codec
+Format profile                           : High@L4.1
+Format settings                          : CABAC / 5 Ref Frames
+Format settings, CABAC                   : Yes
+Format settings, Reference frames        : 5 frames
+Codec ID                                 : avc1
+Codec ID/Info                            : Advanced Video Coding
+Duration                                 : 53 min 39 s
+Bit rate mode                            : Variable
+Bit rate                                 : 3 359 kb/s
+Maximum bit rate                         : 24.0 Mb/s
+Width                                    : 1 920 pixels
+Height                                   : 960 pixels
+Display aspect ratio                     : 2.000
+Frame rate mode                          : Constant
+Frame rate                               : 23.976 (24000/1001) FPS
+Color space                              : YUV
+Chroma subsampling                       : 4:2:0
+Bit depth                                : 8 bits
+Scan type                                : Progressive
+Bits/(Pixel*Frame)                       : 0.076
+Stream size                              : 1.26 GiB (90%)
+Writing library                          : x264 core 158 r2984
+Encoding settings                        : cabac=1 / ref=6 / deblock=1:0:0 / analyse=0x3:0x133 / me=umh / subme=8 / psy=1 / psy_rd=1.00:0.00 / mixed_ref=1 / me_range=16 / chroma_me=1 / trellis=0 / 8x8dct=1 / cqm=0 / deadzone=21,11 / fast_pskip=0 / chroma_qp_offset=-2 / threads=30 / lookahead_threads=5 / sliced_threads=0 / nr=0 / decimate=1 / interlaced=0 / bluray_compat=1 / constrained_intra=0 / bframes=3 / b_pyramid=1 / b_adapt=2 / b_bias=0 / direct=3 / weightb=1 / open_gop=0 / weightp=1 / keyint=250 / keyint_min=1 / scenecut=40 / intra_refresh=0 / rc_lookahead=60 / rc=2pass / mbtree=1 / bitrate=3359 / ratetol=1.0 / qcomp=0.60 / qpmin=10 / qpmax=51 / qpstep=4 / cplxblur=20.0 / qblur=0.5 / vbv_maxrate=24000 / vbv_bufsize=24000 / nal_hrd=vbr / filler=0 / ip_ratio=1.40 / aq=1:1.00
+Encoded date                             : 2020-04-10 07:04:00 UTC
+Tagged date                              : 2020-04-10 07:04:00 UTC
+Color range                              : Limited
+Color primaries                          : BT.709
+Transfer characteristics                 : BT.709
+Matrix coefficients                      : BT.709
+Codec configuration box                  : avcC
+
+Audio
+ID                                       : 2
+Format                                   : AC-3
+Format/Info                              : Audio Coding 3
+Commercial name                          : Dolby Digital
+Codec ID                                 : ac-3
+Duration                                 : 53 min 39 s
+Bit rate mode                            : Constant
+Bit rate                                 : 384 kb/s
+Channel(s)                               : 6 channels
+Channel layout                           : L R C LFE Ls Rs
+Sampling rate                            : 48.0 kHz
+Frame rate                               : 31.250 FPS (1536 SPF)
+Compression mode                         : Lossy
+Stream size                              : 147 MiB (10%)
+Language                                 : English
+Service kind                             : Complete Main
+Default                                  : Yes
+Alternate group                          : 1
+Encoded date                             : 2020-04-10 07:04:00 UTC
+Tagged date                              : 2020-04-10 07:04:00 UTC
+Dialog Normalization                     : -31 dB
+cmixlev                                  : -4.5 dB
+surmixlev                                : -6 dB
+dialnorm_Average                         : -31 dB
+dialnorm_Minimum                         : -31 dB
+dialnorm_Maximum                         : -31 dB
+
+Text #1
+ID                                       : 3
+Format                                   : Timed Text
+Muxing mode                              : sbtl
+Codec ID                                 : tx3g
+Duration                                 : 53 min 31 s
+Bit rate mode                            : Variable
+Bit rate                                 : 34 b/s
+Frame rate                               : 0.297 FPS
+Stream size                              : 13.5 KiB (0%)
+Language                                 : English
+Default                                  : Yes
+Forced                                   : No
+Alternate group                          : 3
+Encoded date                             : 2020-04-10 07:04:00 UTC
+Tagged date                              : 2020-04-10 07:04:00 UTC
+Count of events                          : 477
+
+Text #2
+ID                                       : 4
+Format                                   : Timed Text
+Muxing mode                              : sbtl
+Codec ID                                 : tx3g
+Duration                                 : 53 min 34 s
+Bit rate mode                            : Variable
+Bit rate                                 : 43 b/s
+Frame rate                               : 0.374 FPS
+Stream size                              : 16.8 KiB (0%)
+Language                                 : English
+Default                                  : No
+Forced                                   : No
+Alternate group                          : 3
+Encoded date                             : 2020-04-10 07:04:00 UTC
+Tagged date                              : 2020-04-10 07:04:00 UTC
+Count of events                          : 600
+
+
+
+
+# extract
+ffmpeg -i "Devs S01E07.mp4" -map 0:s:0 -map 0:s:1 subtitle_%d.srt
+```
 
 ## Ass
 
