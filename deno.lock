@@ -117,7 +117,8 @@
         "packageJson": {
           "dependencies": [
             "npm:@types/bun@latest",
-            "npm:better-sqlite3@^12.2.0"
+            "npm:drizzle-kit@~0.31.4",
+            "npm:drizzle-orm@~0.44.4"
           ]
         }
       }
