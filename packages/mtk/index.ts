@@ -1,8 +1,12 @@
+import { drizzle } from "drizzle-orm/bun-sqlite";
 import { Database } from "bun:sqlite";
-const db = new Database(":memory:");
-const row = db.query("select 'Hello world' as message;").get(); // => { me
+import { person } from "./drizzle/schema";
 
-// import Database from "better-sqlite3";
-// const l = new Database("local.db");
-// const row = l.prepare("SELECT * FROM person").get();
+const db = new Database("local.db");
+
+const drz = drizzle({ client: db });
+
+// const row = db.query("SELECT * FROM person;").get();
+
+const row = await drz.select().from(person);
 console.log(row);
