@@ -1,23 +1,27 @@
----
 
-Default to using Bun instead of Node.js.
+# General Instructions
 
-- Use `bun <file>` instead of `node <file>` or `ts-node <file>`
-- Use `bun test` instead of `jest` or `vitest`
-- Use `bun build <file.html|file.ts|file.css>` instead of `webpack` or `esbuild`
-- Use `bun install` instead of `npm install` or `yarn install` or `pnpm install`
-- Use `bun run <script>` instead of `npm run <script>` or `yarn run <script>` or `pnpm run <script>`
-- Bun automatically loads .env, so don't use dotenv.
+* I am learning effect, which is quite new for me
+* Please help me to understand effect by readin the documentation from <https://effect.website/llms-full.txt>
+
+# Instruction for Bun
+
+* Use `bun <file>` instead of `node <file>` or `ts-node <file>`
+* Use `bun test` instead of `jest` or `vitest`
+* Use `bun build <file.html|file.ts|file.css>` instead of `webpack` or `esbuild`
+* Use `bun install` instead of `npm install` or `yarn install` or `pnpm install`
+* Use `bun run <script>` instead of `npm run <script>` or `yarn run <script>` or `pnpm run <script>`
+* Bun automatically loads .env, so don't use dotenv.
 
 ## APIs
 
-- `Bun.serve()` supports WebSockets, HTTPS, and routes. Don't use `express`.
-- `bun:sqlite` for SQLite. Don't use `better-sqlite3`.
-- `Bun.redis` for Redis. Don't use `ioredis`.
-- `Bun.sql` for Postgres. Don't use `pg` or `postgres.js`.
-- `WebSocket` is built-in. Don't use `ws`.
-- Prefer `Bun.file` over `node:fs`'s readFile/writeFile
-- Bun.$`ls` instead of execa.
+* `Bun.serve()` supports WebSockets, HTTPS, and routes. Don't use `express`.
+* `bun:sqlite` for SQLite. Don't use `better-sqlite3`.
+* `Bun.redis` for Redis. Don't use `ioredis`.
+* `Bun.sql` for Postgres. Don't use `pg` or `postgres.js`.
+* `WebSocket` is built-in. Don't use `ws`.
+* Prefer `Bun.file` over `node:fs`'s readFile/writeFile
+* Bun.$`ls` instead of execa.
 
 ## Testing
 
