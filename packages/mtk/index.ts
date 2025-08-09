@@ -4,8 +4,8 @@ import { person } from "./drizzle/schema";
 import * as SqliteDrizzle from "@effect/sql-drizzle/Sqlite";
 import { SqliteClient } from "@effect/sql-sqlite-bun";
 
-const SqlLive = SqliteClient.layer({
-  filename: "local.db",
+const SqlLive = SqliteClient.layerConfig({
+  filename: Config.string("DATABASE_URL"),
 });
 
 const DrizzleLive = SqliteDrizzle.layer.pipe(Layer.provide(SqlLive));
