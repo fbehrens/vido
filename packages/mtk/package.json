@@ -11,6 +11,9 @@
         "typescript": "^5"
     },
     "dependencies": {
-        "drizzle-orm": "^0.44.4"
+        "@effect/sql-drizzle": "^0.43.0",
+        "@effect/sql-sqlite-bun": "^0.45.0",
+        "drizzle-orm": "^0.44.4",
+        "effect": "^3.17.7"
     }
 }
