@@ -1,10 +1,10 @@
 import { describe, test, expect } from "vitest";
 import { getDuration } from "$lib/ffmpeg";
 
-const filepath = "static/mov/test.mov";
+const filepath = "static/test/opening.mkv";
 
 describe("ffmpeg", async () => {
   test("duration", async () => {
-    expect(await getDuration(filepath)).toBe(113.92);
+    expect(await getDuration(filepath)).toBe(44.969);
   });
 });
