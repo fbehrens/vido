@@ -4,7 +4,7 @@
     "type": "module",
     "private": true,
     "scripts": {
-        "i": "bun run index.ts",
+        "i": "bun run play/drizzle_plus.ts",
         "pu": "bun run drizzle-kit push",
         "pu1": "bun run drizzle-kit push --config drizzle1.config.ts"
     },
@@ -16,6 +16,7 @@
         "typescript": "^5"
     },
     "dependencies": {
+        "@effect/experimental": "^0.54.5",
         "@effect/sql-drizzle": "^0.43.0",
         "@effect/sql-sqlite-bun": "^0.45.0",
         "drizzle-orm": "^0.44.4",
