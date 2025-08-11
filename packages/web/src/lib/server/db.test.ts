@@ -1,12 +1,10 @@
 import { describe, test, expect } from "vitest";
-import { dbOld } from "./db";
-import type { Movie } from "./types";
-import { mp3Path } from "./util/util";
-import { extractMp3 } from "./ffmpeg";
+import { db_better } from "$lib/server/db";
+import type { Movie } from "../types";
+import { mp3Path } from "$lib/util/util";
+import { extractMp3 } from "../ffmpeg";
 describe("all segments", async () => {
-  const movie = dbOld
-    .prepare("SELECT * FROM movies where id =?")
-    .get(381) as Movie;
+  const movie = db_better.prepare("SELECT * FROM movies where id =?").get(381) as Movie;
   test.skip("it is found", () => {
     expect(movie.id).toBe(381);
   });

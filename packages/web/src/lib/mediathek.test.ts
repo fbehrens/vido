@@ -1,7 +1,6 @@
 import { describe, test, expect, beforeEach } from "vitest";
 import { parseDate, updateFilmliste } from "./mediathek";
-import { nTimes } from "./util/util";
-import { dbOld } from "./db";
+import { nTimes } from "$lib/util/util";
 
 describe("mediathek", async () => {
   const d = "07.09.2024, 09:35";
