@@ -1,4 +1,7 @@
 {
     "name": "vido",
-    "private": "true"
+    "private": "true",
+    "workspaces": [
+        "packages/*"
+    ]
 }
