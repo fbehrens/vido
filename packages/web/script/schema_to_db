@@ -1,5 +1,0 @@
-#!/bin/bash
-echo i recreate databa $1 from schema.sql
-set -x # turn on ecoing
-rm db/$1.db
-sqlite3 db/$1.db < sql/schema.sql

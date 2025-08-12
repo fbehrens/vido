@@ -1,11 +1,11 @@
 import { describe, test, expect } from "vitest";
 import { eq, lt, gte, ne, sql, desc } from "drizzle-orm";
-import { db } from "./server/db";
-import { captions, mediathek, movies } from "./server/db/schema/vido";
+import { db_mediathek } from "./server/db";
+import { mediathek } from "./server/db/schema/mediathek";
 
 describe("drizzle", () => {
   test("where", async () => {
-    const { etag: oldEtag } = await db.select().from(mediathek).orderBy(desc(mediathek.id)).get()!;
-    console.log({ oldEtag });
+    const r = await db_mediathek.select().from(mediathek).orderBy(desc(mediathek.id)).get();
+    console.log({ r });
   });
 });

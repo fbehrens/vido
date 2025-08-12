@@ -2,8 +2,8 @@ import * as fs from "fs";
 import { exec } from "$lib/util/util";
 
 import { decompress } from "@napi-rs/lzma/xz";
-import { db, dbPath } from "./server/db";
-import { films, filmsImport, mediathek } from "./server/db/schema/vido";
+import { db_mediathek, dbPathMediathek } from "./server/db";
+import { films, filmsImport, mediathek } from "./server/db/schema/mediathek";
 import { count, desc } from "drizzle-orm";
 
 const fileDir = "static/mediathek/",
@@ -14,7 +14,7 @@ export async function updateFilmliste({ force = false, test = false, skipDownloa
     if (!test) {
       const filmlisteXz = "https://liste.mediathekview.de/Filmliste-akt.xz";
       const response = await fetch(filmlisteXz);
-      const result = await db.select().from(mediathek).orderBy(desc(mediathek.id)).get();
+      const result = await db_mediathek.select().from(mediathek).orderBy(desc(mediathek.id)).get();
       const oldEtag = result?.etag || "";
       const etag = response.headers.get("etag")!;
       console.log({ etag, oldEtag });
@@ -30,7 +30,7 @@ export async function updateFilmliste({ force = false, test = false, skipDownloa
       const filme = parseFilme({ bytes });
       const { value: liste } = filme.next();
       const [local, utc, nr, version, hash] = <string[]>liste;
-      await db.insert(mediathek).values({
+      await db_mediathek.insert(mediathek).values({
         local,
         utc,
         nr,
@@ -53,16 +53,16 @@ export async function updateFilmliste({ force = false, test = false, skipDownloa
     }
   }
   // import
-  await db.delete(films);
-  await db.insert(films).select(db.select().from(filmsImport));
+  await db_mediathek.delete(films);
+  await db_mediathek.insert(films).select(db_mediathek.select().from(filmsImport));
   console.log("films_import -> films");
 
-  await db.delete(filmsImport);
-  const insertCommand = `sqlite3 ${dbPath} ".import --csv ${filmeCsv} films_import"`;
+  await db_mediathek.delete(filmsImport);
+  const insertCommand = `sqlite3 ${dbPathMediathek} ".import --csv ${filmeCsv} films_import"`;
   console.log(`run ${insertCommand}`);
   await exec(insertCommand);
 
-  const c = await db.select({ count: count() }).from(filmsImport).get();
+  const c = await db_mediathek.select({ count: count() }).from(filmsImport).get();
   console.log(`imported ${c?.count} films`);
 }
 

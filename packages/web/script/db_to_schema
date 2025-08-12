@@ -1,4 +1,0 @@
-#!/bin/bash
-echo i write schema[db/$1.db] to sql/schema.sql
-set -x # turn on ecoing
-sqlite3 db/$1.db '.schema'  > sql/schema.sql
