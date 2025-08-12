@@ -2,7 +2,7 @@ import * as fs from "fs";
 import { exec } from "$lib/util/util";
 
 import { decompress } from "@napi-rs/lzma/xz";
-import { db_mediathek, dbPathMediathek } from "./server/db";
+import { db_mediathek, dbPathMediathek } from "./server/db/mediathek";
 import { films, filmsImport, mediathek } from "./server/db/schema/mediathek";
 import { count, desc } from "drizzle-orm";
 

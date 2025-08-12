@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import { eq, lt, gte, ne, sql, desc } from "drizzle-orm";
-import { db_mediathek } from "./server/db";
+import { db_mediathek } from "./server/db/mediathek";
 import { mediathek } from "./server/db/schema/mediathek";
 
 describe("drizzle", () => {
