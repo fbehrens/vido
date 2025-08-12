@@ -1,20 +1,32 @@
 import * as fs from "fs";
-import { exec } from "$lib/util/util";
+import { exec } from "./util";
 
 import { decompress } from "@napi-rs/lzma/xz";
-import { db_mediathek, dbPathMediathek } from "./server/db/mediathek";
-import { films, filmsImport, mediathek } from "./server/db/schema/mediathek";
+import { db_mediathek, dbPathMediathek } from "./db";
+import {
+  films,
+  filmsImport,
+  mediathek,
+} from "../../web/src/lib/server/db/schema/mediathek";
 import { count, desc } from "drizzle-orm";
 
-const fileDir = "static/mediathek/",
+const fileDir = "temp/",
   filmeJson = fileDir + "filmliste.json";
 let filmeCsv = fileDir + "filmliste.csv";
-export async function updateFilmliste({ force = false, test = false, skipDownload = false }) {
+export async function updateFilmliste({
+  force = false,
+  test = false,
+  skipDownload = false,
+}) {
   if (!skipDownload) {
     if (!test) {
       const filmlisteXz = "https://liste.mediathekview.de/Filmliste-akt.xz";
       const response = await fetch(filmlisteXz);
-      const result = await db_mediathek.select().from(mediathek).orderBy(desc(mediathek.id)).get();
+      const result = await db_mediathek
+        .select()
+        .from(mediathek)
+        .orderBy(desc(mediathek.id))
+        .get();
       const oldEtag = result?.etag || "";
       const etag = response.headers.get("etag")!;
       console.log({ etag, oldEtag });
@@ -54,7 +66,9 @@ export async function updateFilmliste({ force = false, test = false, skipDownloa
   }
   // import
   await db_mediathek.delete(films);
-  await db_mediathek.insert(films).select(db_mediathek.select().from(filmsImport));
+  await db_mediathek
+    .insert(films)
+    .select(db_mediathek.select().from(filmsImport));
   console.log("films_import -> films");
 
   await db_mediathek.delete(filmsImport);
@@ -62,7 +76,10 @@ export async function updateFilmliste({ force = false, test = false, skipDownloa
   console.log(`run ${insertCommand}`);
   await exec(insertCommand);
 
-  const c = await db_mediathek.select({ count: count() }).from(filmsImport).get();
+  const c = await db_mediathek
+    .select({ count: count() })
+    .from(filmsImport)
+    .get();
   console.log(`imported ${c?.count} films`);
 }
 
@@ -107,5 +124,11 @@ export function parseDate(s: string): Date {
   const [datePart, timePart] = s.split(", ");
   const [day, month, year] = datePart.split(".");
   const [hours, minutes] = timePart.split(":");
-  return new Date(Number(year), Number(month) - 1, Number(day), Number(hours), Number(minutes));
+  return new Date(
+    Number(year),
+    Number(month) - 1,
+    Number(day),
+    Number(hours),
+    Number(minutes)
+  );
 }
