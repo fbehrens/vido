@@ -4,7 +4,8 @@
     "type": "module",
     "private": true,
     "scripts": {
-        "i": "bun run play/drizzle_plus.ts",
+        "import": "bun run src/index.ts",
+        "play": "bun run play/drizzle_plus.ts",
         "pu": "bun run drizzle-kit push",
         "pu1": "bun run drizzle-kit push --config drizzle1.config.ts"
     },

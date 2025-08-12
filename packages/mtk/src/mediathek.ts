@@ -5,7 +5,7 @@ import { decompress } from "@napi-rs/lzma/xz";
 import { db_mediathek, dbPathMediathek } from "./db";
 import {
   films,
-  filmsImport,
+  filmsPrev,
   mediathek,
 } from "../../web/src/lib/server/db/schema/mediathek";
 import { count, desc } from "drizzle-orm";
@@ -67,19 +67,16 @@ export async function updateFilmliste({
   // import
   await db_mediathek.delete(films);
   await db_mediathek
-    .insert(films)
-    .select(db_mediathek.select().from(filmsImport));
-  console.log("films_import -> films");
+    .insert(filmsPrev)
+    .select(db_mediathek.select().from(films));
+  await db_mediathek.delete(films);
+  console.log("films -> films_prev");
 
-  await db_mediathek.delete(filmsImport);
-  const insertCommand = `sqlite3 ${dbPathMediathek} ".import --csv ${filmeCsv} films_import"`;
+  const insertCommand = `sqlite3 ${dbPathMediathek} ".import --csv ${filmeCsv} films"`;
   console.log(`run ${insertCommand}`);
   await exec(insertCommand);
 
-  const c = await db_mediathek
-    .select({ count: count() })
-    .from(filmsImport)
-    .get();
+  const c = await db_mediathek.select({ count: count() }).from(films).get();
   console.log(`imported ${c?.count} films`);
 }
 

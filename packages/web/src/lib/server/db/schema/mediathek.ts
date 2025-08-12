@@ -39,13 +39,11 @@ export const films = sqliteTable(
     neu: text(),
   },
   (table) => {
-    return {
-      nameIdx: index("clips_movie_id_id_pk").on(table.sender, table.thema),
-    };
+    return [index("clips_movie_id_id_pk").on(table.sender, table.thema)];
   },
 );
 
-export const filmsImport = sqliteTable("films_import", {
+export const filmsPrev = sqliteTable("films_prev", {
   id: integer().primaryKey(),
   sender: text(),
   thema: text(),
