@@ -5,9 +5,9 @@
     "private": true,
     "scripts": {
         "import": "bun run src/index.ts",
-        "play": "bun run play/drizzle_plus.ts",
-        "pu": "bun run drizzle-kit push",
-        "pu1": "bun run drizzle-kit push --config drizzle1.config.ts"
+        "drizzle_effect": "bun run play/drizzle_effect.ts",
+        "p:push2": "bun run drizzle-kit push --config p/drizzle2.config.ts",
+        "p:push1": "bun run drizzle-kit push --config p/drizzle1.config.ts"
     },
     "devDependencies": {
         "@types/bun": "latest",
