@@ -1,7 +1,7 @@
 import { readdirSync, statSync } from "fs";
 import { join, extname } from "path";
 import { db } from "$lib/server/db/index.js";
-import { captions, movies } from "$lib/server/db/schema.js";
+import { captions, movies } from "$lib/server/db/schema/vido";
 import { eq, isNotNull } from "drizzle-orm";
 import { createMovie, createTranscription } from "$lib/util/transcribe";
 import { redirect, type Actions } from "@sveltejs/kit";

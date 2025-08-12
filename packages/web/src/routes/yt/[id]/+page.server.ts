@@ -1,7 +1,7 @@
 import { dbOld } from "$lib/db";
 import { db } from "$lib/server/db/index.js";
 import { eq } from "drizzle-orm";
-import { movies, youtube } from "$lib/server/db/schema.js";
+import { movies, youtube } from "$lib/server/db/schema/vido.js";
 import { json3 as json3Schema, ytInfo } from "$lib/yt.js";
 
 export async function load({ params }) {

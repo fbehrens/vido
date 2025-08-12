@@ -1,15 +1,13 @@
 import { and, eq } from "drizzle-orm";
 import { extractMp3, getDuration, getFramerate } from "$lib/ffmpeg";
 import { db } from "$lib/server/db";
-import { movies } from "$lib/server/db/schema";
+import { movies } from "$lib/server/db/schema/vido";
 import { mp3Path } from "$lib/util/util.js";
 import * as fs from "fs";
 import { transcribe } from "$lib/whisper";
 import type { Segment, Word } from "$lib/types";
 
-export async function createMovie(
-  filename: string,
-): Promise<typeof movies.$inferSelect> {
+export async function createMovie(filename: string): Promise<typeof movies.$inferSelect> {
   let m = await db.query.movies.findFirst({
     where: (movies, { eq }) => eq(movies.title, filename),
   });
@@ -65,10 +63,7 @@ export async function createTranscription(m: typeof movies.$inferSelect) {
 
   const [c, ...rest] = await getClips(m.id);
   if (!rest.length) {
-    await db
-      .update(movies)
-      .set({ segments: c.segments })
-      .where(eq(movies.id, c.movieId));
+    await db.update(movies).set({ segments: c.segments }).where(eq(movies.id, c.movieId));
     return true;
   } else {
     return false; // cutt is required

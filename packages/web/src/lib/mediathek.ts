@@ -3,26 +3,18 @@ import { exec } from "$lib/util/util";
 
 import { decompress } from "@napi-rs/lzma/xz";
 import { db, dbPath } from "./server/db";
-import { films, filmsImport, mediathek } from "./server/db/schema";
+import { films, filmsImport, mediathek } from "./server/db/schema/vido";
 import { count, desc } from "drizzle-orm";
 
 const fileDir = "static/mediathek/",
   filmeJson = fileDir + "filmliste.json";
 let filmeCsv = fileDir + "filmliste.csv";
-export async function updateFilmliste({
-  force = false,
-  test = false,
-  skipDownload = false,
-}) {
+export async function updateFilmliste({ force = false, test = false, skipDownload = false }) {
   if (!skipDownload) {
     if (!test) {
       const filmlisteXz = "https://liste.mediathekview.de/Filmliste-akt.xz";
       const response = await fetch(filmlisteXz);
-      const result = await db
-        .select()
-        .from(mediathek)
-        .orderBy(desc(mediathek.id))
-        .get();
+      const result = await db.select().from(mediathek).orderBy(desc(mediathek.id)).get();
       const oldEtag = result?.etag || "";
       const etag = response.headers.get("etag")!;
       console.log({ etag, oldEtag });
@@ -115,11 +107,5 @@ export function parseDate(s: string): Date {
   const [datePart, timePart] = s.split(", ");
   const [day, month, year] = datePart.split(".");
   const [hours, minutes] = timePart.split(":");
-  return new Date(
-    Number(year),
-    Number(month) - 1,
-    Number(day),
-    Number(hours),
-    Number(minutes),
-  );
+  return new Date(Number(year), Number(month) - 1, Number(day), Number(hours), Number(minutes));
 }

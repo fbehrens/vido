@@ -1,6 +1,6 @@
 import { dbOld } from "$lib/db";
 import { db } from "$lib/server/db";
-import { captions, movies } from "$lib/server/db/schema.js";
+import { captions, movies } from "$lib/server/db/schema/vido.js";
 import { ytGetId, ytInfo } from "$lib/yt";
 import { ytGetInfo } from "$lib/server/yt";
 import { isNotNull } from "drizzle-orm";
@@ -40,9 +40,7 @@ export const actions = {
       .get();
 
     const languages = Object.keys(yt.automatic_captions);
-    const language = languages.includes(yt.language!)
-      ? yt.language!
-      : languages[0]!;
+    const language = languages.includes(yt.language!) ? yt.language! : languages[0]!;
     const cs = yt.automatic_captions[language];
     const csJson3 = cs.find((c) => c.ext == "json3");
     if (!csJson3) {

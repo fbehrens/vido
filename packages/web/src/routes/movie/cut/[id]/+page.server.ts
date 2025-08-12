@@ -1,5 +1,5 @@
 import { db } from "$lib/server/db/index.js";
-import { movies } from "$lib/server/db/schema.js";
+import { movies } from "$lib/server/db/schema/vido.js";
 import type { Segment } from "$lib/types";
 import { getClips } from "$lib/util/transcribe";
 import { redirect } from "@sveltejs/kit";
@@ -53,9 +53,7 @@ async function joinClips(id: number) {
   });
 
   const cut: number[] = JSON.parse(movie!.cut!);
-  const clipsSegments = movie!.clips.map(
-    (c) => JSON.parse(c.segments!) as Segment[],
-  );
+  const clipsSegments = movie!.clips.map((c) => JSON.parse(c.segments!) as Segment[]);
   const filterSeg = (wordFn: (w: { start: number }) => boolean) => {
     return (seg) => {
       if (seg.words.every(wordFn)) {
