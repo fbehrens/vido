@@ -1,4 +1,4 @@
-import { Effect, Config, Layer, Context, Scope } from "effect";
+import { Effect, Config, Layer } from "effect";
 import * as schema from "./drizzle2/schema";
 import * as SqliteDrizzle from "@effect/sql-drizzle/Sqlite";
 import { SqliteClient } from "@effect/sql-sqlite-bun";
