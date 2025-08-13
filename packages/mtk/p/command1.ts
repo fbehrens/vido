@@ -1,5 +1,5 @@
 import { Command } from "@effect/platform";
-import { NodeContext, NodeRuntime } from "@effect/platform-node";
+import { BunContext, BunRuntime } from "@effect/platform-bun";
 import { Effect } from "effect";
 
 const command = Command.make("ls", "-al");
@@ -11,6 +11,5 @@ const program = Effect.gen(function* () {
   console.log(output);
 });
 
-const runable = program.pipe(Effect.provide(NodeContext.layer));
 // Provide the necessary CommandExecutor
-NodeRuntime.runMain(runable);
+BunRuntime.runMain(program.pipe(Effect.provide(BunContext.layer)));

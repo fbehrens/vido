@@ -1,5 +1,5 @@
 import { Command } from "@effect/platform";
-import { NodeContext, NodeRuntime } from "@effect/platform-node";
+import { BunContext, BunRuntime } from "@effect/platform-bun";
 import { Effect, Stream, String, pipe } from "effect";
 
 // Helper function to collect stream output as a string
@@ -32,9 +32,6 @@ const program = Effect.gen(function* () {
   console.log({ exitCode, stdout, stderr });
 });
 
-const runnable = Effect.scoped(program).pipe(Effect.provide(NodeContext.layer));
-
-NodeRuntime.runMain(
-  runnable
-  //   Effect.scoped(program).pipe(Effect.provide(NodeContext.layer))
+BunRuntime.runMain(
+  Effect.scoped(program).pipe(Effect.provide(BunContext.layer))
 );
