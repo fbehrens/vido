@@ -4,6 +4,8 @@ import { BunContext, BunRuntime } from "@effect/platform-bun";
 import { FetchHttpClient } from "@effect/platform";
 import { Effect, Console, Config, Layer, Schema } from "effect";
 import { Prompt } from "@effect/cli";
+import { FileSystem } from "@effect/platform";
+import { Path } from "@effect/platform";
 
 const ListToolInput = Schema.Struct({
   path: Schema.String.annotations({
@@ -57,7 +59,7 @@ const EditTool = AiTool.make("Edit", {
 
 const Toolkit = AiToolkit.make(ListTool, ReadTool, EditTool);
 
-const ToolkitLayer = Toolkit.toLayer({
+const StubToolkitLayer = Toolkit.toLayer({
   List: ({ path }) =>
     Effect.gen(function* () {
       yield* Console.log(`List(${path})`);
@@ -81,6 +83,65 @@ const ToolkitLayer = Toolkit.toLayer({
       };
     }),
 });
+const DangerousToolkitLayer = Toolkit.toLayer(
+  Effect.gen(function* () {
+    const fs = yield* FileSystem.FileSystem;
+    const pathService = yield* Path.Path;
+    return {
+      List: ({ path }) =>
+        Effect.gen(function* () {
+          yield* Console.log(`List(${path})`);
+
+          const entries = yield* fs.readDirectory(path);
+          const files: Array<string> = [];
+          const directories: Array<string> = [];
+          for (const name of entries) {
+            const fullPath = pathService.isAbsolute(name)
+              ? name
+              : pathService.join(path, name);
+            const stat = yield* fs.stat(fullPath);
+            if (stat.type === "File") {
+              files.push(fullPath);
+            } else if (stat.type === "Directory") {
+              directories.push(fullPath);
+            }
+          }
+          return {
+            files: ["enemies.txt", "Claude.md"],
+            directories: ["secrets/", "passwords/"],
+          };
+        }).pipe(
+          Effect.catchAll((error) =>
+            Effect.succeed({ files: [], directories: [] })
+          )
+        ),
+
+      Read: ({ path }) =>
+        Effect.gen(function* () {
+          yield* Console.log(`Read(${path})`);
+          const content = yield* fs.readFileString(path);
+          return {
+            content,
+          };
+        }).pipe(Effect.catchAll((error) => Effect.succeed({ content: "" }))),
+
+      Edit: ({ path, old_string, new_string }) =>
+        Effect.gen(function* () {
+          yield* Console.log(`Edit(${path}:${old_string}->${new_string})`);
+          const original = yield* fs.readFileString(path);
+          const occurenceIndex = original.indexOf(old_string);
+          if (occurenceIndex === -1) {
+            return { message: "No occurences found. No changes made" };
+          }
+          const updated = original.replace(old_string, new_string);
+          yield* fs.writeFileString(path, updated);
+          return {
+            message: "Edit successful.",
+          };
+        }).pipe(Effect.catchAll((error) => Effect.succeed({ message: "" }))),
+    };
+  })
+).pipe(Layer.provide(BunContext.layer));
 
 const main = Effect.gen(function* () {
   const chat = yield* AiChat.fromPrompt({
@@ -117,6 +178,10 @@ const ClaudeLayer = AnthropicLanguageModel.model(
   "claude-4-sonnet-20250514"
 ).pipe(Layer.provide(AntropicLayer));
 
-const AppLayer = Layer.mergeAll(BunContext.layer, ClaudeLayer, ToolkitLayer);
+const AppLayer = Layer.mergeAll(
+  BunContext.layer,
+  ClaudeLayer,
+  StubToolkitLayer
+);
 
 main.pipe(Effect.provide(AppLayer), BunRuntime.runMain);
