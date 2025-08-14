@@ -18,10 +18,13 @@
         "typescript": "^5"
     },
     "dependencies": {
+        "@effect/ai": "^0.25.2",
+        "@effect/ai-anthropic": "^0.15.1",
         "@effect/cli": "^0.69.0",
         "@effect/experimental": "^0.54.5",
         "@effect/platform": "^0.90.2",
         "@effect/platform-bun": "^0.78.0",
+        "@effect/platform-node": "^0.95.0",
         "@effect/sql-drizzle": "^0.43.0",
         "@effect/sql-sqlite-bun": "^0.45.0",
         "@napi-rs/lzma": "^1.4.5",
