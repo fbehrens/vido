@@ -20,7 +20,42 @@ const ListTool = AiTool.make("List", {
   .setParameters(ListToolInput)
   .setSuccess(ListToolOutput);
 
-const Toolkit = AiToolkit.make(ListTool);
+const ReadToolInput = Schema.Struct({
+  path: Schema.String.annotations({
+    description: "The absolute path of the file to read",
+  }),
+});
+const ReadToolOutput = Schema.Struct({
+  content: Schema.String,
+});
+const ReadTool = AiTool.make("Read", {
+  description: "Read the contents of a file",
+})
+  .setParameters(ReadToolInput)
+  .setSuccess(ReadToolOutput);
+
+const EditToolInput = Schema.Struct({
+  path: Schema.String.annotations({
+    description: "The absolute path of the file to edit",
+  }),
+  old_string: Schema.String.annotations({
+    description: "the string to search for and replace",
+  }),
+  new_string: Schema.String.annotations({
+    description: "The string to replace the old string with",
+  }),
+});
+const EditToolOutput = Schema.Struct({
+  message: Schema.String,
+});
+const EditTool = AiTool.make("Edit", {
+  description:
+    "Read the contents of a fileEdit a file by replacing the first occurence of a string with a replacement string",
+})
+  .setParameters(EditToolInput)
+  .setSuccess(EditToolOutput);
+
+const Toolkit = AiToolkit.make(ListTool, ReadTool, EditTool);
 
 const ToolkitLayer = Toolkit.toLayer({
   List: ({ path }) =>
@@ -29,6 +64,20 @@ const ToolkitLayer = Toolkit.toLayer({
       return {
         files: ["enemies.txt", "Claude.md"],
         directories: ["secrets/", "passwords/"],
+      };
+    }),
+  Read: ({ path }) =>
+    Effect.gen(function* () {
+      yield* Console.log(`Read(${path})`);
+      return {
+        content: "I am secretly afraid of lettuce.",
+      };
+    }),
+  Edit: ({ path, old_string, new_string }) =>
+    Effect.gen(function* () {
+      yield* Console.log(`Edit(${path}:${old_string}->${new_string})`);
+      return {
+        message: "I have edited the file.",
       };
     }),
 });
@@ -51,7 +100,6 @@ const main = Effect.gen(function* () {
     });
     yield* Console.log(`${turn++} ${response.text}`);
     while (response.toolCalls.length > 0) {
-      yield* Console.log(response.toolCalls.length);
       response = yield* chat.generateText({
         prompt: input,
         toolkit: Toolkit,
