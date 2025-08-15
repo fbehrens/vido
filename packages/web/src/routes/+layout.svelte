@@ -6,5 +6,11 @@
 
 <Header>theHeader</Header>
 <main>
-  {@render children()}
+  <svelte:boundary>
+    {@render children?.()}
+
+    {#snippet pending()}
+      <p>loading...</p>
+    {/snippet}
+  </svelte:boundary>
 </main>

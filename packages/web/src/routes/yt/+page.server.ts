@@ -1,17 +1,8 @@
-import { dbOld } from "$lib/db";
 import { db } from "$lib/server/db";
 import { captions, movies } from "$lib/server/db/schema/vido.js";
 import { ytGetId, ytInfo } from "$lib/yt";
 import { ytGetInfo } from "$lib/server/yt";
 import { isNotNull } from "drizzle-orm";
-
-export async function load({ params }) {
-  const yts = await db
-    .select({ id: movies.id, youtubeId: movies.youtubeId, title: movies.title })
-    .from(movies)
-    .where(isNotNull(movies.youtubeId));
-  return { yts };
-}
 
 export const actions = {
   default: async ({ request }) => {
