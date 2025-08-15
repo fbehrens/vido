@@ -1,10 +1,13 @@
-import { drizzle } from "drizzle-orm/bun-sqlite";
-import { Database } from "bun:sqlite";
+import { drizzle } from "drizzle-orm/better-sqlite3";
+import Database from "better-sqlite3";
 import * as schema2 from "./drizzle2/schema";
 import * as schema1 from "./drizzle1/schema";
+import "dotenv/config";
 
-const sqlite3 = new Database(process.env.DATABASE_URL);
-const db = drizzle({ client: sqlite3, schema: schema2 });
+console.log(process.env.DATABASE2_URL);
+
+const sqlite2 = new Database(process.env.DATABASE2_URL);
+const db = drizzle({ client: sqlite2, schema: schema2 });
 const row = await db.select().from(schema2.person);
 console.log({ row });
 

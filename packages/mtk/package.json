@@ -4,15 +4,17 @@
     "type": "module",
     "private": true,
     "scripts": {
-        "import": "bun run src/import.ts",
-        "drizzle_effect": "bun run play/drizzle_effect.ts",
-        "p:push2": "bun run drizzle-kit push --config p/drizzle2.config.ts",
-        "p:push1": "bun run drizzle-kit push --config p/drizzle1.config.ts"
+        "import": "pnpm exec tsx src/import.ts",
+        "p:push2": "pnpm run drizzle-kit push --config p/drizzle2.config.ts",
+        "p:push1": "pnpm run drizzle-kit push --config p/drizzle1.config.ts"
     },
     "devDependencies": {
         "@effect/language-service": "^0.35.2",
-        "@types/bun": "latest",
-        "drizzle-kit": "^0.31.4"
+        "@effect/vitest": "^0.25.1",
+        "@types/better-sqlite3": "^7.6.13",
+        "drizzle-kit": "^0.31.4",
+        "tsx": "^4.20.4",
+        "vitest": "^3.2.4"
     },
     "peerDependencies": {
         "typescript": "^5"
@@ -23,12 +25,12 @@
         "@effect/cli": "^0.69.0",
         "@effect/experimental": "^0.54.5",
         "@effect/platform": "^0.90.2",
-        "@effect/platform-bun": "^0.78.0",
         "@effect/platform-node": "^0.95.0",
         "@effect/sql-drizzle": "^0.43.0",
-        "@effect/sql-sqlite-bun": "^0.45.0",
-        "@effect/vitest": "^0.25.1",
+        "@effect/sql-sqlite-node": "^0.45.0",
         "@napi-rs/lzma": "^1.4.5",
+        "better-sqlite3": "^12.2.0",
+        "dotenv": "^17.2.1",
         "drizzle-orm": "^0.44.4",
         "effect": "^3.17.7"
     }

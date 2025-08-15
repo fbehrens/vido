@@ -1,10 +1,12 @@
 import { Effect, Config, Layer } from "effect";
 import * as schema from "./drizzle2/schema";
 import * as SqliteDrizzle from "@effect/sql-drizzle/Sqlite";
-import { SqliteClient } from "@effect/sql-sqlite-bun";
+import { SqliteClient } from "@effect/sql-sqlite-node";
 import { Reactivity } from "@effect/experimental";
+import "dotenv/config";
+
 const Client = SqliteClient.layerConfig({
-  filename: Config.string("DATABASE_URL"),
+  filename: Config.string("DATABASE2_URL"),
 });
 const DrizzleLive = SqliteDrizzle.layer.pipe(Layer.provide(Client));
 

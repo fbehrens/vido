@@ -1,7 +1,6 @@
 import { AiChat, AiTool, AiToolkit } from "@effect/ai";
 import { AnthropicClient, AnthropicLanguageModel } from "@effect/ai-anthropic";
-import { BunContext, BunRuntime } from "@effect/platform-bun";
-import { FetchHttpClient } from "@effect/platform";
+import { NodeContext, NodeHttpClient, NodeRuntime } from "@effect/platform-node";
 import { Effect, Console, Config, Layer, Schema } from "effect";
 import { Prompt } from "@effect/cli";
 import { FileSystem } from "@effect/platform";
@@ -141,7 +140,7 @@ const DangerousToolkitLayer = Toolkit.toLayer(
         }).pipe(Effect.catchAll((error) => Effect.succeed({ message: "" }))),
     };
   })
-).pipe(Layer.provide(BunContext.layer));
+).pipe(Layer.provide(NodeContext.layer));
 
 const main = Effect.gen(function* () {
   const chat = yield* AiChat.fromPrompt({
@@ -172,16 +171,16 @@ const main = Effect.gen(function* () {
 
 const AntropicLayer = AnthropicClient.layerConfig({
   apiKey: Config.redacted("ANTHROPIC_API_KEY"),
-}).pipe(Layer.provide(FetchHttpClient.layer));
+}).pipe(Layer.provide(NodeHttpClient.layerUndici));
 
 const ClaudeLayer = AnthropicLanguageModel.model(
   "claude-4-sonnet-20250514"
 ).pipe(Layer.provide(AntropicLayer));
 
 const AppLayer = Layer.mergeAll(
-  BunContext.layer,
+  NodeContext.layer,
   ClaudeLayer,
   StubToolkitLayer
 );
 
-main.pipe(Effect.provide(AppLayer), BunRuntime.runMain);
+main.pipe(Effect.provide(AppLayer), NodeRuntime.runMain);

@@ -1,6 +1,6 @@
+import "dotenv/config";
 import * as fs from "fs";
 import { exec } from "./util";
-
 import { decompress } from "@napi-rs/lzma/xz";
 import { db_mediathek, dbPathMediathek } from "./db";
 import {
