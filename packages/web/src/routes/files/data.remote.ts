@@ -1,3 +1,4 @@
+import { query } from "$app/server";
 import { readdirSync, statSync } from "node:fs";
 import { extname, join } from "node:path";
 
@@ -25,13 +26,8 @@ function getAllFiles(dirPath: string, arrayOfFiles: MyFile[] = []) {
   return arrayOfFiles;
 }
 const extsVideo = [".mov", ".mp4", ".mkv", ".json"];
-export async function load({ params }) {
+export const getFiles = query(async () => {
   console.log({ dir });
-  const files = getAllFiles(dir).filter((f) =>
-    extsVideo.includes(extname(f.filename)),
-  );
-
-  return {
-    files,
-  };
-}
+  const files = getAllFiles(dir).filter((f) => extsVideo.includes(extname(f.filename)));
+  return files;
+});

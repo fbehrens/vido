@@ -1,9 +1,7 @@
 <script lang="ts">
   import { columns } from "./columns";
   import DataTable from "./data-table.svelte";
-
-  const { data } = $props();
-  const { files } = data;
+  import { getFiles } from "./data.remote";
 </script>
 
-<DataTable data={files} {columns} />
+<DataTable data={await getFiles()} {columns} />
