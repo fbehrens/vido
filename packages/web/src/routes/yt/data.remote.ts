@@ -2,6 +2,7 @@ import { command, form, query } from "$app/server";
 import { db } from "$lib/server/db";
 import { captions, movies } from "$lib/server/db/schema/vido";
 import { ytGetInfo } from "$lib/server/yt";
+import { sqliteDate } from "$lib/util/util";
 import { get_json3_url, ytGetId, ytInfo } from "$lib/yt";
 import { error } from "@sveltejs/kit";
 import { eq, sql, isNotNull, desc } from "drizzle-orm";
@@ -44,6 +45,7 @@ export const createYoutube = form(async (data) => {
       channel: yt.channel,
       description: yt.description,
       duration: yt.duration,
+      created_at: sqliteDate(),
     })
     .returning({ movie_id: movies.id })
     .get();

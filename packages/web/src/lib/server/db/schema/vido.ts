@@ -3,6 +3,8 @@ import { sqliteTable, text, integer, real, primaryKey, index } from "drizzle-orm
 export const movies = sqliteTable("movies", {
   id: integer().primaryKey({ autoIncrement: true }),
   youtubeId: text(),
+  url: text(),
+  filename: text(),
   data: text(),
   title: text().notNull(),
   language: text(),
@@ -10,9 +12,7 @@ export const movies = sqliteTable("movies", {
   description: text(),
   duration: real().notNull(),
   framerate: real(),
-  created_at: text("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
+  created_at: text().notNull(),
 });
 
 export const captions = sqliteTable("captions", {

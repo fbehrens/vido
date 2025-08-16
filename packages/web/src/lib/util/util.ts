@@ -67,3 +67,7 @@ export function everyStep(step: number) {
     },
   };
 }
+
+export function sqliteDate(d: Date = new Date()) {
+  return d.toISOString().replace("T", " ").replace("Z", "").split(".")[0];
+}
