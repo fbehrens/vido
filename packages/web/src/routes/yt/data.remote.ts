@@ -1,6 +1,8 @@
 import { command, form, query } from "$app/server";
 import { db } from "$lib/server/db";
-import { movies } from "$lib/server/db/schema/vido";
+import { captions, movies } from "$lib/server/db/schema/vido";
+import { ytGetInfo } from "$lib/server/yt";
+import { ytGetId, ytInfo } from "$lib/yt";
 import { error } from "@sveltejs/kit";
 import { eq, sql, isNotNull } from "drizzle-orm";
 import * as v from "valibot";
@@ -16,31 +18,56 @@ export const getYoutube = query(async () => {
 
 // export const getPost = query(v.string(), async (slug) => {
 // 	const [pos] = await db.select().from(post).where(eq(post.slug, slug));
-
 // 	if (!pos) error(404, 'Not found');
 // 	return pos;
 // });
 
-// export const createPost = form(async (data) => {
-// 	const title = data.get('title');
-// 	const content = data.get('content');
-// 	if (typeof title !== 'string' || typeof content !== 'string') {
-// 		error(400, 'Title and content are required');
-// 	}
-// 	const slug = title.toLowerCase().replace(/ /g, '-');
-// 	await db.insert(post).values({ slug, title, content });
-// 	return { success: true };
-// });
-// export const createBoringPost = form(async (data) => {
-// 	const title = data.get('title');
-// 	const content = 'is boring';
-// 	if (typeof title !== 'string' || typeof content !== 'string') {
-// 		error(400, 'Title and content are required');
-// 	}
-// 	const slug = title.toLowerCase().replace(/ /g, '-');
-// 	await db.insert(post).values({ slug, title, content });
-// 	return { success: true };
-// });
+export const createYoutube = form(async (data) => {
+  const url = data.get("url") as string;
+  console.log({ url });
+
+  const youtubeId = ytGetId(url);
+  if (!youtubeId) {
+    console.log({ err: `Do not have youtubeId`, url });
+    return;
+  }
+  const info = await ytGetInfo(youtubeId);
+  const yt = ytInfo(info);
+  const { movie_id: movieId } = await db
+    .insert(movies)
+    .values({
+      youtubeId,
+      data: info,
+      title: yt.title,
+      language: yt.language,
+      channel: yt.channel,
+      description: yt.description,
+      duration: yt.duration,
+    })
+    .returning({ movie_id: movies.id })
+    .get();
+  console.log(`create movie ${movieId}`);
+  const languages = Object.keys(yt.automatic_captions);
+  const language = languages.includes(yt.language!) ? yt.language! : languages[0]!;
+  const cs = yt.automatic_captions[language];
+  const csJson3 = cs.find((c) => c.ext == "json3");
+  if (!csJson3) {
+    console.log({ err: `Do not have json3 in lang=${language}`, cs });
+    return;
+  }
+  const json3Url: string = csJson3.url;
+  const response = await fetch(json3Url);
+  if (!response.ok) throw "Error fetching json3";
+  const da = await response.text();
+  await db.insert(captions).values({
+    movieId,
+    data: da,
+    typ: "json3",
+  });
+
+  //   await db.insert(movies).values({ youtubeId: "foo", title: "t", duration: 1.1 });
+  return { success: true };
+});
 
 // export const addLike = command(v.string(), async (slug) => {
 // 	await db

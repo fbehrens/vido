@@ -1,11 +1,22 @@
 <script lang="ts">
-  import { getYoutube } from "./data.remote";
-  let value = $state("");
+  import { createYoutube, getYoutube as getYoutubes } from "./data.remote";
+  let value = $state("https://youtu.be/EbqSVYt7PxI");
   // https://youtu.be/EbqSVYt7PxI @ WDR
   // https://youtu.be/OXGznpKZ_sA?si=xm8IitoTrgV0IYHT
 </script>
 
-<form method="POST">
+<form
+  {...createYoutube.enhance(async ({ form, data, submit }) => {
+    try {
+      // await submit();
+      await submit().updates(getYoutubes());
+      form.reset();
+      alert("Successfully published!");
+    } catch (error) {
+      alert("Oh no! Something went wrong");
+    }
+  })}
+>
   <label>
     Url:<input type="text" name="url" placeholder="https://youtu.be/..." bind:value size="50" />
   </label>
@@ -14,7 +25,7 @@
 <div class="container">
   <div>id</div>
   <div>title</div>
-  {#each await getYoutube() as { id, title, youtubeId }}
+  {#each await getYoutubes() as { id, title, youtubeId }}
     <div>{youtubeId}</div>
     <div><a href="yt/{id}">{title}</a></div>
   {/each}

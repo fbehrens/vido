@@ -1,4 +1,3 @@
-import { dbOld } from "$lib/db";
 import { db } from "$lib/server/db/index.js";
 import { eq } from "drizzle-orm";
 import { movies, youtube } from "$lib/server/db/schema/vido.js";
