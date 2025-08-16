@@ -1,1 +1,4 @@
 @import 'tailwindcss';
+* {
+    @apply border-1 border-yellow-200;
+  }
