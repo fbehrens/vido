@@ -7,25 +7,6 @@ import * as fs from "fs";
 import { transcribe } from "$lib/whisper";
 import type { Segment, Word } from "$lib/types";
 
-export async function createMovie(filename: string): Promise<typeof movies.$inferSelect> {
-  let m = await db.query.movies.findFirst({
-    where: (movies, { eq }) => eq(movies.title, filename),
-  });
-  let movie: typeof movies.$inferSelect;
-  if (m) {
-    movie = m;
-  } else {
-    movie = {
-      title: filename,
-      duration: await getDuration(`static/${filename}`),
-      framerate: await getFramerate(`static/${filename}`),
-    } as typeof movies.$inferSelect;
-    const [{ id }] = await db.insert(movies).values(movie).returning();
-    movie = { ...movie, id };
-  }
-  return movie;
-}
-
 export async function createTranscription(m: typeof movies.$inferSelect) {
   console.log(m);
   let cs = await getClips(m.id);

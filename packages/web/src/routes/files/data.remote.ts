@@ -1,13 +1,20 @@
-import { query } from "$app/server";
+import { command, query } from "$app/server";
+import { getDuration, getFramerate } from "$lib/ffmpeg";
+import { db } from "$lib/server/db";
+import { movies } from "$lib/server/db/schema/vido";
+import { sqliteDate } from "$lib/util/util";
+import { isNotNull } from "drizzle-orm";
 import { readdirSync, statSync } from "node:fs";
 import { extname, join } from "node:path";
+import { file } from "zod/v4";
 
 export interface MyFile {
   filename: string;
   size: number;
+  id?: number;
 }
 
-const dir = process.cwd() + "/static/";
+const static_dir = process.cwd() + "/static/";
 
 function getAllFiles(dirPath: string, arrayOfFiles: MyFile[] = []) {
   const files = readdirSync(dirPath);
@@ -18,16 +25,43 @@ function getAllFiles(dirPath: string, arrayOfFiles: MyFile[] = []) {
       arrayOfFiles = getAllFiles(filePath, arrayOfFiles);
     } else {
       arrayOfFiles.push({
-        filename: filePath.replace(dir, ""),
+        filename: filePath.replace(static_dir, ""),
         size: stat.size,
       });
     }
   });
   return arrayOfFiles;
 }
-const extsVideo = [".mov", ".mp4", ".mkv", ".json"];
-export const getFiles = query(async () => {
-  console.log({ dir });
-  const files = getAllFiles(dir).filter((f) => extsVideo.includes(extname(f.filename)));
+const extsVideo = [".mov", ".mp4", ".mkv"];
+
+const files = async () => {
+  const ms: Map<string, number> = new Map();
+  for (const { id, filename } of await db
+    .select({ id: movies.id, filename: movies.filename })
+    .from(movies)
+    .where(isNotNull(movies.filename))) {
+    ms.set(filename!, id);
+  }
+  const files = getAllFiles(static_dir)
+    .filter((f) => extsVideo.includes(extname(f.filename)))
+    .map((f) => ({ ...f, id: ms.get(f.filename) }));
+  console.log({ ms, files });
   return files;
+};
+export const getFiles = query(async () => await files());
+
+export const insertMovies = command(async () => {
+  const fs = (await files()).filter((f) => f.id === undefined);
+  for (const f of fs) {
+    const movie = {
+      filename: f.filename,
+      title: f.filename,
+      duration: await getDuration(`static/${f.filename}`),
+      framerate: await getFramerate(`static/${f.filename}`),
+      created_at: sqliteDate(),
+    } as typeof movies.$inferSelect;
+    await db.insert(movies).values(movie);
+    await getFiles().refresh();
+    console.log({ a: "inserted", f, movie });
+  }
 });
