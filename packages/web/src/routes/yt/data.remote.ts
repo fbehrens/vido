@@ -4,7 +4,7 @@ import { captions, movies } from "$lib/server/db/schema/vido";
 import { ytGetInfo } from "$lib/server/yt";
 import { get_json3_url, ytGetId, ytInfo } from "$lib/yt";
 import { error } from "@sveltejs/kit";
-import { eq, sql, isNotNull } from "drizzle-orm";
+import { eq, sql, isNotNull, desc } from "drizzle-orm";
 import * as v from "valibot";
 
 export const getYoutube = query(async () => {
@@ -12,7 +12,8 @@ export const getYoutube = query(async () => {
   const yt = await db
     .select({ id: movies.id, youtubeId: movies.youtubeId, title: movies.title })
     .from(movies)
-    .where(isNotNull(movies.youtubeId));
+    .where(isNotNull(movies.youtubeId))
+    .orderBy(desc(movies.created_at));
   return yt;
 });
 

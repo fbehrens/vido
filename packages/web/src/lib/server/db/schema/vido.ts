@@ -10,6 +10,9 @@ export const movies = sqliteTable("movies", {
   description: text(),
   duration: real().notNull(),
   framerate: real(),
+  created_at: text("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
 });
 
 export const captions = sqliteTable("captions", {
