@@ -2,7 +2,7 @@ import { command, form, query } from "$app/server";
 import { db } from "$lib/server/db";
 import { captions, movies } from "$lib/server/db/schema/vido";
 import { ytGetInfo } from "$lib/server/yt";
-import { ytGetId, ytInfo } from "$lib/yt";
+import { get_json3_url, ytGetId, ytInfo } from "$lib/yt";
 import { error } from "@sveltejs/kit";
 import { eq, sql, isNotNull } from "drizzle-orm";
 import * as v from "valibot";
@@ -47,15 +47,8 @@ export const createYoutube = form(async (data) => {
     .returning({ movie_id: movies.id })
     .get();
   console.log(`create movie ${movieId}`);
-  const languages = Object.keys(yt.automatic_captions);
-  const language = languages.includes(yt.language!) ? yt.language! : languages[0]!;
-  const cs = yt.automatic_captions[language];
-  const csJson3 = cs.find((c) => c.ext == "json3");
-  if (!csJson3) {
-    console.log({ err: `Do not have json3 in lang=${language}`, cs });
-    return;
-  }
-  const json3Url: string = csJson3.url;
+  const json3Url = get_json3_url(yt);
+  if (json3Url === undefined) return;
   const response = await fetch(json3Url);
   if (!response.ok) throw "Error fetching json3";
   const da = await response.text();

@@ -36,8 +36,36 @@ function applySchema(s: string, schema: z.ZodSchema<any>) {
     throw e;
   }
 }
-export function ytInfo(s: string): z.infer<typeof ytInfoSchema> {
+
+type YtInfoSchema = z.infer<typeof ytInfoSchema>;
+export function ytInfo(s: string): YtInfoSchema {
   return applySchema(s, ytInfoSchema);
+}
+
+export function show_captions(info: YtInfoSchema) {
+  for (const [lang, captions] of Object.entries(info.automatic_captions)) {
+    let out = `${lang} (${captions[0].name}): `;
+    for (const caption of captions) {
+      out += caption.ext + " ";
+    }
+    console.log(out);
+  }
+}
+
+export function get_json3_url(info: YtInfoSchema, lang?: string) {
+  const automatic_captions = info.automatic_captions;
+  const available_langs = Object.keys(automatic_captions);
+  const orig = available_langs.find((s) => s.endsWith("-orig"));
+  const selected_lang =
+    [lang, orig, "de", "en"].find((l): l is string => l !== undefined && l in automatic_captions) ??
+    available_langs[0];
+  const captions = automatic_captions[selected_lang];
+  const exts = captions.map((c) => c.ext);
+  console.log({ available_langs, selected_lang, exts });
+  const json3 = captions.find((c) => c.ext === "json3");
+  if (json3) {
+    return json3.url;
+  }
 }
 
 const js3Event1 = z.object({

@@ -1,17 +1,15 @@
 <script lang="ts">
   import { createYoutube, getYoutube as getYoutubes } from "./data.remote";
-  let value = $state("https://youtu.be/EbqSVYt7PxI");
+  let value = $state("o1JgW_4MTWI");
   // https://youtu.be/EbqSVYt7PxI @ WDR
-  // https://youtu.be/OXGznpKZ_sA?si=xm8IitoTrgV0IYHT
+  // o1JgW_4MTWI
 </script>
 
 <form
   {...createYoutube.enhance(async ({ form, data, submit }) => {
     try {
-      // await submit();
       await submit().updates(getYoutubes());
       form.reset();
-      alert("Successfully published!");
     } catch (error) {
       alert("Oh no! Something went wrong");
     }
