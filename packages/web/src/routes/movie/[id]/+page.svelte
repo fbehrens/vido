@@ -4,6 +4,7 @@
   import Srt from "$lib/components/Srt.svelte";
   import { onMount } from "svelte";
   import { whisperApi } from "$lib/zod-schema";
+  import { getMovie } from "./data.remote";
 
   const togglePaused = () => {
     if (paused) {
@@ -15,7 +16,8 @@
     }
   };
   const { data } = $props();
-  let movie = data.movie!;
+  const { id } = data;
+  let movie = await getMovie(id);
   //   const d = movie!.captions[0]!.data!;
   //   const segments = whisperApi(d);
 
