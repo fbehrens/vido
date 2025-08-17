@@ -2,7 +2,7 @@ import { command, query } from "$app/server";
 import { getDuration, getFramerate } from "$lib/ffmpeg";
 import { db } from "$lib/server/db";
 import { movies } from "$lib/server/db/schema/vido";
-import { sqliteDate } from "$lib/util/util";
+import { sqliteDate } from "$lib/utils";
 import { isNotNull } from "drizzle-orm";
 import { readdirSync, statSync } from "node:fs";
 import { extname, join } from "node:path";

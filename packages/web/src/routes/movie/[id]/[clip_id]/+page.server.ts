@@ -1,6 +1,6 @@
 import { dbOld } from "$lib/db";
 import type { Segment } from "$lib/types.js";
-import { mp3Path } from "$lib/util/util";
+import { mp3Path } from "$lib/utils";
 
 export function load({ params }) {
   const { id, clip_id } = params;

@@ -2,10 +2,13 @@ import { and, eq } from "drizzle-orm";
 import { extractMp3, getDuration, getFramerate } from "$lib/ffmpeg";
 import { db } from "$lib/server/db";
 import { movies } from "$lib/server/db/schema/vido";
-import { mp3Path } from "$lib/util/util.js";
+import { mp3Path } from "$lib/utils";
 import * as fs from "fs";
 import { transcribe } from "$lib/whisper";
 import type { Segment, Word } from "$lib/types";
+import type { whisperApiSchema } from "$lib/zod-schema";
+import type z from "zod";
+import assert from "assert";
 
 export async function createTranscription(m: typeof movies.$inferSelect) {
   console.log(m);
@@ -31,7 +34,7 @@ export async function createTranscription(m: typeof movies.$inferSelect) {
   cs = await getClips(m.id);
   for (const c of cs.filter((c) => !c.segments)) {
     console.log("calculating segments for clip", c.id);
-    const segments = calcSegments({
+    const segments = calcSegmentsOld({
       id: c.id,
       start: c.start,
       transcript: c.transcript!,
@@ -82,65 +85,52 @@ export async function createClips({
   }
 }
 
-function calcSegments({
-  id,
-  start,
-  transcript,
-}: {
-  id: number;
-  start: number;
-  transcript: string;
-}): Segment[] {
-  const t = JSON.parse(transcript);
-  const rSplit = /^([\w'-]*?)(\W*)$/;
+/**
+ * calc Segment from WhisperApi
+ * @param wa WhisperApi
+ * @returns
+ */
+export function calcSegments(wa: z.infer<typeof whisperApiSchema>) {
+  const words = wa.words;
+  const pattern = new RegExp(`^\\s*[${Letters}]+[${NonLetters}]*`);
+  const r = wa.segments.map((segment) => {
+    const segment_words = [];
+    let text = segment.text;
+    while (text.length > 0) {
+      if (words.length == 0) throw new Error("running out ouf words");
+      const word = words.shift()!;
+      const m = text.match(pattern);
+      if (m == undefined) throw new Error(`cannot find pattern in "${text}"`);
+      const ws_w_sp = m[0];
+      if (!ws_w_sp.includes(word.word)) throw new Error(`"${word.word}" is not in "${ws_w_sp}"`);
+      text = text.substring(ws_w_sp.length);
+      segment_words.push({ ...word, word: ws_w_sp });
+    }
+    assert(segment_words.map((w) => w.word).join("") == segment.text);
+    return { ...segment, words: segment_words };
+  });
 
-  const transscriptWords = t.words.map((s: any) => ({
-    start: s.start + start,
-    end: s.end + start,
-    word: s.word,
-  })) as Word[];
-  const segments = t.segments.map((s: any, index: number) => {
-    const words = s.text
-      .trim()
-      .split(/ |(?<=\w)-(?=\w)/) // seperated by blanks or hypehen between words
-      .map((ws: string) => {
-        const m = ws.match(rSplit);
-        if (!m) {
-          console.log(ws.match(/^([\w'-]*?)(\W*)$/));
-          throw `${ws} not matchin ${rSplit}`;
-        }
-        const [wordS, sep] = [m[1], m[2]];
-        if (wordS == "") {
-          return {
-            word: "",
-            sep: sep,
-            start: start + s.start,
-            end: start + s.start + 0.1,
-          };
-        }
-        const i = transscriptWords.findIndex((w) => w.word == wordS);
-        const word = transscriptWords[i];
-        if (i > -1) {
-          word.sep = sep;
-          transscriptWords.splice(i, 1);
-        } else {
-          console.error({
-            message: "segment word not found in words",
-            segmentStart: s.start,
-            text: s.text,
-            wordS: wordS,
-          });
-        }
-        return word;
-      });
-
-    return {
-      clip_id: id,
-      start: s.start + start,
-      end: s.end + start,
-      text: s.text,
-      words,
-    };
-  }) as Segment[];
-  return segments;
+  return r;
 }
+
+export function waToString(wa: z.infer<typeof whisperApiSchema>) {
+  const segments = wa.segments.map((s) => s.text).join("|");
+  const words = wa.words.map((w) => w.word).join("|");
+  return [wa.text, segments, words];
+}
+
+const NonLetters = "\\?\\.,-";
+const Letters = "A-Za-z";
+const AllowedChars = new RegExp(`[${Letters} ${NonLetters}]`);
+
+export const unexpectedChars = ({
+  text,
+  allowedChars = AllowedChars,
+}: {
+  text: string;
+  allowedChars?: RegExp;
+}) => {
+  const s = new Set([...text]);
+  const chars = [...s].filter((c) => !allowedChars.test(c));
+  return new Set(chars);
+};

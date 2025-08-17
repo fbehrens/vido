@@ -19,14 +19,13 @@
   const { data } = $props();
   const id = data.id;
   let movie = await getMovie(id);
+  const capitionsWhisperApi = movie.captions.find(({ typ }) => typ == "WhisperApi");
   //   const d = movie!.captions[0]!.data!;
-  //   const segments = whisperApi(d);
+  const segments = capitionsWhisperApi ? whisperApi(capitionsWhisperApi.data) : undefined;
 
-  //   const _segments_ = [
-  //     { start: -1, end: 0 },
-  //     ...segments,
-  //     { start: movie.duration, end: movie.duration! + 1 },
-  //   ];
+  //   const _segments_ = segments
+  //     ? [{ start: -1, end: 0 }, ...segments, { start: movie.duration, end: movie.duration! + 1 }]
+  //     : undefined;
   let time = $state(0);
   let current = $state<number>(0);
 

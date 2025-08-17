@@ -1,7 +1,7 @@
 import { describe, test, expect } from "vitest";
 import { db_better } from "$lib/server/db";
 import type { Movie } from "../types";
-import { mp3Path } from "$lib/util/util";
+import { mp3Path } from "$lib/utils";
 import { extractMp3 } from "../ffmpeg";
 describe("all segments", async () => {
   const movie = db_better.prepare("SELECT * FROM movies where id =?").get(381) as Movie;

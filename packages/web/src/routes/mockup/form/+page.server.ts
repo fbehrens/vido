@@ -1,6 +1,6 @@
 import { redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import { sleep } from "$lib/util/util";
+import { sleep } from "$lib/utils";
 
 export const load = (async (event) => {
   const data = { server_load: new Date().toISOString(), locals: event.locals };

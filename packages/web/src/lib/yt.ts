@@ -61,7 +61,7 @@ export function get_json3_url(info: YtInfoSchema, lang?: string) {
     available_langs[0];
   const captions = automatic_captions[selected_lang];
   const exts = captions.map((c) => c.ext);
-  console.log({ available_langs, selected_lang, exts });
+  //   console.log({ available_langs, selected_lang, exts });
   const json3 = captions.find((c) => c.ext === "json3");
   if (json3) {
     return json3.url;

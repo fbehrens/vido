@@ -1,6 +1,6 @@
 import { json } from "@sveltejs/kit";
-import { makeDirFor } from "$lib/util/util";
-import { exec } from "./util/util";
+import { makeDirFor } from "./utils";
+import { exec } from "./utils";
 
 export async function getDuration(videoPath: string): Promise<number> {
   let command = `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${videoPath}"`;
@@ -20,12 +20,7 @@ export async function getFramerate(videoPath: string): Promise<number> {
   return Number(m[1]) / Number(m[2]);
 }
 
-export async function extractMp3(
-  filename: string,
-  start: number,
-  end: number,
-  out: string,
-) {
+export async function extractMp3(filename: string, start: number, end: number, out: string) {
   makeDirFor(out);
   const start_arg = start == 0 ? "" : ` -ss ${start}`;
   const command = `ffmpeg${start_arg} -to ${end} -i "${filename}" -y -acodec libmp3lame -vn "${out}"`;
