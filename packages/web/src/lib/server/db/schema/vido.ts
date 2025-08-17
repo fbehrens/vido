@@ -22,9 +22,9 @@ export const captions = sqliteTable("captions", {
     .references(() => movies.id, {
       onDelete: "cascade",
     }),
-  typ: text(),
-  details: text(),
-  data: text(), //json
+  typ: text().notNull(),
+  details: text().notNull(),
+  data: text().notNull(), //json
 });
 
 //relations

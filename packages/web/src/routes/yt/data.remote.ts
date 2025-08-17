@@ -59,6 +59,7 @@ export const createYoutube = form(async (data) => {
     movieId,
     data: da,
     typ: "json3",
+    details: "{}",
   });
 
   //   await db.insert(movies).values({ youtubeId: "foo", title: "t", duration: 1.1 });
