@@ -23,6 +23,6 @@ export async function load({ params }) {
       },
     },
   });
-
+  console.log({ a: "server", movie });
   return { movie };
 }

@@ -16,14 +16,14 @@
   };
   const { data } = $props();
   let movie = data.movie!;
-  const d = movie!.captions[0]!.data!;
-  const segments = whisperApi(d);
+  //   const d = movie!.captions[0]!.data!;
+  //   const segments = whisperApi(d);
 
-  const _segments_ = [
-    { start: -1, end: 0 },
-    ...segments,
-    { start: movie.duration, end: movie.duration! + 1 },
-  ];
+  //   const _segments_ = [
+  //     { start: -1, end: 0 },
+  //     ...segments,
+  //     { start: movie.duration, end: movie.duration! + 1 },
+  //   ];
   let time = $state(0);
   let current = $state<number>(0);
 
@@ -31,32 +31,28 @@
   let paused = $state(true);
   let video: HTMLVideoElement;
   $effect(() => {
-    while (time >= _segments_[current + 1].end) {
-      current++;
-    }
-    while (time < _segments_[current].end) {
-      current--;
-    }
+    // while (time >= _segments_[current + 1].end) {
+    //   current++;
+    // }
+    // while (time < _segments_[current].end) {
+    //   current--;
+    // }
   });
+  console.log({ movie });
   onMount(() => {
     let track = video.addTextTrack("captions", "Captions", "en");
     track.mode = "showing";
-    segments.forEach((s) => {
-      s.words.forEach((w) => {
-        track.addCue(new VTTCue(w.start, w.end, w.word + w.sep));
-      });
-    });
+    // segments.forEach((s) => {
+    //   s.words.forEach((w) => {
+    //     track.addCue(new VTTCue(w.start, w.end, w.word + w.sep));
+    //   });
+    // });
   });
-  let active = $derived(time >= segments[current].start);
+  //   let active = $derived(time >= segments[current].start);
 </script>
 
 <div>
-  <input
-    class="bg-gray-200 w-full"
-    readonly
-    name="filename"
-    value={movie.filename}
-  />
+  <input class="w-full bg-gray-200" readonly name="filename" value={movie.filename} />
 </div>
 <Srt id={movie.id} />
 <div class="p-1">
@@ -73,24 +69,17 @@
 </div>
 <div>
   <label for="playbackrate">playbackRate:</label>
-  <input
-    type="range"
-    id="playbackRate"
-    min="0.1"
-    max="2"
-    step="0.01"
-    bind:value={playbackRate}
-  />
+  <input type="range" id="playbackRate" min="0.1" max="2" step="0.01" bind:value={playbackRate} />
   ({playbackRate})
 </div>
 
-{#each segments as s, i}
+<!-- {#each segments as s, i}
   {#if i == current && active}
     <SegmentRow {...s} bind:time></SegmentRow>
   {:else}
     <div><button onclick={() => (time = s.start)}>{s.text}</button></div>
   {/if}
-{/each}
+{/each} -->
 
 <style>
   video {
