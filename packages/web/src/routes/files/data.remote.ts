@@ -35,16 +35,26 @@ function getAllFiles(dirPath: string, arrayOfFiles: MyFile[] = []) {
 const extsVideo = [".mov", ".mp4", ".mkv"];
 
 const files = async () => {
-  const ms: Map<string, number> = new Map();
-  for (const { id, filename } of await db
-    .select({ id: movies.id, filename: movies.filename })
+  const ms: Map<
+    string,
+    { id: number; title: string; duration: number; framerate: number; created_at: string }
+  > = new Map();
+  for (const { id, filename, title, duration, framerate, created_at } of await db
+    .select({
+      id: movies.id,
+      filename: movies.filename,
+      title: movies.title,
+      duration: movies.duration,
+      framerate: movies.framerate,
+      created_at: movies.created_at,
+    })
     .from(movies)
     .where(isNotNull(movies.filename))) {
-    ms.set(filename!, id);
+    ms.set(filename!, { id, title, duration, framerate: framerate!, created_at });
   }
   const files = getAllFiles(static_dir)
     .filter((f) => extsVideo.includes(extname(f.filename)))
-    .map((f) => ({ ...f, id: ms.get(f.filename) }));
+    .map((f) => ({ ...f, ...ms.get(f.filename) }));
   console.log({ ms, files });
   return files;
 };

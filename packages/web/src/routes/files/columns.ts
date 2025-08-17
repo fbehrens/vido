@@ -19,7 +19,23 @@ export const columns: ColumnDef<MyFile>[] = [
     header: "filename",
   },
   {
+    accessorKey: "title",
+    header: "title",
+  },
+  {
     accessorKey: "size",
     header: "size",
+  },
+  {
+    accessorKey: "duration",
+    header: "duration",
+  },
+  {
+    accessorKey: "framerate",
+    header: "framerate",
+  },
+  {
+    accessorKey: "created_at",
+    header: "created_at",
   },
 ];
