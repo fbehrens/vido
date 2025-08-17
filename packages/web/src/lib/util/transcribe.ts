@@ -13,7 +13,7 @@ export async function createTranscription(m: typeof movies.$inferSelect) {
   if (cs.length === 0) {
     await createClips({
       duration: m.duration!,
-      filename: m.filename,
+      filename: m.filename!,
       movieId: m.id,
     });
   }

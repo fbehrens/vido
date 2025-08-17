@@ -4,7 +4,8 @@
   import Srt from "$lib/components/Srt.svelte";
   import { onMount } from "svelte";
   import { whisperApi } from "$lib/zod-schema";
-  import { getMovie } from "./data.remote";
+  import { getMovie, getOpenai } from "./data.remote";
+  import Button from "$lib/components/ui/button/button.svelte";
 
   const togglePaused = () => {
     if (paused) {
@@ -16,7 +17,7 @@
     }
   };
   const { data } = $props();
-  const { id } = data;
+  const id = data.id;
   let movie = await getMovie(id);
   //   const d = movie!.captions[0]!.data!;
   //   const segments = whisperApi(d);
@@ -42,8 +43,8 @@
   });
   console.log({ movie });
   onMount(() => {
-    let track = video.addTextTrack("captions", "Captions", "en");
-    track.mode = "showing";
+    // let track = video.addTextTrack("captions", "Captions", "en");
+    // track.mode = "showing";
     // segments.forEach((s) => {
     //   s.words.forEach((w) => {
     //     track.addCue(new VTTCue(w.start, w.end, w.word + w.sep));
@@ -52,6 +53,20 @@
   });
   //   let active = $derived(time >= segments[current].start);
 </script>
+
+<div>
+  <Button
+    class="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+    onclick={async () => {
+      try {
+        const result = await getOpenai(id);
+        alert(result);
+      } catch (error) {
+        alert("Something went wrong!");
+      }
+    }}>transcribe</Button
+  >
+</div>
 
 <div>
   <input class="w-full bg-gray-200" readonly name="filename" value={movie.filename} />

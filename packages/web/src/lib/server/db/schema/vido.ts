@@ -23,6 +23,7 @@ export const captions = sqliteTable("captions", {
       onDelete: "cascade",
     }),
   typ: text(),
+  details: text(),
   data: text(), //json
 });
 
