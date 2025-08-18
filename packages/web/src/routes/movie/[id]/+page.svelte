@@ -1,11 +1,10 @@
 <script lang="ts">
-  import type { Segment, Movie, Word } from "$lib/types.js";
   import SegmentRow from "./SegmentRow.svelte";
   import Srt from "$lib/components/Srt.svelte";
-  import { onMount } from "svelte";
   import { whisperApi } from "$lib/zod-schema";
   import { getMovie, getOpenai } from "./data.remote";
   import Button from "$lib/components/ui/button/button.svelte";
+  import { calcSegments } from "$lib/utils";
 
   const togglePaused = () => {
     if (paused) {
@@ -19,38 +18,30 @@
   const { data } = $props();
   const id = data.id;
   let movie = await getMovie(id);
-  const capitionsWhisperApi = movie.captions.find(({ typ }) => typ == "WhisperApi");
-  //   const d = movie!.captions[0]!.data!;
-  const segments = capitionsWhisperApi ? whisperApi(capitionsWhisperApi.data) : undefined;
-
-  //   const _segments_ = segments
-  //     ? [{ start: -1, end: 0 }, ...segments, { start: movie.duration, end: movie.duration! + 1 }]
-  //     : undefined;
+  const cap = movie.captions.find(({ typ }) => typ == "WhisperApi");
+  const segments = cap ? calcSegments(whisperApi(cap.data)) : undefined;
+  const _segments_ = segments
+    ? [{ start: -1, end: 0 }, ...segments, { start: movie.duration, end: movie.duration! + 1 }]
+    : undefined;
   let time = $state(0);
   let current = $state<number>(0);
-
   let playbackRate = $state(1);
   let paused = $state(true);
   let video: HTMLVideoElement;
   $effect(() => {
-    // while (time >= _segments_[current + 1].end) {
-    //   current++;
-    // }
-    // while (time < _segments_[current].end) {
-    //   current--;
-    // }
+    if (_segments_) {
+      while (time >= _segments_[current + 1].end) {
+        current++;
+      }
+      while (time < _segments_[current].end) {
+        current--;
+      }
+    }
   });
   console.log({ movie });
-  onMount(() => {
-    // let track = video.addTextTrack("captions", "Captions", "en");
-    // track.mode = "showing";
-    // segments.forEach((s) => {
-    //   s.words.forEach((w) => {
-    //     track.addCue(new VTTCue(w.start, w.end, w.word + w.sep));
-    //   });
-    // });
-  });
-  //   let active = $derived(time >= segments[current].start);
+  if (segments) console.log(segments[0]);
+
+  let active = $derived(segments && time >= segments[current].start);
 </script>
 
 <div>
@@ -88,14 +79,15 @@
   <input type="range" id="playbackRate" min="0.1" max="2" step="0.01" bind:value={playbackRate} />
   ({playbackRate})
 </div>
-
-<!-- {#each segments as s, i}
-  {#if i == current && active}
-    <SegmentRow {...s} bind:time></SegmentRow>
-  {:else}
-    <div><button onclick={() => (time = s.start)}>{s.text}</button></div>
-  {/if}
-{/each} -->
+{#if segments}
+  {#each segments as s, i}
+    {#if i == current && active}
+      <SegmentRow {...s} bind:time></SegmentRow>
+    {:else}
+      <div><button onclick={() => (time = s.start)}>{s.text}</button></div>
+    {/if}
+  {/each}
+{/if}
 
 <style>
   video {

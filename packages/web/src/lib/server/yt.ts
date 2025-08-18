@@ -1,4 +1,4 @@
-import { exec } from "$lib/utils";
+import { exec } from "./utils";
 
 export async function ytGetInfo(id: string): Promise<string> {
   const info = await exec(

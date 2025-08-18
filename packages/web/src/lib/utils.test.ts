@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { getFileDir } from "$lib/utils";
-import { unexpectedChars } from "./util/transcribe";
+import { getFileDir } from "./server/utils";
+import { unexpectedChars } from "./utils";
 const filename = "static/mov/test.mov";
 describe("Util", () => {
   it("fileDir", () => {

@@ -44,14 +44,12 @@ export const getOpenai = command(v.number(), async (id) => {
   const mp3_filename = tmp.fileSync().name + ".mp3";
   await extractMp3(`static/${filename}`, 0, duration, mp3_filename);
   const transcript = await transcribe(mp3_filename);
-  await db
-    .insert(captions)
-    .values({
-      movieId: id,
-      typ: "WhisperApi",
-      data: JSON.stringify(transcript),
-      details: JSON.stringify({ mp3_filename }),
-    });
+  await db.insert(captions).values({
+    movieId: id,
+    typ: "WhisperApi",
+    data: JSON.stringify(transcript),
+    details: JSON.stringify({ mp3_filename }),
+  });
 
   const result = `${filename} -> ${mp3_filename}`;
   console.log({ result });

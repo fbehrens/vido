@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import { json3, ytInfo, get_json3_url } from "./yt";
-import { readFixture } from "./utils";
+import { readFixture } from "./server/utils";
 
 describe("yt.ts", () => {
   test("YtInfo", () => {

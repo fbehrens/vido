@@ -1,6 +1,6 @@
 import { json } from "@sveltejs/kit";
-import { makeDirFor } from "./utils";
-import { exec } from "./utils";
+import { makeDirFor } from "./server/utils";
+import { exec } from "./server/utils";
 
 export async function getDuration(videoPath: string): Promise<number> {
   let command = `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${videoPath}"`;

@@ -2,7 +2,7 @@ import { command, form, query } from "$app/server";
 import { db } from "$lib/server/db";
 import { captions, movies } from "$lib/server/db/schema/vido";
 import { ytGetInfo } from "$lib/server/yt";
-import { sqliteDate } from "$lib/utils";
+import { sqliteDate } from "$lib/server/utils";
 import { get_json3_url, ytGetId, ytInfo } from "$lib/yt";
 import { error } from "@sveltejs/kit";
 import { eq, sql, isNotNull, desc } from "drizzle-orm";

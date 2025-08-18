@@ -16,7 +16,6 @@ export const whisperApiSchema = z.object({
 
 export const whisperApiSegmentedSchema = z.array(
   z.object({
-    clip_id: z.number().optional(),
     start: z.number(),
     end: z.number(),
     text: z.string(),
@@ -31,9 +30,9 @@ export const whisperApiSegmentedSchema = z.array(
   }),
 );
 
-export function whisperApi(s: string): z.infer<typeof whisperApiSegmentedSchema> {
+export function whisperApi(s: string): z.infer<typeof whisperApiSchema> {
   const o = JSON.parse(s);
-  return whisperApiSegmentedSchema.parse(o);
+  return whisperApiSchema.parse(o);
 }
 
 const format = z.object({

@@ -2,13 +2,12 @@ import { and, eq } from "drizzle-orm";
 import { extractMp3, getDuration, getFramerate } from "$lib/ffmpeg";
 import { db } from "$lib/server/db";
 import { movies } from "$lib/server/db/schema/vido";
-import { mp3Path } from "$lib/utils";
+import { mp3Path } from "$lib/server/utils";
 import * as fs from "fs";
 import { transcribe } from "$lib/whisper";
 import type { Segment, Word } from "$lib/types";
 import type { whisperApiSchema } from "$lib/zod-schema";
 import type z from "zod";
-import assert from "assert";
 
 export async function createTranscription(m: typeof movies.$inferSelect) {
   console.log(m);
@@ -85,52 +84,8 @@ export async function createClips({
   }
 }
 
-/**
- * calc Segment from WhisperApi
- * @param wa WhisperApi
- * @returns
- */
-export function calcSegments(wa: z.infer<typeof whisperApiSchema>) {
-  const words = wa.words;
-  const pattern = new RegExp(`^\\s*[${Letters}]+[${NonLetters}]*`);
-  const r = wa.segments.map((segment) => {
-    const segment_words = [];
-    let text = segment.text;
-    while (text.length > 0) {
-      if (words.length == 0) throw new Error("running out ouf words");
-      const word = words.shift()!;
-      const m = text.match(pattern);
-      if (m == undefined) throw new Error(`cannot find pattern in "${text}"`);
-      const ws_w_sp = m[0];
-      if (!ws_w_sp.includes(word.word)) throw new Error(`"${word.word}" is not in "${ws_w_sp}"`);
-      text = text.substring(ws_w_sp.length);
-      segment_words.push({ ...word, word: ws_w_sp });
-    }
-    assert(segment_words.map((w) => w.word).join("") == segment.text);
-    return { ...segment, words: segment_words };
-  });
-
-  return r;
-}
-
 export function waToString(wa: z.infer<typeof whisperApiSchema>) {
   const segments = wa.segments.map((s) => s.text).join("|");
   const words = wa.words.map((w) => w.word).join("|");
   return [wa.text, segments, words];
 }
-
-const NonLetters = "\\?\\.,-";
-const Letters = "A-Za-z";
-const AllowedChars = new RegExp(`[${Letters} ${NonLetters}]`);
-
-export const unexpectedChars = ({
-  text,
-  allowedChars = AllowedChars,
-}: {
-  text: string;
-  allowedChars?: RegExp;
-}) => {
-  const s = new Set([...text]);
-  const chars = [...s].filter((c) => !allowedChars.test(c));
-  return new Set(chars);
-};

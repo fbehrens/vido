@@ -1,8 +1,9 @@
-import { readFixture } from "$lib/utils";
-import { unexpectedChars } from "./transcribe";
+import { readFixture } from "$lib/server/utils";
+import { unexpectedChars } from "$lib/utils";
 import { whisperApiSchema } from "$lib/zod-schema";
 import { describe, test, expect } from "vitest";
-import { calcSegments, waToString } from "./transcribe";
+import { waToString } from "./transcribe";
+import { calcSegments } from "$lib/utils";
 describe("transcribe", () => {
   test("segmenting", async () => {
     const j = readFixture("test/fixtures/whisperApi.json");

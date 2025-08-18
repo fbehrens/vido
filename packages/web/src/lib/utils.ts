@@ -2,10 +2,8 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { cubicOut } from "svelte/easing";
 import type { TransitionConfig } from "svelte/transition";
-import { readFileSync } from "fs";
-import { type ExecException, exec as child_process_exec } from "child_process";
-import * as fs from "fs";
-import path from "path";
+import type z from "../../node_modules/zod/v3/external.cjs";
+import type { whisperApiSchema } from "./zod-schema";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -58,43 +56,49 @@ export const flyAndScale = (
     easing: cubicOut,
   };
 };
-export function readFixture(file: string) {
-  return readFileSync(file, "utf-8");
-}
 
-export function exec(command: string): Promise<{
-  command: string;
-  error: ExecException | null;
-  out: string;
-  err: string;
-}> {
-  return new Promise((resolve, reject) => {
-    child_process_exec(command, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-      }
-      resolve({ error, command: command, out: stdout, err: stderr });
-    });
-  });
-}
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+} /**
+ * calc Segment from WhisperApi
+ * @param wa WhisperApi
+ * @returns
+ */
+
+export function calcSegments(wa: z.infer<typeof whisperApiSchema>) {
+  const words = wa.words;
+  const pattern = new RegExp(`^\\s*[${Letters}]+[${NonLetters}]*`);
+  const r = wa.segments.map((segment) => {
+    const segment_words = [];
+    let text = segment.text;
+    while (text.length > 0) {
+      if (words.length == 0) throw new Error("running out ouf words");
+      const word = words.shift()!;
+      const m = text.match(pattern);
+      if (m == undefined) throw new Error(`cannot find pattern in "${text}"`);
+      const ws_w_sp = m[0];
+      if (!ws_w_sp.includes(word.word)) throw new Error(`"${word.word}" is not in "${ws_w_sp}"`);
+      text = text.substring(ws_w_sp.length);
+      segment_words.push({ ...word, word: ws_w_sp });
+    }
+    console.assert(segment_words.map((w) => w.word).join("") == segment.text);
+    return { ...segment, words: segment_words };
+  });
+
+  return r;
 }
-export const mp3Path = (filename: string, clip_id: number): string => {
-  const fileDir = getFileDir(filename);
-  return `${fileDir}/mp3/${clip_id}.mp3`;
+export const NonLetters = "\\?\\.,-";
+export const Letters = "A-Za-z";
+const AllowedChars = new RegExp(`[${Letters} ${NonLetters}]`);
+
+export const unexpectedChars = ({
+  text,
+  allowedChars = AllowedChars,
+}: {
+  text: string;
+  allowedChars?: RegExp;
+}) => {
+  const s = new Set([...text]);
+  const chars = [...s].filter((c) => !allowedChars.test(c));
+  return new Set(chars);
 };
-export function makeDirFor(filepath: string): void {
-  const dir = path.dirname(filepath);
-  fs.mkdirSync(dir, { recursive: true });
-}
-
-export function getFileDir(filePath: string): string {
-  const dir = path.dirname(filePath);
-  const base = path.basename(filePath, path.extname(filePath));
-  return path.join(dir, base);
-}
-
-export function sqliteDate(d: Date = new Date()) {
-  return d.toISOString().replace("T", " ").replace("Z", "").split(".")[0];
-}
