@@ -1,7 +1,7 @@
 import { type ExecException, exec as child_process_exec } from "child_process";
 import * as fs from "fs";
 import { readFileSync } from "fs";
-import type path from "path";
+import path from "path";
 
 export function readFixture(file: string) {
   return readFileSync(file, "utf-8");
