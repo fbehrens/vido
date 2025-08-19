@@ -1,13 +1,13 @@
 import { db } from "$lib/server/db";
 import { eq, and, isNotNull } from "drizzle-orm";
 import { captions, movies } from "$lib/server/db/schema/vido";
-import * as v from "valibot";
+import { Schema } from "effect";
 import { command, query } from "$app/server";
 import tmp from "tmp";
 import { extractMp3 } from "$lib/ffmpeg";
 import { transcribe } from "$lib/whisper";
 
-export const getMovie = query(v.number(), async (id) => {
+export const getMovie = query(Schema.standardSchemaV1(Schema.Number), async (id) => {
   console.log({ a: "getMovie", id });
   const movie = await db.query.movies.findFirst({
     columns: {
@@ -32,7 +32,7 @@ export const getMovie = query(v.number(), async (id) => {
   return movie;
 });
 
-export const getOpenai = command(v.number(), async (id) => {
+export const getOpenai = command(Schema.standardSchemaV1(Schema.Number), async (id) => {
   const [{ filename, duration }] = await db
     .select({
       filename: movies.filename,
