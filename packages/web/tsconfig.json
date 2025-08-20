@@ -10,7 +10,12 @@
         "skipLibCheck": true,
         "sourceMap": true,
         "strict": true,
-        "moduleResolution": "bundler"
+        "moduleResolution": "bundler",
+        "plugins": [
+            {
+                "name": "@effect/language-service"
+            }
+        ]
     }
     // Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
     // except $lib which is handled by https://kit.svelte.dev/docs/configuration#files
