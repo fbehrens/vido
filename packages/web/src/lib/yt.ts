@@ -38,7 +38,7 @@ function applySchema(s: string, schema: z.ZodSchema<any>) {
 }
 
 type YtInfoSchema = z.infer<typeof ytInfoSchema>;
-export function ytInfo(s: string): YtInfoSchema {
+export function ytInfoZod(s: string): YtInfoSchema {
   return applySchema(s, ytInfoSchema);
 }
 
@@ -100,7 +100,7 @@ const js3Schema = z.object({
   events: z.tuple([js3Event1]).rest(js3Event),
 });
 
-export function json3(s: string): z.infer<typeof js3Schema> {
+export function json3Schema(s: string): z.infer<typeof js3Schema> {
   const o = JSON.parse(s);
   return js3Schema.parse(o);
 }

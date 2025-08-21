@@ -1,11 +1,17 @@
 <script lang="ts">
   import TextEvent from "$lib/components/TextEvent.svelte";
   import YouTube from "$lib/components/YouTube.svelte";
+  import { json3Schema, ytInfoZod } from "$lib/yt.js";
+  import { error } from "@sveltejs/kit";
   console.log("page");
   let { data } = $props();
+  let { movie } = data;
   let time = $state(0);
   let player = $state<YT.Player>();
-  let { movie, ytInfo, json3 } = data;
+  if (!movie) throw error(404, "Movie not found");
+  const ytInfo = ytInfoZod(movie.data!);
+  const caption = movie.captions.find((c) => c.typ == "json3");
+  const json3 = caption ? json3Schema(caption.data!) : null;
 
   const [e1, ...events] = json3 ? json3.events : [];
   const textEvents = events.filter((e) => !e.aAppend);
@@ -25,7 +31,7 @@
       "ever odd event is a appendEvent",
     );
   }
-  const languagesDisplay = Object.keys(ytInfo?.automatic_captions || {}).filter(
+  const languagesDisplay = Object.keys(ytInfoZod?.automatic_captions || {}).filter(
     (e) => e.includes("en") || e.includes("de") || e.includes("orig"),
   );
 </script>

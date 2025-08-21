@@ -1,7 +1,6 @@
 import { db } from "$lib/server/db/index.js";
 import { eq } from "drizzle-orm";
-import { movies, youtube } from "$lib/server/db/schema/vido.js";
-import { json3 as json3Schema, ytInfo } from "$lib/yt.js";
+import { movies } from "$lib/server/db/schema/vido.js";
 
 export async function load({ params }) {
   const id = Number(params.id);
@@ -15,16 +14,14 @@ export async function load({ params }) {
     where: eq(movies.id, id),
     with: {
       captions: {
-        where: (captions, { eq }) => eq(captions.typ, "json3"),
         columns: {
-          id: true,
           data: true,
           typ: true,
         },
       },
     },
   });
-  if (!movie) {
+  if (movie == undefined) {
     return {
       status: 404,
       body: {
@@ -32,12 +29,12 @@ export async function load({ params }) {
       },
     };
   }
-  const yt = ytInfo(movie.data!);
-  const caption = movie.captions[0];
-  const json3 = caption ? json3Schema(caption.data!) : null;
+  //   const ytInfo = ytInfoZod(movie.data!);
+  //   const caption = movie.captions[0];
+  //   const json3 = caption ? json3Schema(caption.data!) : null;
   return {
     movie,
-    ytInfo: yt,
-    json3,
+    // ytInfo: yt,
+    // json3,
   };
 }
