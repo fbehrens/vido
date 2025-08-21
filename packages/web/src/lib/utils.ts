@@ -59,34 +59,8 @@ export const flyAndScale = (
 
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
-} /**
- * calc Segment from WhisperApi
- * @param wa WhisperApi
- * @returns
- */
-
-export function calcSegments(wa: z.infer<typeof whisperApiSchema>) {
-  const words = wa.words;
-  const pattern = new RegExp(`^\\s*[${Letters}]+[${NonLetters}]*`);
-  const r = wa.segments.map((segment) => {
-    const segment_words = [];
-    let text = segment.text;
-    while (text.length > 0) {
-      if (words.length == 0) throw new Error("running out ouf words");
-      const word = words.shift()!;
-      const m = text.match(pattern);
-      if (m == undefined) throw new Error(`cannot find pattern in "${text}"`);
-      const ws_w_sp = m[0];
-      if (!ws_w_sp.includes(word.word)) throw new Error(`"${word.word}" is not in "${ws_w_sp}"`);
-      text = text.substring(ws_w_sp.length);
-      segment_words.push({ ...word, word: ws_w_sp });
-    }
-    console.assert(segment_words.map((w) => w.word).join("") == segment.text);
-    return { ...segment, words: segment_words };
-  });
-
-  return r;
 }
+
 export const NonLetters = "\\?\\.,-";
 export const Letters = "A-Za-z";
 const AllowedChars = new RegExp(`[${Letters} ${NonLetters}]`);

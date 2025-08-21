@@ -1,10 +1,10 @@
 <script lang="ts">
   import SegmentRow from "./SegmentRow.svelte";
   import Srt from "$lib/components/Srt.svelte";
-  import { whisperApi } from "$lib/zod-schema";
   import { getMovie, getOpenai } from "./data.remote";
   import Button from "$lib/components/ui/button/button.svelte";
-  import { calcSegments } from "$lib/utils";
+  import * as S from "effect/Schema";
+  import { WhisperApiSegmented } from "$lib/schema";
 
   const togglePaused = () => {
     if (paused) {
@@ -19,7 +19,7 @@
   const id = data.id;
   let movie = await getMovie(id);
   const cap = movie.captions.find(({ typ }) => typ == "WhisperApi");
-  const segments = cap ? calcSegments(whisperApi(cap.data)) : undefined;
+  const segments = cap ? S.decodeSync(WhisperApiSegmented)(cap!.data) : undefined;
   const _segments_ = segments
     ? [{ start: -1, end: 0 }, ...segments, { start: movie.duration, end: movie.duration! + 1 }]
     : undefined;

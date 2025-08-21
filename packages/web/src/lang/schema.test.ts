@@ -25,25 +25,51 @@ it.effect("effect", () => Effect.sync(() => expect(1).toEqual(1)));
 const Video = Schema.Struct({
   title: Schema.String,
 });
-const VideoData = Schema.parseJson(Video);
+class VideoC extends Schema.Class<VideoC>("Person")({
+  title: Schema.String,
+}) {}
 
-const encoded = `{"title":"Test Video"}`;
-const decoded = { title: "Test Video" };
-const decoded_ = { title_: "Test Video" };
-
-it("VideoData", () => {
-  expect(Schema.encodeUnknownSync(VideoData)(decoded)).toEqual(encoded);
-  expect(Schema.decodeSync(VideoData)(encoded)).toStrictEqual(decoded);
-});
+const VideoJson = Schema.parseJson(Video);
+const VideoDataC = Schema.parseJson(VideoC);
 
 const Video_ = Schema.Struct({
   title_: Schema.String,
 });
 
-const VideoData_ = Schema.transform(VideoData, Video_, {
+class VideoC_ extends Schema.Class<VideoC_>("Person")({
+  title_: Schema.String,
+}) {}
+
+const encoded = `{"title":"Test Video"}`;
+
+const decoded = { title: "Test Video" };
+const decodedC = new VideoC({ title: "Test Video" });
+const decoded_ = { title_: "Test Video" };
+const decodedC_ = new VideoC_({ title_: "Test Video" });
+
+it("VideoData", () => {
+  expect(Schema.encodeUnknownSync(VideoJson)(decoded)).toEqual(encoded);
+  expect(Schema.encodeUnknownSync(VideoDataC)(decoded)).toEqual(encoded);
+  expect(Schema.decodeSync(VideoJson)(encoded)).toStrictEqual(decoded);
+});
+
+const VideoData_ = Schema.transform(VideoJson, Video_, {
   strict: true,
   decode: (data) => ({ title_: data.title }),
   encode: (video) => ({ title: video.title_ }),
 });
 
+const VideoDataC_ = Schema.transform(VideoDataC, VideoC_, {
+  strict: true,
+  decode: (v) => new VideoC_({ title_: v.title }),
+  encode: (v_) => new VideoC({ title: v_.title_ }),
+});
+
 it("VideoData_", () => expect(Schema.decodeSync(VideoData_)(encoded)).toStrictEqual(decoded_));
+it("VideoDataC_", () => expect(Schema.decodeSync(VideoDataC_)(encoded)).toStrictEqual(decodedC_));
+
+const schema = Schema.URL;
+it("url", () =>
+  expect(Schema.decodeUnknownSync(schema)("https://example.com")).toStrictEqual(
+    new URL("https://example.com"),
+  ));

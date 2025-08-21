@@ -1,40 +1,5 @@
 import { z } from "zod";
 
-const whisperApiWordsSchema = z.object({ word: z.string(), start: z.number(), end: z.number() });
-export const whisperApiSchema = z.object({
-  text: z.string(),
-  segments: z.array(
-    z.object({
-      id: z.number(),
-      start: z.number(),
-      end: z.number(),
-      text: z.string(),
-    }),
-  ),
-  words: z.array(whisperApiWordsSchema),
-});
-
-export const whisperApiSegmentedSchema = z.array(
-  z.object({
-    start: z.number(),
-    end: z.number(),
-    text: z.string(),
-    words: z.array(
-      z.object({
-        start: z.number(),
-        end: z.number(),
-        word: z.string(),
-        sep: z.string(),
-      }),
-    ),
-  }),
-);
-
-export function whisperApi(s: string): z.infer<typeof whisperApiSchema> {
-  const o = JSON.parse(s);
-  return whisperApiSchema.parse(o);
-}
-
 const format = z.object({
   format_id: z.string(),
   format_note: z.string(),
