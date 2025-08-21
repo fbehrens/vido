@@ -4,7 +4,7 @@
   import { getMovie, getOpenai } from "./data.remote";
   import Button from "$lib/components/ui/button/button.svelte";
   import * as S from "effect/Schema";
-  import { WhisperApiSegmented } from "$lib/schema";
+  import { WhisperApiSegmented } from "$lib/schema/whisper_api";
 
   const togglePaused = () => {
     if (paused) {

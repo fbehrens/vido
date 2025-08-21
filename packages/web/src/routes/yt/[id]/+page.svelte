@@ -8,7 +8,7 @@
   let { movie } = data;
   let time = $state(0);
   let player = $state<YT.Player>();
-  if (!movie) throw error(404, "Movie not found");
+  if (!movie) throw new Error("Movie not found");
   const ytInfo = ytInfoZod(movie.data!);
   const caption = movie.captions.find((c) => c.typ == "json3");
   const json3 = caption ? json3Schema(caption.data!) : null;

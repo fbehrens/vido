@@ -1,11 +1,11 @@
 import * as S from "effect/Schema";
-import { Letters, NonLetters } from "./utils";
+import { Letters, NonLetters } from "../utils";
 export const Word = S.Struct({
   word: S.String,
   start: S.Number,
   end: S.Number,
 });
-
+export type Word = typeof Word.Type;
 export const Segment = S.Struct({
   id: S.Number,
   //   seek: S.Number,
@@ -18,13 +18,14 @@ export const Segment = S.Struct({
   // compression_ratio: S.Number,
   // no_speech_prob: S.Number,
 });
+export type Segment = typeof Segment.Type;
 
 export const WhisperApi = S.Struct({
   text: S.String,
   segments: S.Array(Segment),
   words: S.Array(Word),
 });
-type WhisperApiT = typeof WhisperApi.Type;
+export type WhisperApi = typeof WhisperApi.Type;
 export const WhisperApiJson = S.parseJson(WhisperApi);
 
 export const Segm = S.Array(
