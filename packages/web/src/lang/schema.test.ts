@@ -15,6 +15,7 @@ const BooleanFromString = Schema.transform(
     encode: (bool) => (bool ? "on" : "off"),
   },
 );
+const _ = Schema.asSchema(BooleanFromString); // <bool,on|off,never>
 type Type = typeof BooleanFromString.Type;
 type Encoded = typeof BooleanFromString.Encoded;
 

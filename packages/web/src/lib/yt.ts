@@ -3,28 +3,20 @@ import { ytInfoSchema } from "./zod-schema";
 
 export function ytGetId(url: string): string | null {
   if (url.length === 11) return url;
-  try {
-    const urlObj = new URL(url);
-    const hostname = urlObj.hostname;
-
-    if (hostname === "youtu.be") {
-      return urlObj.pathname.slice(1);
-    }
-
-    if (hostname === "www.youtube.com" || hostname === "youtube.com") {
-      if (urlObj.searchParams.has("v")) {
-        return urlObj.searchParams.get("v");
-      }
-
-      if (urlObj.pathname.startsWith("/embed/")) {
-        return urlObj.pathname.slice(7);
-      }
-    }
-
-    return null;
-  } catch (error) {
-    return url;
+  const urlObj = new URL(url);
+  const hostname = urlObj.hostname;
+  if (hostname === "youtu.be") {
+    return urlObj.pathname.slice(1);
   }
+  if (hostname === "www.youtube.com" || hostname === "youtube.com") {
+    if (urlObj.searchParams.has("v")) {
+      return urlObj.searchParams.get("v");
+    }
+    if (urlObj.pathname.startsWith("/embed/")) {
+      return urlObj.pathname.slice(7);
+    }
+  }
+  return null;
 }
 
 function applySchema(s: string, schema: z.ZodSchema<any>) {

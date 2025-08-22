@@ -1,8 +1,6 @@
 <script lang="ts">
   import { createYoutube, getYoutube as getYoutubes } from "./data.remote";
-  let value = $state("o1JgW_4MTWI");
-  // https://youtu.be/EbqSVYt7PxI @ WDR
-  // o1JgW_4MTWI
+  let value = $state("");
 </script>
 
 <form
