@@ -17,7 +17,7 @@ describe("YoutubeInfo", async () => {
     .from(movies)
     .where(isNotNull(movies.youtubeId))) {
     test(`YoutubeInfo(${id})`, async () => {
-      const yi = S.decodeUnknownSync(YoutubeInfoJson)(data);
+      const _ = S.decodeUnknownSync(YoutubeInfoJson)(data);
     });
   }
 });
