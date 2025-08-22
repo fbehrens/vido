@@ -3,7 +3,7 @@ import { db } from "$lib/server/db";
 import { captions, movies } from "$lib/server/db/schema/vido";
 import { ytGetInfo } from "$lib/server/yt";
 import { sqliteDate } from "$lib/server/utils";
-import { get_json3_url, ytGetId, ytInfo } from "$lib/yt";
+import { get_json3_url, ytGetId, ytInfoZod } from "$lib/yt";
 import { error } from "@sveltejs/kit";
 import { eq, sql, isNotNull, desc } from "drizzle-orm";
 
@@ -32,7 +32,7 @@ export const createYoutube = form(async (data) => {
     return;
   }
   const info = await ytGetInfo(youtubeId);
-  const yt = ytInfo(info);
+  const yt = ytInfoZod(info);
   const { movie_id: movieId } = await db
     .insert(movies)
     .values({

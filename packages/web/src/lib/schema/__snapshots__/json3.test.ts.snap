@@ -1,0 +1,2373 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Json3 > parse 1`] = `
+Json3 {
+  "events": [
+    Event {
+      "dDurationMs": 211879,
+      "id": 1,
+      "tStartMs": 0,
+      "wpWinPosId": 1,
+      "wsWinStyleId": 1,
+    },
+    Event {
+      "dDurationMs": 14260,
+      "segs": [
+        Seg {
+          "utf8": "[Music]",
+        },
+      ],
+      "tStartMs": 320,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 18790,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 7160,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "We're",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 239,
+          "utf8": " no",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 559,
+          "utf8": " strangers",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1040,
+          "utf8": " to",
+        },
+      ],
+      "tStartMs": 18800,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 4170,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 21790,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 7319,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "love.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1000,
+          "utf8": " You",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1239,
+          "utf8": " know",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1479,
+          "utf8": " the",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1800,
+          "utf8": " rules",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2520,
+          "utf8": " and",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2840,
+          "utf8": " so",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3399,
+          "utf8": " do",
+        },
+      ],
+      "tStartMs": 21800,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 3169,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 25950,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 4319,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "I.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1079,
+          "utf8": " I",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1319,
+          "utf8": " feel",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1720,
+          "utf8": " commitments",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2440,
+          "utf8": " from what",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2680,
+          "utf8": " I'm",
+        },
+      ],
+      "tStartMs": 25960,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 1170,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 29109,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 5241,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "thinking",
+        },
+      ],
+      "tStartMs": 29119,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 4091,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 30269,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 9280,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "of.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1000,
+          "utf8": " You",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1320,
+          "utf8": " wouldn't",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1800,
+          "utf8": " get",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2041,
+          "utf8": " this",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2201,
+          "utf8": " from",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2921,
+          "utf8": " any",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3401,
+          "utf8": " other",
+        },
+      ],
+      "tStartMs": 30279,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 5209,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 34350,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 8760,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "guy.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1120,
+          "utf8": " I",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2120,
+          "utf8": " just",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2440,
+          "utf8": " want",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2680,
+          "utf8": " to",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2920,
+          "utf8": " tell",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3160,
+          "utf8": " you",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3480,
+          "utf8": " how",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3800,
+          "utf8": " I'm",
+        },
+      ],
+      "tStartMs": 34360,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 3571,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 39549,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 6281,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "feeling.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1000,
+          "utf8": " Got",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1160,
+          "utf8": " to",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1401,
+          "utf8": " make",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1721,
+          "utf8": " you",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2561,
+          "utf8": " understand.",
+        },
+      ],
+      "tStartMs": 39559,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 2730,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 43110,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 6080,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "Never",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 320,
+          "utf8": " going",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 400,
+          "utf8": " to",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 640,
+          "utf8": " give",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 959,
+          "utf8": " you",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1360,
+          "utf8": " up.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2240,
+          "utf8": " I'm",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2400,
+          "utf8": " going",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2480,
+          "utf8": " to",
+        },
+      ],
+      "tStartMs": 43120,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 3370,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 45830,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 7480,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "let",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 320,
+          "utf8": " you",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 719,
+          "utf8": " down.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1680,
+          "utf8": " I'm",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1760,
+          "utf8": " going",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1920,
+          "utf8": " to",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2080,
+          "utf8": " run",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2640,
+          "utf8": " around",
+        },
+      ],
+      "tStartMs": 45840,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 4130,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 49190,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 7199,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "and",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 640,
+          "utf8": " desert",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1480,
+          "utf8": " you.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2480,
+          "utf8": " I'm",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2640,
+          "utf8": " going",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2720,
+          "utf8": " to",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2960,
+          "utf8": " make",
+        },
+      ],
+      "tStartMs": 49200,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 3089,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 53310,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 6559,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "you",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1000,
+          "utf8": " say",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1399,
+          "utf8": " goodbye.",
+        },
+      ],
+      "tStartMs": 53320,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 3490,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 56389,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 7641,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "Tell",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 480,
+          "utf8": " a",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 921,
+          "utf8": " lie",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1921,
+          "utf8": " and",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2081,
+          "utf8": " hurt",
+        },
+      ],
+      "tStartMs": 56399,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 4171,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 59869,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 7321,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "you.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1000,
+          "utf8": " We've",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1160,
+          "utf8": " known",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1480,
+          "utf8": " each",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2000,
+          "utf8": " other",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3000,
+          "utf8": " for",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3320,
+          "utf8": " so",
+        },
+      ],
+      "tStartMs": 59879,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 3170,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 64030,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 6520,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "long.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1000,
+          "utf8": " Your",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1240,
+          "utf8": " heart's",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1560,
+          "utf8": " been",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1880,
+          "utf8": " aching,",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2200,
+          "utf8": " but",
+        },
+      ],
+      "tStartMs": 64040,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 3370,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 67190,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 5400,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "you're",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 160,
+          "utf8": " too",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 480,
+          "utf8": " shy",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1040,
+          "utf8": " to",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1640,
+          "utf8": " say",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2640,
+          "utf8": " we",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2880,
+          "utf8": " don't",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3120,
+          "utf8": " know",
+        },
+      ],
+      "tStartMs": 67200,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 2050,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 70550,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 7239,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "what's",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 320,
+          "utf8": " been",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 879,
+          "utf8": " going",
+        },
+      ],
+      "tStartMs": 70560,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 5209,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 72590,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 8879,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "on.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1000,
+          "utf8": " We",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1160,
+          "utf8": " know",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1400,
+          "utf8": " the",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1720,
+          "utf8": " game",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2040,
+          "utf8": " and",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2280,
+          "utf8": " we're",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3080,
+          "utf8": " going",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3320,
+          "utf8": " to",
+        },
+      ],
+      "tStartMs": 72600,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 3690,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 77789,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 6761,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "play.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1000,
+          "utf8": " If",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1241,
+          "utf8": " you",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1640,
+          "utf8": " ask",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1960,
+          "utf8": " me",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2360,
+          "utf8": " how",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2601,
+          "utf8": " I'm",
+        },
+      ],
+      "tStartMs": 77799,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 3091,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 81469,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 6841,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "feeling,",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1000,
+          "utf8": " don't",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1241,
+          "utf8": " tell",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1481,
+          "utf8": " me",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1801,
+          "utf8": " your",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2041,
+          "utf8": " truth.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2921,
+          "utf8": " to",
+        },
+      ],
+      "tStartMs": 81479,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 3770,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 84550,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 3760,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "see.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 960,
+          "utf8": " I",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1120,
+          "utf8": " will",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1440,
+          "utf8": " give",
+        },
+      ],
+      "tStartMs": 84560,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 89870,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 4840,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "you",
+        },
+      ],
+      "tStartMs": 89880,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 3010,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 91710,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 3000,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "around",
+        },
+      ],
+      "tStartMs": 91720,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 94990,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 4040,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "you.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1000,
+          "utf8": " I",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1159,
+          "utf8": " will",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1479,
+          "utf8": " say",
+        },
+      ],
+      "tStartMs": 95000,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 99550,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 7199,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "goodbye",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1000,
+          "utf8": " and",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1160,
+          "utf8": " hurt",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1840,
+          "utf8": " you.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2840,
+          "utf8": " I",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3000,
+          "utf8": " will",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3320,
+          "utf8": " give",
+        },
+      ],
+      "tStartMs": 99560,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 2779,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 103980,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 4610,
+      "segs": [
+        Seg {
+          "utf8": "[Music]",
+        },
+      ],
+      "tStartMs": 103990,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 1851,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 106749,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 9161,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "you",
+        },
+      ],
+      "tStartMs": 106759,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 7330,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 108590,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 7320,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "around",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1000,
+          "utf8": " you.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2280,
+          "utf8": " I",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2440,
+          "utf8": " will",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2680,
+          "utf8": " leave",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3360,
+          "utf8": " you.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 4360,
+          "utf8": " I",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 4519,
+          "utf8": " will",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 4760,
+          "utf8": " say",
+        },
+      ],
+      "tStartMs": 108600,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 116429,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 4640,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "goodbye",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1000,
+          "utf8": " and",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1241,
+          "utf8": " hurt",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1640,
+          "utf8": " you.",
+        },
+      ],
+      "tStartMs": 116439,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 128309,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 4241,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "Never",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 321,
+          "utf8": " going",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 481,
+          "utf8": " to",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 640,
+          "utf8": " give.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 881,
+          "utf8": " Never",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1121,
+          "utf8": " going",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1280,
+          "utf8": " to",
+        },
+      ],
+      "tStartMs": 128319,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 2811,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 129749,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 4241,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "give.",
+        },
+      ],
+      "tStartMs": 129759,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 1450,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 132550,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 4240,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "Never",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 319,
+          "utf8": " going",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 480,
+          "utf8": " to",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 560,
+          "utf8": " give.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 880,
+          "utf8": " Never",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1120,
+          "utf8": " going",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1280,
+          "utf8": " to",
+        },
+      ],
+      "tStartMs": 132560,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 2810,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 133990,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 7040,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "give.",
+        },
+      ],
+      "tStartMs": 134000,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 4250,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 136790,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 6880,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "We've",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 320,
+          "utf8": " known",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 640,
+          "utf8": " each",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1079,
+          "utf8": " other",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2079,
+          "utf8": " for",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2400,
+          "utf8": " so",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2640,
+          "utf8": " long.",
+        },
+      ],
+      "tStartMs": 136800,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 2650,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 141030,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 6480,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "Your",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 240,
+          "utf8": " heart's",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 559,
+          "utf8": " been",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 880,
+          "utf8": " aching,",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1360,
+          "utf8": " but",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2080,
+          "utf8": " you're",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2400,
+          "utf8": " too",
+        },
+      ],
+      "tStartMs": 141040,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 3850,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 143670,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 4840,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "shy",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 559,
+          "utf8": " to",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 800,
+          "utf8": " say",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1160,
+          "utf8": " it.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2160,
+          "utf8": " We",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2400,
+          "utf8": " both",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2639,
+          "utf8": " know",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2880,
+          "utf8": " what's",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3199,
+          "utf8": " been",
+        },
+      ],
+      "tStartMs": 143680,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 1010,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 147510,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 4719,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "going",
+        },
+      ],
+      "tStartMs": 147520,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 3729,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 148510,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 9280,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "on.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1000,
+          "utf8": " We",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1240,
+          "utf8": " know",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1480,
+          "utf8": " the",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1799,
+          "utf8": " game",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2040,
+          "utf8": " and",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2280,
+          "utf8": " we're",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3160,
+          "utf8": " going",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3400,
+          "utf8": " to",
+        },
+      ],
+      "tStartMs": 148520,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 5571,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 152229,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 9121,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "play",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 481,
+          "utf8": " it.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1561,
+          "utf8": " I",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2561,
+          "utf8": " just",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2881,
+          "utf8": " want",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3041,
+          "utf8": " to",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3360,
+          "utf8": " tell",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3521,
+          "utf8": " you",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3921,
+          "utf8": " how",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 4161,
+          "utf8": " I'm",
+        },
+      ],
+      "tStartMs": 152239,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 3570,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 157790,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 6120,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "feeling.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1000,
+          "utf8": " Got",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1240,
+          "utf8": " to",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1480,
+          "utf8": " make",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1719,
+          "utf8": " you",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2560,
+          "utf8": " understand.",
+        },
+      ],
+      "tStartMs": 157800,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 2570,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 161350,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 5440,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "Never",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 320,
+          "utf8": " going",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 480,
+          "utf8": " to",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 640,
+          "utf8": " give",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 959,
+          "utf8": " you",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1440,
+          "utf8": " up.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2159,
+          "utf8": " Never",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2400,
+          "utf8": " going",
+        },
+      ],
+      "tStartMs": 161360,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 2890,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 163910,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 7360,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "to",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 160,
+          "utf8": " let",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 480,
+          "utf8": " you",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 880,
+          "utf8": " down.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1760,
+          "utf8": " Never",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2000,
+          "utf8": " going",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2080,
+          "utf8": " to",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2319,
+          "utf8": " run",
+        },
+      ],
+      "tStartMs": 163920,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 4490,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 166790,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 4480,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "around",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 719,
+          "utf8": " and",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1280,
+          "utf8": " desert",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1920,
+          "utf8": " you.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2480,
+          "utf8": " Heat.",
+        },
+      ],
+      "tStartMs": 166800,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 172320,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 10430,
+      "segs": [
+        Seg {
+          "utf8": "[Music]",
+        },
+      ],
+      "tStartMs": 172330,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 4010,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 178750,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 4000,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "Heat.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1000,
+          "utf8": " Heat. Heat.",
+        },
+      ],
+      "tStartMs": 178760,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 183380,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 11810,
+      "segs": [
+        Seg {
+          "utf8": "[Music]",
+        },
+      ],
+      "tStartMs": 183390,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 4170,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 191030,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 6720,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "Never",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 240,
+          "utf8": " going",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 320,
+          "utf8": " to",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 479,
+          "utf8": " tell",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 960,
+          "utf8": " a",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1400,
+          "utf8": " lie",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2400,
+          "utf8": " and",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2640,
+          "utf8": " hurt",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3160,
+          "utf8": " you.",
+        },
+      ],
+      "tStartMs": 191040,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 2570,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 195190,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 5440,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "Never",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 319,
+          "utf8": " going",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 399,
+          "utf8": " to",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 640,
+          "utf8": " give",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 959,
+          "utf8": " you",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1360,
+          "utf8": " up.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2080,
+          "utf8": " Never",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2399,
+          "utf8": " going",
+        },
+      ],
+      "tStartMs": 195200,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 2890,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 197750,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 6479,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "to",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 160,
+          "utf8": " let",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 479,
+          "utf8": " you",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 800,
+          "utf8": " down.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1680,
+          "utf8": " Never",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1920,
+          "utf8": " going",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2080,
+          "utf8": " to",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2320,
+          "utf8": " run",
+        },
+      ],
+      "tStartMs": 197760,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 3609,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 200630,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 6200,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "around",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 640,
+          "utf8": " and",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1280,
+          "utf8": " desert",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2040,
+          "utf8": " you.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3040,
+          "utf8": " Never",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3280,
+          "utf8": " going",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 3440,
+          "utf8": " to",
+        },
+      ],
+      "tStartMs": 200640,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 2611,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 204229,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 7640,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "make",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 321,
+          "utf8": " you",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 720,
+          "utf8": " cry.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1521,
+          "utf8": " Never",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1761,
+          "utf8": " going",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1920,
+          "utf8": " to",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2161,
+          "utf8": " say",
+        },
+      ],
+      "tStartMs": 204239,
+      "wWinId": 1,
+    },
+    Event {
+      "aAppend": 1,
+      "dDurationMs": 5049,
+      "segs": [
+        Seg {
+          "utf8": "
+",
+        },
+      ],
+      "tStartMs": 206830,
+      "wWinId": 1,
+    },
+    Event {
+      "dDurationMs": 5039,
+      "segs": [
+        Seg {
+          "acAsrConf": 0,
+          "utf8": "goodbye.",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1000,
+          "utf8": " Never",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1319,
+          "utf8": " going",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1399,
+          "utf8": " to",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 1720,
+          "utf8": " say",
+        },
+        Seg {
+          "acAsrConf": 0,
+          "tOffsetMs": 2039,
+          "utf8": " goodbye.",
+        },
+      ],
+      "tStartMs": 206840,
+      "wWinId": 1,
+    },
+  ],
+  "wireMagic": "pb3",
+}
+`;

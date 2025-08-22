@@ -1,7 +1,7 @@
 <script lang="ts">
   import TextEvent from "$lib/components/TextEvent.svelte";
   import YouTube from "$lib/components/YouTube.svelte";
-  import { YoutubeInfo } from "$lib/schema/youtube_info.js";
+  import { YoutubeInfoJson } from "$lib/schema/youtube_info.js";
   import { json3Schema, ytInfoZod } from "$lib/yt.js";
   import * as S from "effect/Schema";
 
@@ -13,7 +13,7 @@
   if (!movie) throw new Error("Movie not found");
 
   const ytInfo = ytInfoZod(movie.data!);
-  const ytInfoS = S.decodeSync(YoutubeInfo)(movie.data!);
+  //   const ytInfoS = S.decodeSync(YoutubeInfoJson)(movie.data!);
 
   const caption = movie.captions.find((c) => c.typ == "json3");
   const json3 = caption ? json3Schema(caption.data!) : null;
