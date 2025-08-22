@@ -3,7 +3,7 @@
 exports[`Json3 > parse 1`] = `
 Json3 {
   "events": [
-    Event {
+    Event1 {
       "dDurationMs": 211879,
       "id": 1,
       "tStartMs": 0,
