@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { ytInfoSchema } from "./zod-schema";
 import * as S from "effect/Schema";
+import { ParseResult } from "effect";
 
 export const YouTubeVideoId = S.String.pipe(
-  S.transform(
+  S.transformOrFail(
     S.String.pipe(
       S.pattern(/^[a-zA-Z0-9_-]{11}$/), // YouTube video IDs are 11 characters long
       S.annotations({
@@ -12,24 +13,31 @@ export const YouTubeVideoId = S.String.pipe(
       }),
     ),
     {
-      decode: (url: string) => {
-        if (url.length === 11) return url;
+      strict: true,
+      decode: (url: string, _, ast) => {
+        if (url.length === 11) return ParseResult.succeed(url);
         const urlObj = new URL(url);
         const hostname = urlObj.hostname;
         if (hostname === "youtu.be") {
-          return urlObj.pathname.slice(1);
+          return ParseResult.succeed(urlObj.pathname.slice(1));
         }
         if (hostname === "www.youtube.com" || hostname === "youtube.com") {
           if (urlObj.searchParams.has("v")) {
-            return urlObj.searchParams.get("v")!;
+            return ParseResult.succeed(urlObj.searchParams.get("v")!);
           }
           if (urlObj.pathname.startsWith("/embed/")) {
-            return urlObj.pathname.slice(7);
+            return ParseResult.succeed(urlObj.pathname.slice(7));
           }
         }
-        return "";
+        return ParseResult.fail(
+          new ParseResult.Type(
+            ast, // Provide the schema's abstract syntax tree for context
+            url, // Include the problematic input
+            "Failed to extract YoutubeUrl", // Optional custom error message
+          ),
+        );
       },
-      encode: (id: string) => id, // The ID can be used as-is
+      encode: (id: string) => ParseResult.succeed(id), // The ID can be used as-is
     },
   ),
   S.annotations({

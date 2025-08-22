@@ -10,6 +10,10 @@ describe("yt.ts", () => {
     expect(decode(id)).toBe(id);
     expect(decode(`https://www.youtube.com/watch?v=${id}`)).toBe(id);
     expect(decode(`https://youtu.be/${id}`)).toBe(id);
+    expect(decode(`https://youtu.be/${id}`)).toBe(id);
+    expect(() => {
+      decode("invalid-id");
+    }).toThrow("Invalid URL");
   });
 
   test("YtInfo", () => {
