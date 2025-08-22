@@ -6,7 +6,6 @@ import { mp3Path } from "$lib/server/utils";
 import * as fs from "fs";
 import { transcribe } from "$lib/whisper";
 import type { Segment, Word } from "$lib/types";
-import type { whisperApiSchema } from "$lib/zod-schema";
 import type z from "zod";
 
 export async function createTranscription(m: typeof movies.$inferSelect) {

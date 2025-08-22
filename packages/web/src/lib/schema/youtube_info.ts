@@ -1,78 +1,14 @@
 import * as S from "effect/Schema";
 
-export const Acodec = S.Literal("mp4a.40.2", "none", "opus");
-export type Acodec = S.Schema.Type<typeof Acodec>;
-
 export const AutomaticCaptionExt = S.Literal("json3", "srt", "srv1", "srv2", "srv3", "ttml", "vtt");
-export type AutomaticCaptionExt = S.Schema.Type<typeof AutomaticCaptionExt>;
-
-export const YtDlpClient = S.Literal("tv");
-export type YtDlpClient = S.Schema.Type<typeof YtDlpClient>;
-
-export const DynamicRange = S.Literal("SDR");
-export type DynamicRange = S.Schema.Type<typeof DynamicRange>;
 
 export const AudioExtEnum = S.Literal("m4a", "mhtml", "mp4", "none", "webm");
-export type AudioExtEnum = S.Schema.Type<typeof AudioExtEnum>;
-
-export const Container = S.Literal("m4a_dash", "mp4_dash", "webm_dash");
-export type Container = S.Schema.Type<typeof Container>;
-
-export const Accept = S.Literal("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-export type Accept = S.Schema.Type<typeof Accept>;
-
-export const AcceptLanguage = S.Literal("en-us,en;q=0.5");
-export type AcceptLanguage = S.Schema.Type<typeof AcceptLanguage>;
-
-export const SecFetchMode = S.Literal("navigate");
-export type SecFetchMode = S.Schema.Type<typeof SecFetchMode>;
-
-export const Language = S.Literal("en");
-export type Language = S.Schema.Type<typeof Language>;
-
-export const Protocol = S.Literal("https", "m3u8_native", "mhtml");
-export type Protocol = S.Schema.Type<typeof Protocol>;
-
-export class Version extends S.Class<Version>("Version")({
-  version: S.String,
-  current_git_head: S.Null,
-  release_git_head: S.String,
-  repository: S.String,
-}) {}
-
-export class Thumbnail extends S.Class<Thumbnail>("Thumbnail")({
-  url: S.String,
-  preference: S.Number,
-  id: S.String,
-  height: S.optional(S.NullOr(S.Number)),
-  width: S.optional(S.NullOr(S.Number)),
-  resolution: S.optional(S.NullOr(S.String)),
-}) {}
-
-export class Subtitles extends S.Class<Subtitles>("Subtitles")({}) {}
-
-export class HttpHeaders extends S.Class<HttpHeaders>("HttpHeaders")({
-  "User-Agent": S.String,
-  Accept: Accept,
-  "Accept-Language": AcceptLanguage,
-  "Sec-Fetch-Mode": SecFetchMode,
-}) {}
-
-export class Fragment extends S.Class<Fragment>("Fragment")({
-  url: S.String,
-  duration: S.Number,
-}) {}
-
-export class DownloaderOptions extends S.Class<DownloaderOptions>("DownloaderOptions")({
-  http_chunk_size: S.Number,
-}) {}
 
 export class Format extends S.Class<Format>("Format")({
   format_id: S.String,
   format_note: S.optional(S.NullOr(S.String)),
-  ext: AudioExtEnum,
-  protocol: Protocol,
-  acodec: S.optional(S.NullOr(Acodec)),
+  ext: S.String,
+  acodec: S.optional(S.String),
   vcodec: S.String,
   url: S.String,
   width: S.optional(S.NullOr(S.Number)),
@@ -80,7 +16,7 @@ export class Format extends S.Class<Format>("Format")({
   fps: S.optional(S.NullOr(S.Number)),
   rows: S.optional(S.NullOr(S.Number)),
   columns: S.optional(S.NullOr(S.Number)),
-  fragments: S.optional(S.NullOr(S.Array(Fragment))),
+  //   fragments: S.optional(S.NullOr(S.Array(Fragment))),
   audio_ext: AudioExtEnum,
   video_ext: AudioExtEnum,
   vbr: S.NullOr(S.Number),
@@ -89,11 +25,10 @@ export class Format extends S.Class<Format>("Format")({
   resolution: S.String,
   aspect_ratio: S.NullOr(S.Number),
   filesize_approx: S.optional(S.NullOr(S.Number)),
-  http_headers: HttpHeaders,
   format: S.String,
   format_index: S.optional(S.Null),
   manifest_url: S.optional(S.NullOr(S.String)),
-  language: S.optional(S.NullOr(Language)),
+  //  language: S.optional(S.NullOr(Language)),
   preference: S.optional(S.Null),
   quality: S.optional(S.NullOr(S.Number)),
   has_drm: S.optional(S.NullOr(S.Boolean)),
@@ -103,9 +38,9 @@ export class Format extends S.Class<Format>("Format")({
   filesize: S.optional(S.NullOr(S.Number)),
   audio_channels: S.optional(S.NullOr(S.Number)),
   language_preference: S.optional(S.NullOr(S.Number)),
-  dynamic_range: S.optional(S.NullOr(DynamicRange)),
-  container: S.optional(S.NullOr(Container)),
-  downloader_options: S.optional(S.NullOr(DownloaderOptions)),
+  //   dynamic_range: S.optional(S.NullOr(DynamicRange)),
+  //   container: S.optional(S.NullOr(Container)),
+  //   downloader_options: S.optional(S.NullOr(DownloaderOptions)),
 }) {}
 
 export class Chapter extends S.Class<Chapter>("Chapter")({
@@ -119,14 +54,14 @@ export class AutomaticCaption extends S.Class<AutomaticCaption>("AutomaticCaptio
   url: S.String,
   name: S.String,
   impersonate: S.Boolean,
-  __yt_dlp_client: YtDlpClient,
+  //   __yt_dlp_client: YtDlpClient,
 }) {}
 
 export class YoutubeInfo extends S.Class<YoutubeInfo>("YoutubeInfo")({
   id: S.String,
   title: S.String,
   formats: S.Array(Format),
-  thumbnails: S.Array(Thumbnail),
+  //   thumbnails: S.Array(Thumbnail),
   thumbnail: S.String,
   description: S.String,
   channel_id: S.String,
@@ -144,7 +79,7 @@ export class YoutubeInfo extends S.Class<YoutubeInfo>("YoutubeInfo")({
   release_timestamp: S.Null,
   _format_sort_fields: S.Array(S.String),
   automatic_captions: S.Record({ key: S.String, value: S.Array(AutomaticCaption) }),
-  subtitles: Subtitles,
+  //   subtitles: Subtitles,
   comment_count: S.Number,
   chapters: S.Array(Chapter),
   heatmap: S.Null,
@@ -178,7 +113,7 @@ export class YoutubeInfo extends S.Class<YoutubeInfo>("YoutubeInfo")({
   format_id: S.String,
   ext: AudioExtEnum,
   protocol: S.String,
-  language: Language,
+  //   language: Language,
   format_note: S.String,
   filesize_approx: S.Number,
   tbr: S.Number,
@@ -186,17 +121,19 @@ export class YoutubeInfo extends S.Class<YoutubeInfo>("YoutubeInfo")({
   height: S.Number,
   resolution: S.String,
   fps: S.Number,
-  dynamic_range: DynamicRange,
+  //   dynamic_range: DynamicRange,
   vcodec: S.String,
   vbr: S.Number,
   stretched_ratio: S.Null,
   aspect_ratio: S.Number,
-  acodec: Acodec,
+  // acodec: Acodec,
   abr: S.Number,
   asr: S.Number,
   audio_channels: S.Number,
   _filename: S.String,
   filename: S.String,
   _type: S.String,
-  _version: Version,
+  //   _version: Version,
 }) {}
+
+export const YoutubeInfoJson = S.parseJson(YoutubeInfo);

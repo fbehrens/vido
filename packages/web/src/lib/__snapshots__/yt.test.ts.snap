@@ -1,3 +1,3 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`yt.ts > YtInfo 1`] = `"https://www.youtube.com/api/timedtext?v=rg7Fvvl3taU&ei=s6CoZqzFM4W76dsP2PL7uAc&caps=asr&opi=112496729&exp=xbt&xoaf=5&hl=en&ip=0.0.0.0&ipbits=0&expire=1722352419&sparams=ip%2Cipbits%2Cexpire%2Cv%2Cei%2Ccaps%2Copi%2Cexp%2Cxoaf&signature=4C8F704290B64888F9387BBDFC01B265D30BF2CC.2FAFE0592B5F37666405C10BE1B82C5AF53E0071&key=yt8&kind=asr&lang=en&fmt=json3"`;
+exports[`yt.ts > YtInfo 1`] = `"https://www.youtube.com/api/timedtext?v=o1JgW_4MTWI&ei=SpSgaJfbJJulzPsPloH2sQc&caps=asr&opi=112496729&xoaf=5&hl=en&ip=0.0.0.0&ipbits=0&expire=1755379386&sparams=ip%2Cipbits%2Cexpire%2Cv%2Cei%2Ccaps%2Copi%2Cxoaf&signature=228FC7D235124160489567ED09CA210B6B9C540B.1C9113645534D6BD9A69F0CB3A3562C47ED95E82&key=yt8&kind=asr&lang=en&fmt=json3"`;

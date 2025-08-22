@@ -1,15 +1,20 @@
 <script lang="ts">
   import TextEvent from "$lib/components/TextEvent.svelte";
   import YouTube from "$lib/components/YouTube.svelte";
+  import { YoutubeInfo } from "$lib/schema/youtube_info.js";
   import { json3Schema, ytInfoZod } from "$lib/yt.js";
-  import { error } from "@sveltejs/kit";
-  console.log("page");
+  import * as S from "effect/Schema";
+
+  //   import * as S from "effect/Schema";
   let { data } = $props();
   let { movie } = data;
   let time = $state(0);
   let player = $state<YT.Player>();
   if (!movie) throw new Error("Movie not found");
+
   const ytInfo = ytInfoZod(movie.data!);
+  const ytInfoS = S.decodeSync(YoutubeInfo)(movie.data!);
+
   const caption = movie.captions.find((c) => c.typ == "json3");
   const json3 = caption ? json3Schema(caption.data!) : null;
 

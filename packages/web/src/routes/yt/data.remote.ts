@@ -8,7 +8,6 @@ import { error } from "@sveltejs/kit";
 import { eq, sql, isNotNull, desc } from "drizzle-orm";
 
 export const getYoutube = query(async () => {
-  console.log("getMovies");
   const yt = await db
     .select({ id: movies.id, youtubeId: movies.youtubeId, title: movies.title })
     .from(movies)
