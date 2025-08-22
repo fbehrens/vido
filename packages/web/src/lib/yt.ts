@@ -1,23 +1,42 @@
 import { z } from "zod";
 import { ytInfoSchema } from "./zod-schema";
+import * as S from "effect/Schema";
 
-export function ytGetId(url: string): string | null {
-  if (url.length === 11) return url;
-  const urlObj = new URL(url);
-  const hostname = urlObj.hostname;
-  if (hostname === "youtu.be") {
-    return urlObj.pathname.slice(1);
-  }
-  if (hostname === "www.youtube.com" || hostname === "youtube.com") {
-    if (urlObj.searchParams.has("v")) {
-      return urlObj.searchParams.get("v");
-    }
-    if (urlObj.pathname.startsWith("/embed/")) {
-      return urlObj.pathname.slice(7);
-    }
-  }
-  return null;
-}
+export const YouTubeVideoId = S.String.pipe(
+  S.transform(
+    S.String.pipe(
+      S.pattern(/^[a-zA-Z0-9_-]{11}$/), // YouTube video IDs are 11 characters long
+      S.annotations({
+        title: "YouTube Video ID",
+        description: "A valid YouTube video ID (11 characters)",
+      }),
+    ),
+    {
+      decode: (url: string) => {
+        if (url.length === 11) return url;
+        const urlObj = new URL(url);
+        const hostname = urlObj.hostname;
+        if (hostname === "youtu.be") {
+          return urlObj.pathname.slice(1);
+        }
+        if (hostname === "www.youtube.com" || hostname === "youtube.com") {
+          if (urlObj.searchParams.has("v")) {
+            return urlObj.searchParams.get("v")!;
+          }
+          if (urlObj.pathname.startsWith("/embed/")) {
+            return urlObj.pathname.slice(7);
+          }
+        }
+        return "";
+      },
+      encode: (id: string) => id, // The ID can be used as-is
+    },
+  ),
+  S.annotations({
+    title: "YouTube URL to Video ID",
+    description: "Transforms YouTube URLs or video IDs into standardized video IDs",
+  }),
+);
 
 function applySchema(s: string, schema: z.ZodSchema<any>) {
   const o = JSON.parse(s);

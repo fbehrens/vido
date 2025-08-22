@@ -1,13 +1,15 @@
 import { describe, test, expect } from "vitest";
-import { json3Schema, ytInfoZod, get_json3_url, ytGetId } from "./yt";
+import { json3Schema, ytInfoZod, get_json3_url, YouTubeVideoId } from "./yt";
 import { readFixture } from "./server/utils";
+import * as S from "effect/Schema";
 
 describe("yt.ts", () => {
-  test("ytGetId", () => {
+  test("YouTubeVideoId", () => {
     const id = "o1JgW_4MTWI";
-    expect(ytGetId(id)).toBe(id);
-    expect(ytGetId(`https://www.youtube.com/watch?v=${id}`)).toBe(id);
-    expect(ytGetId(`https://youtu.be/${id}`)).toBe(id);
+    const decode = S.decodeSync(YouTubeVideoId);
+    expect(decode(id)).toBe(id);
+    expect(decode(`https://www.youtube.com/watch?v=${id}`)).toBe(id);
+    expect(decode(`https://youtu.be/${id}`)).toBe(id);
   });
 
   test("YtInfo", () => {

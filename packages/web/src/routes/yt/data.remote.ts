@@ -1,10 +1,10 @@
 import { command, form, query } from "$app/server";
 import { db } from "$lib/server/db";
+import * as S from "effect/Schema";
 import { captions, movies } from "$lib/server/db/schema/vido";
 import { ytGetInfo } from "$lib/server/yt";
 import { sqliteDate } from "$lib/server/utils";
-import { get_json3_url, ytGetId, ytInfoZod } from "$lib/yt";
-import { error } from "@sveltejs/kit";
+import { get_json3_url, ytInfoZod, YouTubeVideoId } from "$lib/yt";
 import { eq, sql, isNotNull, desc } from "drizzle-orm";
 
 export const getYoutube = query(async () => {
@@ -26,7 +26,7 @@ export const createYoutube = form(async (data) => {
   const url = data.get("url") as string;
   console.log({ url });
 
-  const youtubeId = ytGetId(url);
+  const youtubeId = S.decodeSync(YouTubeVideoId)(url);
   if (!youtubeId) {
     console.log({ err: `Do not have youtubeId`, url });
     return;
