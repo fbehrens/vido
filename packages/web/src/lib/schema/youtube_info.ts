@@ -2,7 +2,7 @@ import * as S from "effect/Schema";
 
 export const AutomaticCaptionExt = S.Literal("json3", "srt", "srv1", "srv2", "srv3", "ttml", "vtt");
 
-export const AudioExtEnum = S.Literal("m4a", "mhtml", "mp4", "none", "webm");
+export const AudioExtEnum = S.Literal("m4a", "mhtml", "mp4", "none", "webm", "mkv");
 
 export class Format extends S.Class<Format>("Format")({
   format_id: S.String,
@@ -52,8 +52,8 @@ export class Chapter extends S.Class<Chapter>("Chapter")({
 export class AutomaticCaption extends S.Class<AutomaticCaption>("AutomaticCaption")({
   ext: AutomaticCaptionExt,
   url: S.String,
-  name: S.String,
-  impersonate: S.Boolean,
+  name: S.optional(S.String),
+  //   impersonate: S.Boolean,
   //   __yt_dlp_client: YtDlpClient,
 }) {}
 
@@ -81,8 +81,8 @@ export class YoutubeInfo extends S.Class<YoutubeInfo>("YoutubeInfo")({
   automatic_captions: S.Record({ key: S.String, value: S.Array(AutomaticCaption) }),
   //   subtitles: Subtitles,
   comment_count: S.Number,
-  chapters: S.Array(Chapter),
-  heatmap: S.Null,
+  chapters: S.NullOr(S.Array(Chapter)),
+  //   heatmap: S.Null,
   like_count: S.Number,
   channel: S.String,
   channel_follower_count: S.Number,
