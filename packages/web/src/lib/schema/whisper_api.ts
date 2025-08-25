@@ -1,5 +1,5 @@
 import * as S from "effect/Schema";
-import { Letters, NonLetters } from "../utils";
+import { Letters, NonLetters } from "$lib/helper";
 export const Word = S.Struct({
   word: S.String,
   start: S.Number,

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { getFileDir } from "./server/utils";
-import { unexpectedChars } from "./utils";
+import { unexpectedChars } from "./helper";
 const filename = "static/mov/test.mov";
 describe("Util", () => {
   it("fileDir", () => {
