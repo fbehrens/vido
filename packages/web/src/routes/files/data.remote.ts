@@ -6,40 +6,43 @@ import { sqliteDate } from "$lib/server/utils";
 import { isNotNull } from "drizzle-orm";
 import { readdirSync, statSync } from "node:fs";
 import { extname, join } from "node:path";
-import { file } from "zod/v4";
-
-export interface MyFile {
-  filename: string;
-  size: number;
-  id?: number;
-}
 
 const static_dir = process.cwd() + "/static/";
+interface FileSystem {
+  filename: string;
+  size: number;
+}
 
-function getAllFiles(dirPath: string, arrayOfFiles: MyFile[] = []) {
-  const files = readdirSync(dirPath);
-  files.forEach((file) => {
-    const filePath = join(dirPath, file);
-    const stat = statSync(filePath);
-    if (stat.isDirectory()) {
-      arrayOfFiles = getAllFiles(filePath, arrayOfFiles);
-    } else {
-      arrayOfFiles.push({
-        filename: filePath.replace(static_dir, ""),
-        size: stat.size,
-      });
+interface FileSystem {
+  filename: string;
+  size: number;
+}
+
+function getAllFiles(dirPath: string): FileSystem[] {
+  const result: FileSystem[] = [];
+  const stack = [dirPath];
+
+  while (stack.length) {
+    const current = stack.pop()!;
+    for (const file of readdirSync(current)) {
+      const filePath = join(current, file);
+      const stat = statSync(filePath);
+      if (stat.isDirectory()) {
+        stack.push(filePath);
+      } else {
+        result.push({
+          filename: filePath.slice(static_dir.length),
+          size: stat.size,
+        });
+      }
     }
-  });
-  return arrayOfFiles;
+  }
+  return result;
 }
 const extsVideo = [".mov", ".mp4", ".mkv"];
 
-const files = async () => {
-  const ms: Map<
-    string,
-    { id: number; title: string; duration: number; framerate: number; created_at: string }
-  > = new Map();
-  for (const { id, filename, title, duration, framerate, created_at } of await db
+const movis = async () =>
+  await db
     .select({
       id: movies.id,
       filename: movies.filename,
@@ -49,19 +52,26 @@ const files = async () => {
       created_at: movies.created_at,
     })
     .from(movies)
-    .where(isNotNull(movies.filename))) {
-    ms.set(filename!, { id, title, duration, framerate: framerate!, created_at });
+    .where(isNotNull(movies.filename));
+
+type Movi = Awaited<ReturnType<typeof movis>>[number];
+
+const db_files = async () => {
+  const movis_map = new Map<string, Movi>();
+  for (const { id, filename, title, duration, framerate, created_at } of await movis()) {
+    movis_map.set(filename!, { id, filename, title, duration, framerate: framerate!, created_at });
   }
   const files = getAllFiles(static_dir)
     .filter((f) => extsVideo.includes(extname(f.filename)))
-    .map((f) => ({ ...f, ...ms.get(f.filename) }));
-  console.log({ ms, files });
+    .map((f) => ({ ...f, ...movis_map.get(f.filename) }));
   return files;
 };
-export const getFiles = query(async () => await files());
+export type Files = Awaited<ReturnType<typeof db_files>>[number];
+
+export const getFiles = query(async () => await db_files());
 
 export const insertMovies = command(async () => {
-  const fs = (await files()).filter((f) => f.id === undefined);
+  const fs = (await db_files()).filter((f) => f.id === undefined);
   for (const f of fs) {
     const movie = {
       filename: f.filename,
