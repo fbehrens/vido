@@ -25,3 +25,19 @@ export function formatSize(bytes: number): string {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 }
+
+export function formatDuration(seconds: number): string {
+  if (isNaN(seconds) || seconds < 0) {
+    return "Invalid duration";
+  }
+
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
+
+  const hoursStr = String(hours).padStart(2, "0");
+  const minutesStr = String(minutes).padStart(2, "0");
+  const secsStr = String(secs).padStart(2, "0");
+
+  return `${hoursStr}:${minutesStr}:${secsStr}`;
+}

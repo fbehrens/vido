@@ -1,7 +1,13 @@
 <script lang="ts" generics="TData, TValue">
-  import { type ColumnDef, getCoreRowModel } from "@tanstack/table-core";
+  import {
+    type ColumnDef,
+    type ColumnFiltersState,
+    getCoreRowModel,
+    getFilteredRowModel,
+  } from "@tanstack/table-core";
   import { createSvelteTable, FlexRender } from "$lib/components/ui/data-table/index.js";
   import * as Table from "$lib/components/ui/table/index.js";
+  import { Input } from "$lib/components/ui/input";
 
   type DataTableProps<TData, TValue> = {
     columns: ColumnDef<TData, TValue>[];
@@ -9,15 +15,42 @@
   };
 
   let { data, columns }: DataTableProps<TData, TValue> = $props();
-
+  let columnFilters = $state<ColumnFiltersState>([]);
   const table = createSvelteTable({
     get data() {
       return data;
     },
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnFiltersChange: (updater) => {
+      if (typeof updater === "function") {
+        columnFilters = updater(columnFilters);
+      } else {
+        columnFilters = updater;
+      }
+    },
+    state: {
+      get columnFilters() {
+        return columnFilters;
+      },
+    },
   });
 </script>
+
+<div class="flex flex-col items-start">
+  <Input
+    placeholder="Filter filename..."
+    value={(table.getColumn("filename")?.getFilterValue() as string) ?? ""}
+    onchange={(e) => {
+      table.getColumn("filename")?.setFilterValue(e.currentTarget.value);
+    }}
+    oninput={(e) => {
+      table.getColumn("filename")?.setFilterValue(e.currentTarget.value);
+    }}
+    class="max-w-sm"
+  />
+</div>
 
 <div class="rounded-md border">
   <Table.Root>

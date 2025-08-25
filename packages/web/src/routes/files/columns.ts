@@ -5,9 +5,8 @@ import type { ColumnDef } from "@tanstack/table-core";
 // import DataTableEmailButton from "./data-table-email-button.svelte";
 // import { Checkbox } from "$lib/components/ui/checkbox/index.js";
 import type { Files } from "./data.remote";
-import { createRawSnippet } from "svelte";
-import { renderSnippet } from "$lib/components/ui/data-table";
-import { formatSize } from "$lib/helper";
+
+import { formatDuration, formatSize } from "$lib/helper";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -19,12 +18,7 @@ export const columns: ColumnDef<Files>[] = [
   },
   {
     accessorKey: "filename",
-    header: () => {
-      const filenameHeaderSnippet = createRawSnippet(() => ({
-        render: () => `<div class="text-left">filename</div>`,
-      }));
-      return renderSnippet(filenameHeaderSnippet, "");
-    },
+    header: "filename",
   },
   {
     accessorKey: "title",
@@ -38,6 +32,7 @@ export const columns: ColumnDef<Files>[] = [
   {
     accessorKey: "duration",
     header: "duration",
+    cell: ({ getValue }) => formatDuration(getValue() as number),
   },
   {
     accessorKey: "framerate",
