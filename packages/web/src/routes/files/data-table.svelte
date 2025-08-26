@@ -7,7 +7,6 @@
   } from "@tanstack/table-core";
   import { createSvelteTable, FlexRender } from "$lib/components/ui/data-table/index.js";
   import * as Table from "$lib/components/ui/table/index.js";
-  import { Input } from "$lib/components/ui/input";
 
   type DataTableProps<TData, TValue> = {
     columns: ColumnDef<TData, TValue>[];
@@ -37,20 +36,6 @@
     },
   });
 </script>
-
-<div class="flex flex-col items-start">
-  <Input
-    placeholder="Filter filename..."
-    value={(table.getColumn("filename")?.getFilterValue() as string) ?? ""}
-    onchange={(e) => {
-      table.getColumn("filename")?.setFilterValue(e.currentTarget.value);
-    }}
-    oninput={(e) => {
-      table.getColumn("filename")?.setFilterValue(e.currentTarget.value);
-    }}
-    class="max-w-sm"
-  />
-</div>
 
 <div class="rounded-md border">
   <Table.Root>

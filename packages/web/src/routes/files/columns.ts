@@ -1,10 +1,7 @@
-// import { renderComponent, renderSnippet } from "$lib/components/ui/data-table";
+import { renderComponent } from "$lib/components/ui/data-table/render-helpers";
 import type { ColumnDef } from "@tanstack/table-core";
-// import { createRawSnippet } from "svelte";
-// import DataTableActions from "./data-table-actions.svelte";
-// import DataTableEmailButton from "./data-table-email-button.svelte";
-// import { Checkbox } from "$lib/components/ui/checkbox/index.js";
 import type { Files } from "./data.remote";
+import FilenameHeader from "./FilenameHeader.svelte";
 
 import { formatDuration, formatSize } from "$lib/helper";
 
@@ -18,7 +15,7 @@ export const columns: ColumnDef<Files>[] = [
   },
   {
     accessorKey: "filename",
-    header: "filename",
+    header: ({ column }) => renderComponent(FilenameHeader, { column }),
   },
   {
     accessorKey: "title",
