@@ -1,7 +1,7 @@
 import { renderComponent } from "$lib/components/ui/data-table/render-helpers";
 import type { ColumnDef } from "@tanstack/table-core";
 import type { Files } from "./data.remote";
-import FilenameHeader from "./FilenameHeader.svelte";
+import FilenameHeader from "$lib/components/InputHeader.svelte";
 import { Checkbox } from "$lib/components/ui/checkbox/index.js";
 
 import { formatDuration, formatSize } from "$lib/helper";
@@ -33,7 +33,7 @@ export const columns: ColumnDef<Files>[] = [
   },
   {
     accessorKey: "filename",
-    header: ({ column }) => renderComponent(FilenameHeader, { column }),
+    header: ({ column }) => renderComponent(FilenameHeader, { column, a_key: "filename" }),
   },
   {
     accessorKey: "title",

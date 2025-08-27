@@ -3,13 +3,13 @@
   import type { Files } from "./data.remote";
   import { type Column } from "@tanstack/table-core";
 
-  const { column }: { column: Column<Files, unknown> } = $props(); // Column<Files, unknown>;
+  const { column, a_key }: { column: Column<Files, unknown>; a_key: string } = $props(); // Column<Files, unknown>;
 </script>
 
 <div class="flex flex-col items-start">
-  <div>filename</div>
+  <div>{a_key}</div>
   <Input
-    placeholder="Filter filename..."
+    placeholder={"Filter " + a_key + "..."}
     value={(column.getFilterValue() as string) ?? ""}
     oninput={(e) => {
       column.setFilterValue(e.currentTarget.value);
