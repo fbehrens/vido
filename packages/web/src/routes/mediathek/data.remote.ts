@@ -7,9 +7,10 @@ import * as S from "effect/Schema";
 const GetFmmsParam = S.Struct({ search: S.String, limit: S.Number });
 type GetFmmsParam = S.Schema.Type<typeof GetFmmsParam>;
 
-const flms = async (param: GetFmmsParam) => {
-  console.log({ param });
-  return await db_mediathek
+const where_clause = (s: string) => sql`${films.thema} like ${"%" + s + "%"} `;
+
+const flms = async (param: GetFmmsParam) =>
+  await db_mediathek
     .select({
       id: films.id,
       sender: films.sender,
@@ -19,10 +20,20 @@ const flms = async (param: GetFmmsParam) => {
       //   url: films.url,
     })
     .from(films)
-    .where(sql`${films.thema} like ${"%" + param.search + "%"} `)
+    .where(where_clause(param.search))
     .limit(param.limit);
-};
-
 export type Flm = Awaited<ReturnType<typeof flms>>[number];
 
-export const getFlms = query(S.standardSchemaV1(GetFmmsParam), async (p) => await flms(p));
+const flms_fromasync = async (param: GetFmmsParam) => {
+  const data = await flms(param);
+  const count =
+    data.length == param.limit
+      ? await db_mediathek.$count(films, where_clause(param.search))
+      : data.length;
+  return { data, count };
+};
+
+export const getFlms = query(
+  S.standardSchemaV1(GetFmmsParam),
+  async (p) => await flms_fromasync(p),
+);
