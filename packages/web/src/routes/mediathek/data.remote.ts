@@ -1,13 +1,14 @@
 import { command, query } from "$app/server";
 import { db_mediathek } from "$lib/server/db/mediathek";
 import { films } from "$lib/server/db/schema/mediathek";
-import { sql } from "drizzle-orm";
+import { SQL, sql } from "drizzle-orm";
 import * as S from "effect/Schema";
 
 const GetFmmsParam = S.Struct({ search: S.String, limit: S.Number });
 type GetFmmsParam = S.Schema.Type<typeof GetFmmsParam>;
 
-const where_clause = (s: string) => sql`${films.thema} like ${"%" + s + "%"} `;
+const where_clause = (s: string) =>
+  sql`${films.sender} || ${films.thema} || ${films.titel} || ${films.beschreibung} like ${"%" + s + "%"} `;
 
 const flms = async (param: GetFmmsParam) =>
   await db_mediathek
@@ -16,6 +17,7 @@ const flms = async (param: GetFmmsParam) =>
       sender: films.sender,
       thema: films.thema,
       titel: films.titel,
+      beschreibung: films.beschreibung,
       datum: films.datum,
       //   url: films.url,
     })

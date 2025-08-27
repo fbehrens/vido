@@ -43,4 +43,8 @@ export const columns: ColumnDef<Flm>[] = [
     accessorKey: "datum",
     header: "datum",
   },
+  {
+    accessorKey: "beschreibung",
+    header: "beschreibung",
+  },
 ];
