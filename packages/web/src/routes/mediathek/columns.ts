@@ -37,6 +37,7 @@ export const columns: ColumnDef<Flm>[] = [
   {
     accessorKey: "titel",
     header: ({ column }) => renderComponent(InputHeader, { column, a_key: "titel" }),
+    filterFn: "includesString", //Sensitive
   },
   {
     accessorKey: "datum",

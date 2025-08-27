@@ -1,13 +1,10 @@
 import { renderComponent } from "$lib/components/ui/data-table/render-helpers";
 import type { ColumnDef } from "@tanstack/table-core";
 import type { Files } from "./data.remote";
-import FilenameHeader from "$lib/components/InputHeader.svelte";
+import InputHeader from "$lib/components/InputHeader.svelte";
 import { Checkbox } from "$lib/components/ui/checkbox/index.js";
 
 import { formatDuration, formatSize } from "$lib/helper";
-
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
 
 export const columns: ColumnDef<Files>[] = [
   {
@@ -33,7 +30,7 @@ export const columns: ColumnDef<Files>[] = [
   },
   {
     accessorKey: "filename",
-    header: ({ column }) => renderComponent(FilenameHeader, { column, a_key: "filename" }),
+    header: ({ column }) => renderComponent(InputHeader, { column, a_key: "filename" }),
   },
   {
     accessorKey: "title",
