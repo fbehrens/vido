@@ -7,42 +7,22 @@
   <div class="hidden md:flex">
     <p class="mr-6">video transcripting</p>
     <nav class="flex items-center gap-6 text-sm">
-      <a
-        class={cn(
-          "transition-colors hover:text-foreground/80",
-          page.url.pathname.startsWith("/files")
-            ? "text-foreground"
-            : "text-foreground/60",
-        )}
-        href="/files">files</a
-      >
-      <a
-        class={cn(
-          "transition-colors hover:text-foreground/80",
-          page.url.pathname.startsWith("/movie")
-            ? "text-foreground"
-            : "text-foreground/60",
-        )}
-        href="/movie">movie</a
-      >
-      <a
-        class={cn(
-          "transition-colors hover:text-foreground/80",
-          page.url.pathname.startsWith("/yt")
-            ? "text-foreground"
-            : "text-foreground/60",
-        )}
-        href="/yt">youtube</a
-      >
-      <a
-        class={cn(
-          "transition-colors hover:text-foreground/80",
-          page.url.pathname.startsWith("/mockup")
-            ? "text-foreground"
-            : "text-foreground/60",
-        )}
-        href="/mockup">mockup</a
-      >
+      {#snippet entry(route: string)}
+        <a
+          class={cn(
+            "transition-colors hover:text-foreground/80",
+            page.url.pathname.startsWith("/" + route)
+              ? "bg-blue-100 text-foreground"
+              : "text-foreground/60",
+          )}
+          href={"/" + route}>{route}</a
+        >
+      {/snippet}
+      {@render entry("files")}
+      {@render entry("movie")}
+      {@render entry("yt")}
+      {@render entry("mediathek")}
+      {@render entry("mockup")}
     </nav>
   </div>
 </header>
