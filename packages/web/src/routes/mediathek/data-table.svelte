@@ -2,6 +2,7 @@
   import {
     type ColumnDef,
     type ColumnFiltersState,
+    type VisibilityState,
     getCoreRowModel,
     getFilteredRowModel,
     getSortedRowModel,
@@ -9,6 +10,7 @@
   } from "@tanstack/table-core";
   import { createSvelteTable, FlexRender } from "$lib/components/ui/data-table/index.js";
   import * as Table from "$lib/components/ui/table/index.js";
+  import Checkbox from "$lib/components/ui/checkbox/checkbox.svelte";
 
   type DataTableProps<TData, TValue> = {
     columns: ColumnDef<TData, TValue>[];
@@ -18,6 +20,7 @@
   let { data, columns }: DataTableProps<TData, TValue> = $props();
   let columnFilters = $state<ColumnFiltersState>([]);
   let rowSelection = $state<RowSelectionState>({});
+  let columnVisibility = $state<VisibilityState>({ beschreibung: false });
 
   const table = createSvelteTable({
     get data() {
@@ -41,6 +44,13 @@
         rowSelection = updater;
       }
     },
+    onColumnVisibilityChange: (updater) => {
+      if (typeof updater === "function") {
+        columnVisibility = updater(columnVisibility);
+      } else {
+        columnVisibility = updater;
+      }
+    },
     state: {
       get columnFilters() {
         return columnFilters;
@@ -48,9 +58,21 @@
       get rowSelection() {
         return rowSelection;
       },
+      get columnVisibility() {
+        return columnVisibility;
+      },
     },
   });
 </script>
+
+<div class="flex items-center gap-4">
+  {#each table.getAllLeafColumns().filter((c) => c.id != "select") as c}
+    <label for={c.id} class="flex items-center gap-2">
+      <Checkbox id={c.id} bind:checked={() => c.getIsVisible(), (v) => c.toggleVisibility(!!v)} />
+      {c.id}
+    </label>
+  {/each}
+</div>
 
 <div class="space-y-4">
   <div class="rounded-md border">
