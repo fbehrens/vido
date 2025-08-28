@@ -1,7 +1,7 @@
 import { renderComponent } from "$lib/components/ui/data-table/render-helpers";
 import type { ColumnDef } from "@tanstack/table-core";
 import type { Flm } from "./data.remote";
-import InputHeader from "$lib/components/InputHeader.svelte";
+import FilteredColumnHeader from "$lib/components/FilteredColumnHeader.svelte";
 import { Checkbox } from "$lib/components/ui/checkbox/index.js";
 
 export const columns: ColumnDef<Flm>[] = [
@@ -36,7 +36,7 @@ export const columns: ColumnDef<Flm>[] = [
   },
   {
     accessorKey: "titel",
-    header: ({ column }) => renderComponent(InputHeader, { column }),
+    header: ({ column }) => renderComponent(FilteredColumnHeader, { column }),
     filterFn: "includesString", //Sensitive
   },
   {
