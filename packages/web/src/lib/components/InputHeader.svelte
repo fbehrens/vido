@@ -1,20 +1,18 @@
 <script lang="ts">
   import { Input } from "$lib/components/ui/input";
   import { type Column } from "@tanstack/table-core";
-  import type { Files } from "../../routes/files/data.remote";
-  import type { Flm } from "../../routes/mediathek/data.remote";
   type InputHeaderProps<T> = {
     column: Column<T, unknown>;
-    a_key: string;
+    label?: string;
   };
-
-  const { column, a_key }: InputHeaderProps<any> = $props();
+  const { column, label }: InputHeaderProps<any> = $props();
+  const label_ = label ?? column.id;
 </script>
 
 <div class="flex flex-col items-start">
-  <div>{a_key}</div>
+  <div>{label_}</div>
   <Input
-    placeholder={"Filter " + a_key + "..."}
+    placeholder={"Filter " + label_ + "..."}
     value={(column.getFilterValue() as string) ?? ""}
     oninput={(e) => {
       column.setFilterValue(e.currentTarget.value);

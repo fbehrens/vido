@@ -30,7 +30,7 @@ export const columns: ColumnDef<Files>[] = [
   },
   {
     accessorKey: "filename",
-    header: ({ column }) => renderComponent(InputHeader, { column, a_key: "filename" }),
+    header: ({ column }) => renderComponent(InputHeader, { column }),
   },
   {
     accessorKey: "title",
