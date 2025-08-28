@@ -28,11 +28,11 @@ export const columns: ColumnDef<Flm>[] = [
   },
   {
     accessorKey: "sender",
-    header: "sender",
+    header: ({ column }) => renderComponent(FilteredColumnHeader, { column }),
   },
   {
     accessorKey: "thema",
-    header: "thema",
+    header: ({ column }) => renderComponent(FilteredColumnHeader, { column }),
   },
   {
     accessorKey: "titel",
@@ -41,10 +41,10 @@ export const columns: ColumnDef<Flm>[] = [
   },
   {
     accessorKey: "datum",
-    header: "datum",
+    header: ({ column }) => renderComponent(FilteredColumnHeader, { column }),
   },
   {
     accessorKey: "beschreibung",
-    header: "beschreibung",
+    header: ({ column }) => renderComponent(FilteredColumnHeader, { column }),
   },
 ];
