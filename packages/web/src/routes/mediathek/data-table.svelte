@@ -66,9 +66,9 @@
 </script>
 
 <div class="flex items-center gap-4">
-  {#each table.getAllLeafColumns().filter((c) => c.id != "select") as c}
+  {#each table.getAllLeafColumns().filter((c) => c.getCanHide()) as c}
     <label for={c.id} class="flex items-center gap-2">
-      <Checkbox id={c.id} bind:checked={() => c.getIsVisible(), (v) => c.toggleVisibility(!!v)} />
+      <Checkbox id={c.id} bind:checked={() => c.getIsVisible(), (v) => c.toggleVisibility(v)} />
       {c.id}
     </label>
   {/each}
