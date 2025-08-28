@@ -10,7 +10,8 @@
   } from "@tanstack/table-core";
   import { createSvelteTable, FlexRender } from "$lib/components/ui/data-table/index.js";
   import * as Table from "$lib/components/ui/table/index.js";
-  import Checkbox from "$lib/components/ui/checkbox/checkbox.svelte";
+  import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
+  import { Button } from "$lib/components/ui/button";
 
   type DataTableProps<TData, TValue> = {
     columns: ColumnDef<TData, TValue>[];
@@ -65,14 +66,32 @@
   });
 </script>
 
-<div class="flex items-center gap-4">
+<!-- <div class="flex items-center gap-4">
   {#each table.getAllLeafColumns().filter((c) => c.getCanHide()) as c}
     <label for={c.id} class="flex items-center gap-2">
       <Checkbox id={c.id} bind:checked={() => c.getIsVisible(), (v) => c.toggleVisibility(v)} />
       {c.id}
     </label>
   {/each}
-</div>
+</div> -->
+
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger>
+    {#snippet child({ props })}
+      <Button {...props} variant="outline" class="ml-auto">Columns</Button>
+    {/snippet}
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content align="end">
+    {#each table.getAllColumns().filter((col) => col.getCanHide()) as column (column.id)}
+      <DropdownMenu.CheckboxItem
+        class="capitalize"
+        bind:checked={() => column.getIsVisible(), (v) => column.toggleVisibility(!!v)}
+      >
+        {column.id}
+      </DropdownMenu.CheckboxItem>
+    {/each}
+  </DropdownMenu.Content>
+</DropdownMenu.Root>
 
 <div class="space-y-4">
   <div class="rounded-md border">
