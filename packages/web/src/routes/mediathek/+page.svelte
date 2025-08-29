@@ -6,6 +6,7 @@
     getFilteredRowModel,
     getSortedRowModel,
     type RowSelectionState,
+    type SortingState,
   } from "@tanstack/table-core";
   import { createSvelteTable, FlexRender } from "$lib/components/ui/data-table/index.js";
   import * as Table from "$lib/components/ui/table/index.js";
@@ -19,6 +20,7 @@
   const param = $derived({ search, limit: Number(limit) });
   const { data, count } = $derived(await getFilms(param));
 
+  let sorting = $state<SortingState>([]);
   let columnFilters = $state<ColumnFiltersState>([]);
   let rowSelection = $state<RowSelectionState>({});
   let columnVisibility = $state<VisibilityState>({ beschreibung: false });
@@ -31,6 +33,13 @@
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    onSortingChange: (updater) => {
+      if (typeof updater === "function") {
+        sorting = updater(sorting);
+      } else {
+        sorting = updater;
+      }
+    },
     onColumnFiltersChange: (updater) => {
       if (typeof updater === "function") {
         columnFilters = updater(columnFilters);
@@ -53,6 +62,9 @@
       }
     },
     state: {
+      get sorting() {
+        return sorting;
+      },
       get columnFilters() {
         return columnFilters;
       },
