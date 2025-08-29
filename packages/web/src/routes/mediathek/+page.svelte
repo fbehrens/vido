@@ -12,12 +12,12 @@
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
   import { Button } from "$lib/components/ui/button";
   import { columns } from "./columns";
-  import { getFlms } from "./data.remote";
+  import { getFilms } from "./data.remote";
   import { Input } from "$lib/components/ui/input";
   let search = $state("lanz");
   let limit = $state("1000");
   const param = $derived({ search, limit: Number(limit) });
-  const { data, count } = $derived(await getFlms(param));
+  const { data, count } = $derived(await getFilms(param));
 
   let columnFilters = $state<ColumnFiltersState>([]);
   let rowSelection = $state<RowSelectionState>({});
@@ -73,7 +73,7 @@
     <Input bind:value={limit} class="w-20 " />
     <span class="text-sm">/{count})</span>
   </div>
-  <Button onclick={() => getFlms(param).refresh()} variant="outline">refresh</Button>
+  <Button onclick={() => getFilms(param).refresh()} variant="outline">refresh</Button>
   <DropdownMenu.Root>
     <DropdownMenu.Trigger>
       {#snippet child({ props })}

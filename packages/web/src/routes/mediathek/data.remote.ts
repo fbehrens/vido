@@ -4,13 +4,13 @@ import { films } from "$lib/server/db/schema/mediathek";
 import { sql } from "drizzle-orm";
 import * as S from "effect/Schema";
 
-const GetFmmsParam = S.Struct({ search: S.String, limit: S.Number });
-type GetFmmsParam = S.Schema.Type<typeof GetFmmsParam>;
+const GetFilmsParam = S.Struct({ search: S.String, limit: S.Number });
+type GetFilmsParam = S.Schema.Type<typeof GetFilmsParam>;
 
 const where_clause = (s: string) =>
   sql`${films.sender} || ${films.thema} || ${films.titel} || ${films.beschreibung} like ${"%" + s + "%"} `;
 
-export const getFlms = query(S.standardSchemaV1(GetFmmsParam), async (param) => {
+export const getFilms = query(S.standardSchemaV1(GetFilmsParam), async (param) => {
   const data = await db_mediathek
     .select({
       id: films.id,
@@ -29,3 +29,4 @@ export const getFlms = query(S.standardSchemaV1(GetFmmsParam), async (param) => 
       : data.length;
   return { data, count };
 });
+export type Film = Awaited<ReturnType<typeof getFilms>>["data"][number];

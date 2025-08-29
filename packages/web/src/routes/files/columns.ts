@@ -1,12 +1,12 @@
 import { renderComponent } from "$lib/components/ui/data-table/render-helpers";
 import type { ColumnDef } from "@tanstack/table-core";
-import type { Files } from "./data.remote";
+import type { File } from "./data.remote";
 import FilteredColumnHeader from "$lib/components/FilteredColumnHeader.svelte";
 import { Checkbox } from "$lib/components/ui/checkbox/index.js";
 
 import { formatDuration, formatSize } from "$lib/helper";
 
-export const columns: ColumnDef<Files>[] = [
+export const columns: ColumnDef<File>[] = [
   {
     id: "select",
     header: ({ table }) =>

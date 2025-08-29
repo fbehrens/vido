@@ -41,7 +41,7 @@ function getAllFiles(dirPath: string): FileSystem[] {
 }
 const extsVideo = [".mov", ".mp4", ".mkv"];
 
-const movis = async () =>
+const getMovies = async () =>
   await db
     .select({
       id: movies.id,
@@ -54,11 +54,12 @@ const movis = async () =>
     .from(movies)
     .where(isNotNull(movies.filename));
 
-type Movi = Awaited<ReturnType<typeof movis>>[number];
+type Movie = Awaited<ReturnType<typeof getMovies>>[number];
 
-const db_files = async () => {
-  const movis_map = new Map<string, Movi>();
-  for (const { id, filename, title, duration, framerate, created_at } of await movis()) {
+//
+const filesWithMovies = async () => {
+  const movis_map = new Map<string, Movie>();
+  for (const { id, filename, title, duration, framerate, created_at } of await getMovies()) {
     movis_map.set(filename!, { id, filename, title, duration, framerate: framerate!, created_at });
   }
   const files = getAllFiles(static_dir)
@@ -66,12 +67,12 @@ const db_files = async () => {
     .map((f) => ({ ...f, ...movis_map.get(f.filename) }));
   return files;
 };
-export type Files = Awaited<ReturnType<typeof db_files>>[number];
+export type File = Awaited<ReturnType<typeof filesWithMovies>>[number];
 
-export const getFiles = query(async () => await db_files());
+export const getFiles = query(async () => await filesWithMovies());
 
 export const insertMovies = command(async () => {
-  const fs = (await db_files()).filter((f) => f.id === undefined);
+  const fs = (await filesWithMovies()).filter((f) => f.id === undefined);
   for (const f of fs) {
     const movie = {
       filename: f.filename,
