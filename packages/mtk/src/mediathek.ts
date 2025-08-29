@@ -8,7 +8,7 @@ import {
   filmsPrev,
   mediathek,
 } from "../../web/src/lib/server/db/schema/mediathek";
-import { count, desc } from "drizzle-orm";
+import { count, desc, sql } from "drizzle-orm";
 
 const fileDir = "temp/",
   filmeJson = fileDir + "filmliste.json";
@@ -65,7 +65,7 @@ export async function updateFilmliste({
     }
   }
   // import
-  await db_mediathek.delete(films);
+  await db_mediathek.delete(filmsPrev);
   await db_mediathek
     .insert(filmsPrev)
     .select(db_mediathek.select().from(films));
@@ -75,7 +75,9 @@ export async function updateFilmliste({
   const insertCommand = `sqlite3 ${dbPathMediathek} ".import --csv ${filmeCsv} films"`;
   console.log(`run ${insertCommand}`);
   await exec(insertCommand);
-
+  await db_mediathek.update(films).set({
+    datum: sql`substr(datum, 7, 4) || '-' || substr(datum, 4, 2) || '-' || substr(datum, 1, 2)`,
+  }); // YYYY--MM-DD
   const c = await db_mediathek.select({ count: count() }).from(films).get();
   console.log(`imported ${c?.count} films`);
 }
