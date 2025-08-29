@@ -3,7 +3,6 @@ import type { ColumnDef } from "@tanstack/table-core";
 import type { Film } from "./data.remote";
 import FilteredColumnHeader from "$lib/components/FilteredColumnHeader.svelte";
 import { Checkbox } from "$lib/components/ui/checkbox/index.js";
-import SortableHeader from "./SortableHeader.svelte";
 
 export const columns: ColumnDef<Film>[] = [
   {

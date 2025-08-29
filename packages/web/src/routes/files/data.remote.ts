@@ -5,21 +5,12 @@ import { movies } from "$lib/server/db/schema/vido";
 import { sqliteDate } from "$lib/server/utils";
 import { isNotNull } from "drizzle-orm";
 import { readdirSync, statSync } from "node:fs";
-import { extname, join } from "node:path";
+import { basename, extname, join } from "node:path";
 
 const static_dir = process.cwd() + "/static/";
-interface FileSystem {
-  filename: string;
-  size: number;
-}
 
-interface FileSystem {
-  filename: string;
-  size: number;
-}
-
-function getAllFiles(dirPath: string): FileSystem[] {
-  const result: FileSystem[] = [];
+function getAllFiles(dirPath: string) {
+  const result = [];
   const stack = [dirPath];
 
   while (stack.length) {
@@ -30,16 +21,20 @@ function getAllFiles(dirPath: string): FileSystem[] {
       if (stat.isDirectory()) {
         stack.push(filePath);
       } else {
+        const filename = filePath.slice(static_dir.length);
+        const ext = extname(filename).slice(1);
         result.push({
-          filename: filePath.slice(static_dir.length),
+          filename,
           size: stat.size,
+          ext,
+          basename: filename.slice(0, filename.length - ext.length - 1),
         });
       }
     }
   }
   return result;
 }
-const extsVideo = [".mov", ".mp4", ".mkv"];
+const videoExtensions = ["mov", "mp4", "mkv"];
 
 const getMovies = async () =>
   await db
@@ -62,10 +57,17 @@ const filesWithMovies = async () => {
   for (const { id, filename, title, duration, framerate, created_at } of await getMovies()) {
     movis_map.set(filename!, { id, filename, title, duration, framerate: framerate!, created_at });
   }
-  const files = getAllFiles(static_dir)
-    .filter((f) => extsVideo.includes(extname(f.filename)))
-    .map((f) => ({ ...f, ...movis_map.get(f.filename) }));
-  return files;
+  const files = getAllFiles(static_dir);
+  const filesMovie = files
+    .filter((f) => videoExtensions.includes(f.ext))
+    .map((fm) => {
+      const subtitles = files
+        .filter((f) => f.basename == fm.basename && f.filename != fm.filename)
+        .map((f) => f.ext)
+        .join(",");
+      return { ...fm, subtitles, ...movis_map.get(fm.filename) };
+    });
+  return filesMovie;
 };
 export type File = Awaited<ReturnType<typeof filesWithMovies>>[number];
 

@@ -33,6 +33,10 @@ export const columns: ColumnDef<File>[] = [
     header: ({ column }) => renderComponent(FilteredColumnHeader, { column }),
   },
   {
+    accessorKey: "subtitles",
+    header: ({ column }) => renderComponent(FilteredColumnHeader, { column }),
+  },
+  {
     accessorKey: "title",
     header: "title",
   },
