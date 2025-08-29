@@ -5,6 +5,7 @@
     "private": true,
     "scripts": {
         "import": "pnpm exec tsx src/import.ts",
+        "db:push": "drizzle-kit push",
         "p:push2": "pnpm run drizzle-kit push --config p/drizzle2.config.ts",
         "p:push1": "pnpm run drizzle-kit push --config p/drizzle1.config.ts"
     },

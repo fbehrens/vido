@@ -1,7 +1,7 @@
 import { query } from "$app/server";
 import { db_mediathek } from "$lib/server/db/mediathek";
 import { films } from "$lib/server/db/schema/mediathek";
-import { sql } from "drizzle-orm";
+import { desc, sql } from "drizzle-orm";
 import * as S from "effect/Schema";
 
 const GetFilmsParam = S.Struct({ search: S.String, limit: S.Number });
@@ -22,6 +22,7 @@ export const getFilms = query(S.standardSchemaV1(GetFilmsParam), async (param) =
     })
     .from(films)
     .where(where_clause(param.search))
+    .orderBy(desc(films.datum))
     .limit(param.limit);
   const count =
     data.length == param.limit

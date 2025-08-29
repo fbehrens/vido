@@ -39,7 +39,10 @@ export const films = sqliteTable(
     neu: text(),
   },
   (table) => {
-    return [index("clips_movie_id_id_pk").on(table.sender, table.thema)];
+    return [
+      index("idx_sender_thema").on(table.sender, table.thema),
+      index("idx_datum").on(table.datum),
+    ];
   },
 );
 
