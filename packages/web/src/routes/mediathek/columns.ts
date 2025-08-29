@@ -42,8 +42,7 @@ export const columns: ColumnDef<Film>[] = [
   },
   {
     accessorKey: "datum",
-    header: ({ column }) =>
-      renderComponent(SortableHeader, { onclick: column.getToggleSortingHandler() }),
+    header: ({ column }) => renderComponent(FilteredColumnHeader, { column }),
   },
   {
     accessorKey: "beschreibung",
