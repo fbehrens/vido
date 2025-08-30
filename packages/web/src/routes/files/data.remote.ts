@@ -1,10 +1,11 @@
 import { command, query } from "$app/server";
 import { getDuration, getFramerate } from "$lib/ffmpeg";
 import { db } from "$lib/server/db";
-import { movies } from "$lib/server/db/schema/vido";
+import { captions, movies } from "$lib/server/db/schema/vido";
 import { sqliteDate } from "$lib/server/utils";
-import { isNotNull } from "drizzle-orm";
+import { isNotNull, sql } from "drizzle-orm";
 import { readdirSync, statSync } from "node:fs";
+import { readFile, unlink } from "node:fs/promises";
 import { basename, extname, join } from "node:path";
 
 const static_dir = process.cwd() + "/static/";
@@ -51,21 +52,38 @@ const getMovies = async () =>
 
 type Movie = Awaited<ReturnType<typeof getMovies>>[number];
 
+const files = () => getAllFiles(static_dir);
+
+export const insertWhisper = command(async () => {
+  for (const { filename, basename } of files().filter(({ ext }) => ext == "json")) {
+    const glob = basename + ".*";
+    const [movie] = await db
+      .select({ id: movies.id })
+      .from(movies)
+      .where(sql`${movies.filename} GLOB ${glob}`);
+    const staticFilename = "static/" + filename;
+    const data = await readFile(staticFilename, "utf8");
+    const caption = { movieId: movie.id, details: "{}", typ: "whisper", data };
+    await db.insert(captions).values(caption);
+    await unlink(staticFilename);
+    console.log({ action: "created caption", ...caption });
+  }
+});
+
 //
 const filesWithMovies = async () => {
   const movis_map = new Map<string, Movie>();
   for (const { id, filename, title, duration, framerate, created_at } of await getMovies()) {
     movis_map.set(filename!, { id, filename, title, duration, framerate: framerate!, created_at });
   }
-  const files = getAllFiles(static_dir);
-  const filesMovie = files
+  const filesMovie = files()
     .filter((f) => videoExtensions.includes(f.ext))
     .map((fm) => {
-      const subtitles = files
+      const subtitles = files()
         .filter((f) => f.basename == fm.basename && f.filename != fm.filename)
-        .map((f) => f.ext)
+        .map(({ ext }) => ext)
         .join(",");
-      return { ...fm, subtitles, ...movis_map.get(fm.filename) };
+      return { ...fm, ...movis_map.get(fm.filename), subtitles };
     });
   return filesMovie;
 };
