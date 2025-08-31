@@ -1,6 +1,7 @@
 import * as S from "effect/Schema";
 import { Letters, NonLetters } from "$lib/helper";
-export const Word = S.Struct({
+import { Segments } from "./Segments";
+const Word = S.Struct({
   word: S.String,
   start: S.Number,
   end: S.Number,
@@ -28,16 +29,7 @@ export const WhisperApi = S.Struct({
 export type WhisperApi = typeof WhisperApi.Type;
 export const WhisperApiJson = S.parseJson(WhisperApi);
 
-export const Segm = S.Array(
-  S.Struct({
-    start: S.Number,
-    end: S.Number,
-    text: S.String,
-    words: S.Array(Word),
-  }),
-);
-
-export const WhisperApiSegmented = S.transform(WhisperApiJson, Segm, {
+export const WhisperApiSegmented = S.transform(WhisperApiJson, Segments, {
   strict: true,
   decode: ({ segments, words }) => {
     let words_editable = [...words];
