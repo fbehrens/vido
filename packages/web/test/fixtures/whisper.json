@@ -1,0 +1,574 @@
+{
+    "text": " Next movement, opening. Rotate your arms. Palms turn facing yourself. Lift up your arms. Leads by your body. Upper arms, forearms, two palms. Keep between arms, shoulder waist apart. Until your arms shoulder level. Go down, push. Start from body. Upper arms, forearms, two palms. And gradually sit in your palms. Push to where? We say almost to the bottom. Okay, keep between arms. Still is shoulder waist apart. This is opening.",
+    "segments": [
+        {
+            "id": 0,
+            "seek": 0,
+            "start": 1.640000000000002,
+            "end": 22.76,
+            "text": " Next movement, opening. Rotate your arms. Palms turn facing yourself. Lift up your arms. Leads by your body. Upper arms, forearms, two palms. Keep between arms, shoulder waist apart. Until your arms shoulder level.",
+            "tokens": [
+                50365,
+                3087,
+                3963,
+                11,
+                5193,
+                13,
+                17681,
+                473,
+                428,
+                5812,
+                13,
+                6116,
+                2592,
+                1261,
+                7170,
+                1803,
+                13,
+                26148,
+                493,
+                428,
+                5812,
+                13,
+                1456,
+                5834,
+                538,
+                428,
+                1772,
+                13,
+                36926,
+                5812,
+                11,
+                2091,
+                19537,
+                11,
+                732,
+                30819,
+                13,
+                5527,
+                1296,
+                5812,
+                11,
+                7948,
+                15732,
+                4936,
+                13,
+                9088,
+                428,
+                5812,
+                7948,
+                1496,
+                13,
+                51515
+            ],
+            "temperature": 0.0,
+            "avg_logprob": -0.25796130851463034,
+            "compression_ratio": 1.4965034965034965,
+            "no_speech_prob": 3.2192918036216822e-12,
+            "words": [
+                {
+                    "word": " Next",
+                    "start": 1.640000000000002,
+                    "end": 2.48,
+                    "probability": 0.8233931660652161
+                },
+                {
+                    "word": " movement,",
+                    "start": 2.48,
+                    "end": 2.94,
+                    "probability": 0.866375207901001
+                },
+                {
+                    "word": " opening.",
+                    "start": 3.48,
+                    "end": 4.04,
+                    "probability": 0.7291399836540222
+                },
+                {
+                    "word": " Rotate",
+                    "start": 4.84,
+                    "end": 5.68,
+                    "probability": 0.9874618649482727
+                },
+                {
+                    "word": " your",
+                    "start": 5.68,
+                    "end": 5.9,
+                    "probability": 0.9904507994651794
+                },
+                {
+                    "word": " arms.",
+                    "start": 5.9,
+                    "end": 6.48,
+                    "probability": 0.9933598637580872
+                },
+                {
+                    "word": " Palms",
+                    "start": 6.86,
+                    "end": 7.6,
+                    "probability": 0.961674690246582
+                },
+                {
+                    "word": " turn",
+                    "start": 7.6,
+                    "end": 8.32,
+                    "probability": 0.766989529132843
+                },
+                {
+                    "word": " facing",
+                    "start": 8.32,
+                    "end": 8.9,
+                    "probability": 0.9624404907226562
+                },
+                {
+                    "word": " yourself.",
+                    "start": 8.9,
+                    "end": 9.46,
+                    "probability": 0.9893306493759155
+                },
+                {
+                    "word": " Lift",
+                    "start": 10.26,
+                    "end": 10.56,
+                    "probability": 0.9939571619033813
+                },
+                {
+                    "word": " up",
+                    "start": 10.56,
+                    "end": 10.92,
+                    "probability": 0.9959040284156799
+                },
+                {
+                    "word": " your",
+                    "start": 10.92,
+                    "end": 11.18,
+                    "probability": 0.996566653251648
+                },
+                {
+                    "word": " arms.",
+                    "start": 11.18,
+                    "end": 11.68,
+                    "probability": 0.9968444108963013
+                },
+                {
+                    "word": " Leads",
+                    "start": 12.42,
+                    "end": 12.86,
+                    "probability": 0.8661425411701202
+                },
+                {
+                    "word": " by",
+                    "start": 12.86,
+                    "end": 13.26,
+                    "probability": 0.9841837882995605
+                },
+                {
+                    "word": " your",
+                    "start": 13.26,
+                    "end": 13.52,
+                    "probability": 0.9921497106552124
+                },
+                {
+                    "word": " body.",
+                    "start": 13.52,
+                    "end": 14.54,
+                    "probability": 0.9764577746391296
+                },
+                {
+                    "word": " Upper",
+                    "start": 15.38,
+                    "end": 15.62,
+                    "probability": 0.577121376991272
+                },
+                {
+                    "word": " arms,",
+                    "start": 15.62,
+                    "end": 16.04,
+                    "probability": 0.9948689937591553
+                },
+                {
+                    "word": " forearms,",
+                    "start": 16.32,
+                    "end": 16.82,
+                    "probability": 0.9826947748661041
+                },
+                {
+                    "word": " two",
+                    "start": 17.04,
+                    "end": 17.16,
+                    "probability": 0.6479141712188721
+                },
+                {
+                    "word": " palms.",
+                    "start": 17.16,
+                    "end": 17.58,
+                    "probability": 0.7293593883514404
+                },
+                {
+                    "word": " Keep",
+                    "start": 18.18,
+                    "end": 18.5,
+                    "probability": 0.9799142479896545
+                },
+                {
+                    "word": " between",
+                    "start": 18.5,
+                    "end": 18.86,
+                    "probability": 0.9901476502418518
+                },
+                {
+                    "word": " arms,",
+                    "start": 18.86,
+                    "end": 19.22,
+                    "probability": 0.990228533744812
+                },
+                {
+                    "word": " shoulder",
+                    "start": 19.44,
+                    "end": 19.68,
+                    "probability": 0.7660839557647705
+                },
+                {
+                    "word": " waist",
+                    "start": 19.68,
+                    "end": 19.9,
+                    "probability": 0.4920184910297394
+                },
+                {
+                    "word": " apart.",
+                    "start": 19.9,
+                    "end": 20.18,
+                    "probability": 0.36617422103881836
+                },
+                {
+                    "word": " Until",
+                    "start": 20.4,
+                    "end": 21.02,
+                    "probability": 0.9870204925537109
+                },
+                {
+                    "word": " your",
+                    "start": 21.02,
+                    "end": 21.24,
+                    "probability": 0.9968229532241821
+                },
+                {
+                    "word": " arms",
+                    "start": 21.24,
+                    "end": 21.7,
+                    "probability": 0.982371985912323
+                },
+                {
+                    "word": " shoulder",
+                    "start": 21.7,
+                    "end": 22.4,
+                    "probability": 0.49952253699302673
+                },
+                {
+                    "word": " level.",
+                    "start": 22.4,
+                    "end": 22.76,
+                    "probability": 0.9891071915626526
+                }
+            ]
+        },
+        {
+            "id": 1,
+            "seek": 2276,
+            "start": 22.76,
+            "end": 44.76,
+            "text": " Go down, push. Start from body. Upper arms, forearms, two palms. And gradually sit in your palms. Push to where? We say almost to the bottom. Okay, keep between arms. Still is shoulder waist apart. This is opening.",
+            "tokens": [
+                50365,
+                1037,
+                760,
+                11,
+                2944,
+                13,
+                6481,
+                490,
+                1772,
+                13,
+                36926,
+                5812,
+                11,
+                2091,
+                19537,
+                11,
+                732,
+                30819,
+                13,
+                400,
+                13145,
+                1394,
+                294,
+                428,
+                30819,
+                13,
+                18229,
+                281,
+                689,
+                30,
+                492,
+                584,
+                1920,
+                281,
+                264,
+                2767,
+                13,
+                1033,
+                11,
+                1066,
+                1296,
+                5812,
+                13,
+                8291,
+                307,
+                7948,
+                15732,
+                4936,
+                13,
+                639,
+                307,
+                5193,
+                13,
+                51468
+            ],
+            "temperature": 0.0,
+            "avg_logprob": -0.1642665689641779,
+            "compression_ratio": 1.329192546583851,
+            "no_speech_prob": 6.091795904522579e-12,
+            "words": [
+                {
+                    "word": " Go",
+                    "start": 22.76,
+                    "end": 23.78,
+                    "probability": 0.36289238929748535
+                },
+                {
+                    "word": " down,",
+                    "start": 23.78,
+                    "end": 24.22,
+                    "probability": 0.9346944689750671
+                },
+                {
+                    "word": " push.",
+                    "start": 24.56,
+                    "end": 24.8,
+                    "probability": 0.9636329412460327
+                },
+                {
+                    "word": " Start",
+                    "start": 25.18,
+                    "end": 25.54,
+                    "probability": 0.9751925468444824
+                },
+                {
+                    "word": " from",
+                    "start": 25.54,
+                    "end": 25.92,
+                    "probability": 0.9771847128868103
+                },
+                {
+                    "word": " body.",
+                    "start": 25.92,
+                    "end": 26.42,
+                    "probability": 0.9253937005996704
+                },
+                {
+                    "word": " Upper",
+                    "start": 26.58,
+                    "end": 26.98,
+                    "probability": 0.19647110998630524
+                },
+                {
+                    "word": " arms,",
+                    "start": 26.98,
+                    "end": 27.46,
+                    "probability": 0.9706757664680481
+                },
+                {
+                    "word": " forearms,",
+                    "start": 27.64,
+                    "end": 28.24,
+                    "probability": 0.9621413946151733
+                },
+                {
+                    "word": " two",
+                    "start": 28.42,
+                    "end": 28.48,
+                    "probability": 0.4574151635169983
+                },
+                {
+                    "word": " palms.",
+                    "start": 28.48,
+                    "end": 28.94,
+                    "probability": 0.5510187745094299
+                },
+                {
+                    "word": " And",
+                    "start": 29.64,
+                    "end": 29.76,
+                    "probability": 0.863405704498291
+                },
+                {
+                    "word": " gradually",
+                    "start": 29.76,
+                    "end": 31.0,
+                    "probability": 0.8693186044692993
+                },
+                {
+                    "word": " sit",
+                    "start": 31.0,
+                    "end": 31.72,
+                    "probability": 0.4436245858669281
+                },
+                {
+                    "word": " in",
+                    "start": 31.72,
+                    "end": 31.86,
+                    "probability": 0.9086538553237915
+                },
+                {
+                    "word": " your",
+                    "start": 31.86,
+                    "end": 32.12,
+                    "probability": 0.9900082349777222
+                },
+                {
+                    "word": " palms.",
+                    "start": 32.12,
+                    "end": 32.64,
+                    "probability": 0.9759101271629333
+                },
+                {
+                    "word": " Push",
+                    "start": 34.14,
+                    "end": 34.9,
+                    "probability": 0.9939415454864502
+                },
+                {
+                    "word": " to",
+                    "start": 34.9,
+                    "end": 35.12,
+                    "probability": 0.9663729071617126
+                },
+                {
+                    "word": " where?",
+                    "start": 35.12,
+                    "end": 35.44,
+                    "probability": 0.9420095086097717
+                },
+                {
+                    "word": " We",
+                    "start": 36.4,
+                    "end": 36.8,
+                    "probability": 0.8699867725372314
+                },
+                {
+                    "word": " say",
+                    "start": 36.8,
+                    "end": 37.04,
+                    "probability": 0.8271656036376953
+                },
+                {
+                    "word": " almost",
+                    "start": 37.04,
+                    "end": 37.66,
+                    "probability": 0.7371964454650879
+                },
+                {
+                    "word": " to",
+                    "start": 37.66,
+                    "end": 38.16,
+                    "probability": 0.9805712103843689
+                },
+                {
+                    "word": " the",
+                    "start": 38.16,
+                    "end": 38.3,
+                    "probability": 0.9987987279891968
+                },
+                {
+                    "word": " bottom.",
+                    "start": 38.3,
+                    "end": 38.6,
+                    "probability": 0.9951687455177307
+                },
+                {
+                    "word": " Okay,",
+                    "start": 39.34,
+                    "end": 39.44,
+                    "probability": 0.5917934775352478
+                },
+                {
+                    "word": " keep",
+                    "start": 39.56,
+                    "end": 39.78,
+                    "probability": 0.9664689302444458
+                },
+                {
+                    "word": " between",
+                    "start": 39.78,
+                    "end": 40.12,
+                    "probability": 0.8640210032463074
+                },
+                {
+                    "word": " arms.",
+                    "start": 40.12,
+                    "end": 40.52,
+                    "probability": 0.9822470545768738
+                },
+                {
+                    "word": " Still",
+                    "start": 41.02,
+                    "end": 41.3,
+                    "probability": 0.8964163661003113
+                },
+                {
+                    "word": " is",
+                    "start": 41.3,
+                    "end": 41.64,
+                    "probability": 0.8495765328407288
+                },
+                {
+                    "word": " shoulder",
+                    "start": 41.64,
+                    "end": 42.22,
+                    "probability": 0.5502098202705383
+                },
+                {
+                    "word": " waist",
+                    "start": 42.22,
+                    "end": 42.52,
+                    "probability": 0.005020122975111008
+                },
+                {
+                    "word": " apart.",
+                    "start": 42.52,
+                    "end": 42.82,
+                    "probability": 0.008073404431343079
+                },
+                {
+                    "word": " This",
+                    "start": 43.2,
+                    "end": 43.82,
+                    "probability": 0.9963296055793762
+                },
+                {
+                    "word": " is",
+                    "start": 43.82,
+                    "end": 44.08,
+                    "probability": 0.9983371496200562
+                },
+                {
+                    "word": " opening.",
+                    "start": 44.08,
+                    "end": 44.76,
+                    "probability": 0.9324376583099365
+                }
+            ]
+        }
+    ],
+    "language": "en"
+}

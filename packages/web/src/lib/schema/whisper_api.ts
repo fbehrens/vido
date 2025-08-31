@@ -36,7 +36,6 @@ export const Segm = S.Array(
     words: S.Array(Word),
   }),
 );
-type SegmT = typeof Segm.Type;
 
 export const WhisperApiSegmented = S.transform(WhisperApiJson, Segm, {
   strict: true,
