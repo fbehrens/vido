@@ -5,8 +5,6 @@ import { movies } from "$lib/server/db/schema/vido";
 import { mp3Path } from "$lib/server/utils";
 import * as fs from "fs";
 import { transcribe } from "$lib/whisper";
-import type { Segment, Word } from "$lib/types";
-import type z from "zod";
 
 export async function createTranscription(m: typeof movies.$inferSelect) {
   console.log(m);
@@ -81,10 +79,4 @@ export async function createClips({
     start += maxClipLength;
     id++;
   }
-}
-
-export function waToString(wa: z.infer<typeof whisperApiSchema>) {
-  const segments = wa.segments.map((s) => s.text).join("|");
-  const words = wa.words.map((w) => w.word).join("|");
-  return [wa.text, segments, words];
 }

@@ -113,7 +113,7 @@ export class YoutubeInfo extends S.Class<YoutubeInfo>("YoutubeInfo")({
   format_id: S.String,
   ext: AudioExtEnum,
   protocol: S.String,
-  //   language: Language,
+  language: S.String,
   format_note: S.String,
   filesize_approx: S.Number,
   tbr: S.Number,
@@ -137,3 +137,19 @@ export class YoutubeInfo extends S.Class<YoutubeInfo>("YoutubeInfo")({
 }) {}
 
 export const YoutubeInfoJson = S.parseJson(YoutubeInfo);
+
+export function get_json3_url(info: YoutubeInfo, lang?: string) {
+  const automatic_captions = info.automatic_captions;
+  const available_langs = Object.keys(automatic_captions);
+  const orig = available_langs.find((s) => s.endsWith("-orig"));
+  const selected_lang =
+    [lang, orig, "de", "en"].find((l): l is string => l !== undefined && l in automatic_captions) ??
+    available_langs[0];
+  const captions = automatic_captions[selected_lang];
+  const exts = captions.map((c) => c.ext);
+  //   console.log({ available_langs, selected_lang, exts });
+  const json3 = captions.find((c) => c.ext === "json3");
+  if (json3) {
+    return json3.url;
+  }
+}

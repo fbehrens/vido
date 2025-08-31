@@ -1,25 +1,26 @@
 <script lang="ts">
   import TextEvent from "$lib/components/TextEvent.svelte";
   import YouTube from "$lib/components/YouTube.svelte";
+  import { Json3Json } from "$lib/schema/json3";
   import { YoutubeInfoJson } from "$lib/schema/youtube_info.js";
-  import { json3Schema, ytInfoZod } from "$lib/yt.js";
   import * as S from "effect/Schema";
 
-  //   import * as S from "effect/Schema";
   let { data } = $props();
   let { movie } = data;
   let time = $state(0);
   let player = $state<YT.Player>();
   if (!movie) throw new Error("Movie not found");
 
-  const ytInfo = ytInfoZod(movie.data!);
-  //   const ytInfoS = S.decodeSync(YoutubeInfoJson)(movie.data!);
-
+  const ytInfo = S.decodeSync(YoutubeInfoJson)(movie.data!);
   const caption = movie.captions.find((c) => c.typ == "json3");
-  const json3 = caption ? json3Schema(caption.data!) : null;
-
+  const json3 = caption ? S.decodeUnknownSync(Json3Json)(caption.data!) : null;
   const [e1, ...events] = json3 ? json3.events : [];
-  const textEvents = events.filter((e) => !e.aAppend);
+  const textEvents = events.filter((e) => !e.aAppend && e.segs) as {
+    tStartMs: number;
+    dDurationMs: number;
+    wWinId: number;
+    segs: { utf8: string; tOffsetMs?: number }[];
+  }[];
   let current = $derived.by(() => {
     const i = textEvents.findIndex((e) => e.tStartMs + 100 > time * 1000);
     return textEvents.slice(i ? i - 1 : i, i + 20);
@@ -36,7 +37,7 @@
       "ever odd event is a appendEvent",
     );
   }
-  const languagesDisplay = Object.keys(ytInfoZod?.automatic_captions || {}).filter(
+  const languagesDisplay = Object.keys(ytInfo.automatic_captions || {}).filter(
     (e) => e.includes("en") || e.includes("de") || e.includes("orig"),
   );
 </script>
@@ -55,10 +56,12 @@
   </div>
 
   <div>
-    <h3>Chapters</h3>
-    {#each ytInfo!.chapters as chapter}
-      <button onclick={() => seek(chapter.start_time * 1000)}>{chapter.title}</button><br />
-    {/each}
+    {#if ytInfo!.chapters}
+      <h3>Chapters</h3>
+      {#each ytInfo!.chapters as chapter}
+        <button onclick={() => seek(chapter.start_time * 1000)}>{chapter.title}</button><br />
+      {/each}
+    {/if}
   </div>
   <div class="h-80 overflow-y-scroll border border-gray-300 p-2">
     {#each textEvents as te}

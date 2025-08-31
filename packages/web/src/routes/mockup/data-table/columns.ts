@@ -5,8 +5,6 @@ import DataTableActions from "./data-table-actions.svelte";
 import DataTableEmailButton from "./data-table-email-button.svelte";
 import { Checkbox } from "$lib/components/ui/checkbox/index.js";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
 export type Payment = {
   id: string;
   amount: number;
@@ -14,25 +12,26 @@ export type Payment = {
   email: string;
 };
 
-function randomAmount(){
-    return Math.floor(Math.random() * 101);
+function randomAmount() {
+  return Math.floor(Math.random() * 101);
 }
 
 export const getPayments = (): Payment[] => {
-    return [
-  {
-    id: "728ed52f",
-    amount: randomAmount(),
-    status: "pending",
-    email: "m@example.com",
-  },
-  {
-    id: "489e1d42",
-    amount: randomAmount(),
-    status: "processing",
-    email: "example@gmail.com",
-  },
-]};
+  return [
+    {
+      id: "728ed52f",
+      amount: randomAmount(),
+      status: "pending",
+      email: "m@example.com",
+    },
+    {
+      id: "489e1d42",
+      amount: randomAmount(),
+      status: "processing",
+      email: "example@gmail.com",
+    },
+  ];
+};
 
 export const columns: ColumnDef<Payment>[] = [
   {
@@ -40,9 +39,7 @@ export const columns: ColumnDef<Payment>[] = [
     header: ({ table }) =>
       renderComponent(Checkbox, {
         checked: table.getIsAllPageRowsSelected(),
-        indeterminate:
-          table.getIsSomePageRowsSelected() &&
-          !table.getIsAllPageRowsSelected(),
+        indeterminate: table.getIsSomePageRowsSelected() && !table.getIsAllPageRowsSelected(),
         onCheckedChange: (value) => table.toggleAllPageRowsSelected(!!value),
         "aria-label": "Select all",
       }),
@@ -87,10 +84,7 @@ export const columns: ColumnDef<Payment>[] = [
         };
       });
 
-      return renderSnippet(
-        amountCellSnippet,
-        formatter.format(parseFloat(row.getValue("amount"))),
-      );
+      return renderSnippet(amountCellSnippet, formatter.format(parseFloat(row.getValue("amount"))));
     },
   },
   {

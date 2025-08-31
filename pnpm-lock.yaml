@@ -125,9 +125,6 @@ importers:
       tmp:
         specifier: ^0.2.5
         version: 0.2.5
-      zod:
-        specifier: 3.25.76
-        version: 3.25.76
     devDependencies:
       '@effect/language-service':
         specifier: ^0.35.2

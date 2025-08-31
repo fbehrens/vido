@@ -29,12 +29,7 @@ export async function load({ params }) {
       },
     };
   }
-  //   const ytInfo = ytInfoZod(movie.data!);
-  //   const caption = movie.captions[0];
-  //   const json3 = caption ? json3Schema(caption.data!) : null;
   return {
     movie,
-    // ytInfo: yt,
-    // json3,
   };
 }

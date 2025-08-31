@@ -2,10 +2,11 @@ import { command, form, query } from "$app/server";
 import { db } from "$lib/server/db";
 import * as S from "effect/Schema";
 import { captions, movies } from "$lib/server/db/schema/vido";
-import { ytGetInfo } from "$lib/server/yt";
+import { ytPlpGetInfo } from "$lib/server/yt_dlp";
 import { sqliteDate } from "$lib/server/utils";
-import { get_json3_url, ytInfoZod, YouTubeVideoId } from "$lib/yt";
-import { eq, sql, isNotNull, desc } from "drizzle-orm";
+import { YouTubeVideoId } from "$lib/yt";
+import { isNotNull, desc } from "drizzle-orm";
+import { YoutubeInfoJson, get_json3_url } from "$lib/schema/youtube_info";
 
 export const getYoutube = query(async () => {
   const yt = await db
@@ -16,12 +17,6 @@ export const getYoutube = query(async () => {
   return yt;
 });
 
-// export const getPost = query(v.string(), async (slug) => {
-// 	const [pos] = await db.select().from(post).where(eq(post.slug, slug));
-// 	if (!pos) error(404, 'Not found');
-// 	return pos;
-// });
-
 export const createYoutube = form(async (data) => {
   const url = data.get("url") as string;
   console.log({ url });
@@ -31,8 +26,8 @@ export const createYoutube = form(async (data) => {
     console.log({ err: `Do not have youtubeId`, url });
     return;
   }
-  const info = await ytGetInfo(youtubeId);
-  const yt = ytInfoZod(info);
+  const info = await ytPlpGetInfo(youtubeId);
+  const yt = S.decodeUnknownSync(YoutubeInfoJson)(info);
   const { movie_id: movieId } = await db
     .insert(movies)
     .values({
@@ -59,17 +54,5 @@ export const createYoutube = form(async (data) => {
     typ: "json3",
     details: "{}",
   });
-
-  //   await db.insert(movies).values({ youtubeId: "foo", title: "t", duration: 1.1 });
   return { success: true };
 });
-
-// export const addLike = command(v.string(), async (slug) => {
-// 	await db
-// 		.update(post)
-// 		.set({
-// 			likes: sql`${post.likes} + 1`
-// 		})
-// 		.where(eq(post.slug, slug));
-// 	// getPosts().refresh();
-// });
