@@ -4,29 +4,28 @@ import { db } from "$lib/server/db";
 import { captions, movies } from "$lib/server/db/schema/vido";
 import { sqliteDate } from "$lib/server/utils";
 import { isNotNull, sql } from "drizzle-orm";
-import { readdirSync, statSync } from "node:fs";
-import { readFile, unlink } from "node:fs/promises";
-import { basename, extname, join } from "node:path";
+import { readFile, unlink, readdir, stat } from "node:fs/promises";
+import { extname, join } from "node:path";
 
 const static_dir = process.cwd() + "/static/";
 
-function getAllFiles(dirPath: string) {
+async function getAllFiles(dirPath: string) {
   const result = [];
   const stack = [dirPath];
 
   while (stack.length) {
     const current = stack.pop()!;
-    for (const file of readdirSync(current)) {
+    for (const file of await readdir(current)) {
       const filePath = join(current, file);
-      const stat = statSync(filePath);
-      if (stat.isDirectory()) {
+      const stat_ = await stat(filePath);
+      if (stat_.isDirectory()) {
         stack.push(filePath);
       } else {
         const filename = filePath.slice(static_dir.length);
         const ext = extname(filename).slice(1);
         result.push({
           filename,
-          size: stat.size,
+          size: stat_.size,
           ext,
           basename: filename.slice(0, filename.length - ext.length - 1),
         });
@@ -55,7 +54,7 @@ type Movie = Awaited<ReturnType<typeof getMovies>>[number];
 const files = () => getAllFiles(static_dir);
 
 export const insertWhisper = command(async () => {
-  for (const { filename, basename } of files().filter(({ ext }) => ext == "json")) {
+  for (const { filename, basename } of (await files()).filter(({ ext }) => ext == "json")) {
     const glob = basename + ".*";
     const [movie] = await db
       .select({ id: movies.id })
@@ -76,15 +75,15 @@ const filesWithMovies = async () => {
   for (const { id, filename, title, duration, framerate, created_at } of await getMovies()) {
     movis_map.set(filename!, { id, filename, title, duration, framerate: framerate!, created_at });
   }
-  const filesMovie = files()
-    .filter((f) => videoExtensions.includes(f.ext))
-    .map((fm) => {
-      const subtitles = files()
-        .filter((f) => f.basename == fm.basename && f.filename != fm.filename)
-        .map(({ ext }) => ext)
-        .join(",");
-      return { ...fm, ...movis_map.get(fm.filename), subtitles };
-    });
+  const Awaitedfiles = await files();
+  const filesMovie = Awaitedfiles.filter((f) => videoExtensions.includes(f.ext)).map((fm) => {
+    const subtitles = Awaitedfiles.filter(
+      (f) => f.basename == fm.basename && f.filename != fm.filename,
+    )
+      .map(({ ext }) => ext)
+      .join(",");
+    return { ...fm, ...movis_map.get(fm.filename), subtitles };
+  });
   return filesMovie;
 };
 export type File = Awaited<ReturnType<typeof filesWithMovies>>[number];
