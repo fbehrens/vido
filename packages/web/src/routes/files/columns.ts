@@ -1,10 +1,11 @@
-import { renderComponent } from "$lib/components/ui/data-table/render-helpers";
+import { renderComponent, renderSnippet } from "$lib/components/ui/data-table/render-helpers";
 import type { ColumnDef } from "@tanstack/table-core";
 import type { File } from "./data.remote";
 import FilteredColumnHeader from "$lib/components/FilteredColumnHeader.svelte";
 import { Checkbox } from "$lib/components/ui/checkbox/index.js";
 
 import { formatDuration, formatSize } from "$lib/helper";
+import { createRawSnippet } from "svelte";
 
 export const columns: ColumnDef<File>[] = [
   {
@@ -31,6 +32,12 @@ export const columns: ColumnDef<File>[] = [
   {
     accessorKey: "filename",
     header: ({ column }) => renderComponent(FilteredColumnHeader, { column }),
+    cell: ({ row }) => {
+      const filenameLinkSnippet = createRawSnippet(() => ({
+        render: () => `<a href="/movie/${row.getValue("id")}">${row.getValue("filename")}</a>`,
+      }));
+      return renderSnippet(filenameLinkSnippet, "");
+    },
   },
   {
     accessorKey: "subtitles",
