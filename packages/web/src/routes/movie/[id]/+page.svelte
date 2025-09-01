@@ -3,9 +3,9 @@
   import { getMovie, getOpenai } from "./data.remote";
   import Button from "$lib/components/ui/button/button.svelte";
   import * as S from "effect/Schema";
-  import { WhisperApiSegmented } from "$lib/schema/whisper_api";
-  console.log(42);
-
+  import { TypSegmented } from "$lib/schema/captions";
+  import { type TypJson } from "$lib/schema/captions";
+  import * as Select from "$lib/components/ui/select/index.js";
   const togglePaused = () => {
     if (paused) {
       video.play();
@@ -18,11 +18,20 @@
   const { data } = $props();
   const id = data.id;
   let movie = await getMovie(id);
-  const cap = movie.captions.find(({ typ }) => typ == "WhisperApi");
-  const segments = cap ? S.decodeSync(WhisperApiSegmented)(cap!.data) : undefined;
-  const _segments_ = segments
-    ? [{ start: -1, end: 0 }, ...segments, { start: movie.duration, end: movie.duration! + 1 }]
-    : undefined;
+
+  const allCaptions = movie.captions.map(({ typ }) => typ);
+  let currentCaption = $state(allCaptions[0]);
+  const triggerContent = $derived(currentCaption ?? "Select captions");
+
+  const cap = $derived(movie.captions.find(({ typ }) => typ == currentCaption));
+  const segments = $derived(cap && S.decodeSync(TypSegmented)(cap as TypJson));
+  const _segments_ = $derived(
+    segments && [
+      { start: -1, end: 0 },
+      ...segments,
+      { start: movie.duration, end: movie.duration! + 1 },
+    ],
+  );
   let time = $state(0);
   let current = $state<number>(0);
   let playbackRate = $state(1);
@@ -38,13 +47,25 @@
       }
     }
   });
-  console.log({ movie });
-  if (segments) console.log(segments[0]);
-
   let active = $derived(segments && time >= segments[current].start);
 </script>
 
-<div>
+<div class="flex flex-row">
+  <Select.Root type="single" name="selectCaption" bind:value={currentCaption}>
+    <Select.Trigger class="w-[180px]">
+      {triggerContent}
+    </Select.Trigger>
+    <Select.Content>
+      <Select.Group>
+        {#each allCaptions as caption}
+          <Select.Item value={caption} label={caption}>
+            {caption}
+          </Select.Item>
+        {/each}
+      </Select.Group>
+    </Select.Content>
+  </Select.Root>
+
   <Button
     class="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
     onclick={async () => {

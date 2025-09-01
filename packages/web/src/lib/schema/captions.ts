@@ -7,6 +7,7 @@ const TypJson = S.Struct({
   typ: S.Literal("whisper", "whisper_api"),
   data: S.String,
 });
+export type TypJson = S.Schema.Type<typeof TypJson>;
 
 export const TypSegmented = S.transform(TypJson, Segments, {
   strict: true,

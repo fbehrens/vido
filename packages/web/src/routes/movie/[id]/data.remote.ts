@@ -46,7 +46,7 @@ export const getOpenai = command(Schema.standardSchemaV1(Schema.Number), async (
   const transcript = await transcribe(mp3_filename);
   await db.insert(captions).values({
     movieId: id,
-    typ: "WhisperApi",
+    typ: "whisper_api",
     data: JSON.stringify(transcript),
     details: JSON.stringify({ mp3_filename }),
   });
