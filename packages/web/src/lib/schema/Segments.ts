@@ -8,6 +8,7 @@ const Word = S.Struct({
 
 export const Segments = S.Array(
   S.Struct({
+    id: S.Number,
     start: S.Number,
     end: S.Number,
     text: S.String,
