@@ -4,6 +4,7 @@
   import Button from "$lib/components/ui/button/button.svelte";
   import * as S from "effect/Schema";
   import { WhisperApiSegmented } from "$lib/schema/whisper_api";
+  console.log(42);
 
   const togglePaused = () => {
     if (paused) {
