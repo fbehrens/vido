@@ -1,6 +1,5 @@
 <script lang="ts">
   import SegmentRow from "./SegmentRow.svelte";
-  import Srt from "$lib/components/Srt.svelte";
   import { getMovie, getOpenai } from "./data.remote";
   import Button from "$lib/components/ui/button/button.svelte";
   import * as S from "effect/Schema";
@@ -61,7 +60,6 @@
 <div>
   <input class="w-full bg-gray-200" readonly name="filename" value={movie.filename} />
 </div>
-<Srt id={movie.id} />
 <div class="p-1">
   <!-- svelte-ignore a11y_media_has_caption -->
   <video
