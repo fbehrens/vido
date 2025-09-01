@@ -1,4 +1,5 @@
 import * as S from "effect/Schema";
+import { Segments } from "./Segments";
 
 export class Word extends S.Class<Word>("Word")({
   word: S.String,
@@ -28,3 +29,14 @@ export class Whisper extends S.Class<Whisper>("Whisper")({
 }) {}
 
 export const WhisperJson = S.parseJson(Whisper);
+
+export const WhisperSegmented = S.transform(WhisperJson, Segments, {
+  strict: true,
+  decode: ({ segments }) => {
+    const r = segments.map(({ id, start, end, text, words }) => {
+      return { id, start, end, text, words };
+    });
+    return r;
+  },
+  encode: (segms) => segms as any,
+});

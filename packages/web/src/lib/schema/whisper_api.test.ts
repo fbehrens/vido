@@ -1,13 +1,15 @@
 import { readFixture } from "$lib/server/utils";
 import { describe, test, expect } from "vitest";
 import * as S from "effect/Schema";
-import { WhisperApiJson } from "./whisper_api";
+import { WhisperApiJson, WhisperApiSegmented } from "./whisper_api";
 
 const j = readFixture("test/fixtures/whisperApi.json");
-const wa = S.decodeSync(WhisperApiJson)(j);
 
 describe("whisper_api", () => {
-  test("", () => {
-    expect(wa).toMatchSnapshot();
+  test("decode", () => {
+    expect(S.decodeSync(WhisperApiJson)(j)).toMatchSnapshot();
+  });
+  test("transform", () => {
+    expect(S.decodeSync(WhisperApiSegmented)(j)).toMatchSnapshot();
   });
 });
