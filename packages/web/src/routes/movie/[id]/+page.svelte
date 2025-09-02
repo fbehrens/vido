@@ -21,39 +21,34 @@
 
   const allCaptions = movie.captions.map(({ typ }) => typ);
   let currentCaption = $state(allCaptions[0]);
-  const triggerContent = $derived(currentCaption ?? "Select captions");
+  const selectText = $derived(currentCaption ?? "Select captions");
+  const caption = $derived(movie.captions.find(({ typ }) => typ == currentCaption));
+  const segments = $derived(caption && S.decodeSync(TypSegmented)(caption as TypJson));
 
-  const cap = $derived(movie.captions.find(({ typ }) => typ == currentCaption));
-  const segments = $derived(cap && S.decodeSync(TypSegmented)(cap as TypJson));
-  const _segments_ = $derived(
-    segments && [
-      { start: -1, end: 0 },
-      ...segments,
-      { start: movie.duration, end: movie.duration! + 1 },
-    ],
-  );
-  let time = $state(0);
+  let currentTime = $state(0);
   let current = $state<number>(0);
   let playbackRate = $state(1);
   let paused = $state(true);
   let video: HTMLVideoElement;
   $effect(() => {
-    if (_segments_) {
-      while (time >= _segments_[current + 1].end) {
+    if (segments) {
+      while (segments[current + 1] && currentTime >= segments[current + 1].start) {
         current++;
       }
-      while (time < _segments_[current].end) {
+      while (current > 0 && currentTime < segments[current].start) {
         current--;
       }
     }
   });
-  let active = $derived(segments && time >= segments[current].start);
+  let active = $derived(
+    segments && (!segments[current].end || currentTime <= segments[current].end),
+  );
 </script>
 
 <div class="flex flex-row">
   <Select.Root type="single" name="selectCaption" bind:value={currentCaption}>
     <Select.Trigger class="w-[180px]">
-      {triggerContent}
+      {selectText}
     </Select.Trigger>
     <Select.Content>
       <Select.Group>
@@ -75,7 +70,7 @@
       } catch (error) {
         alert("Something went wrong!");
       }
-    }}>transcribe</Button
+    }}>whisper_api</Button
   >
 </div>
 
@@ -87,7 +82,7 @@
   <video
     bind:this={video}
     bind:paused
-    bind:currentTime={time}
+    bind:currentTime
     bind:playbackRate
     src={"/" + movie.filename}
     controls
@@ -102,9 +97,9 @@
 {#if segments}
   {#each segments as s, i}
     {#if i == current && active}
-      <SegmentRow {...s} bind:time></SegmentRow>
+      <SegmentRow {...s} bind:time={currentTime}></SegmentRow>
     {:else}
-      <div><button onclick={() => (time = s.start)}>{s.text}</button></div>
+      <div><button onclick={() => (currentTime = s.start)}>{s.text}</button></div>
     {/if}
   {/each}
 {/if}
