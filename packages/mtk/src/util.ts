@@ -15,9 +15,3 @@ export function exec(command: string): Promise<{
     });
   });
 }
-
-export function nTimes(n: number, f: any, ...args: any[]) {
-  for (let i = 0; i < n; i++) {
-    f(...args);
-  }
-}
