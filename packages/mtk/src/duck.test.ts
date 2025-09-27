@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { con, firstRowObject } from "./duck";
+import { con, firstRowObject, getThemaId } from "./duck";
 
+const thema = ["zdf", "lanz"] as [string, string];
 describe("duck", () => {
   it("firstrowObject", async () => {
     expect(await firstRowObject(`select 2 as "v"`)).toStrictEqual({ v: 2 });
@@ -9,10 +10,17 @@ describe("duck", () => {
   it("get", async () => {
     const row = await con.runAndReadAll(
       `insert into thema (sender, thema) values (?, ?) returning id`,
-      ["alice", "hello world"]
+      thema
     );
     const id = row.getRowObjects()[0]!.id;
     expect(id).toBe(1);
+  });
+
+  it("getThemaId", async () => {
+    expect(await getThemaId(...thema)).toBe(1);
+  });
+  it("getThemaId", async () => {
+    expect(await getThemaId("ARD", "weltspiegel")).toBe(2);
   });
 });
 
