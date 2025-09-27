@@ -121,8 +121,8 @@ export function* parseFilme({ path = "", bytes = Buffer.alloc(0) }) {
 
 export function parseDate(s: string): Date {
   const [datePart, timePart] = s.split(", ");
-  const [day, month, year] = datePart.split(".");
-  const [hours, minutes] = timePart.split(":");
+  const [day, month, year] = datePart!.split(".");
+  const [hours, minutes] = timePart!.split(":");
   return new Date(
     Number(year),
     Number(month) - 1,
