@@ -9,12 +9,16 @@ import {
   mediathek,
 } from "../../web/src/lib/server/db/schema/mediathek";
 import { count, desc, sql } from "drizzle-orm";
+import { con, getThemaId } from "./duck";
 
 const fileDir = "temp/",
-  filmeJson = fileDir + "filmliste.json";
+  filmeJson = fileDir + "filmliste.json",
+  filmeXz = fileDir + "Filmliste-akt.xz";
 let filmeCsv = fileDir + "filmliste.csv";
 
-const download = async ({ force }: { force: boolean }) => {
+type Download = { etag?: string; buffer?: Uint8Array };
+
+const download = async ({ force }: { force: boolean }): Promise<Download> => {
   const filmlisteXz = "https://liste.mediathekview.de/Filmliste-akt.xz";
   const response = await fetch(filmlisteXz);
   const result = await db_mediathek
@@ -27,25 +31,36 @@ const download = async ({ force }: { force: boolean }) => {
   console.log({ etag, oldEtag });
   if (etag === oldEtag) {
     console.log("no update");
-    if (!force) return;
+    if (!force) return { etag };
   }
   console.log(`download ${filmlisteXz} [etag=${etag}]`);
   const buffer = new Uint8Array(await response.arrayBuffer());
+  if (!fs.existsSync(filmeXz)) {
+    fs.writeFileSync(filmeXz, buffer);
+  }
+  return { etag, buffer };
+};
+
+const uncompress = async ({ etag, buffer }: Download) => {
   console.log(`decompress xz`);
-  const bytes = (await decompress(buffer)) as Buffer<ArrayBuffer>;
-  //   await Deno.writeFile(filmeJson, bytes);
+  const bytes = fs.existsSync(filmeJson)
+    ? await fs.readFileSync(filmeJson)
+    : ((await decompress(buffer!)) as Buffer<ArrayBuffer>);
+  //   await fs.writeFileSync(filmeJson, bytes);
   const filme = parseFilme({ bytes });
   const { value: liste } = filme.next();
   const [local, utc, nr, version, hash] = <string[]>liste;
-  await db_mediathek.insert(mediathek).values({
-    local,
-    utc,
-    nr,
-    version,
-    hash,
-    etag,
-    createdAt: Date.now(),
-  });
+  if (etag) {
+    await db_mediathek.insert(mediathek).values({
+      local,
+      utc,
+      nr,
+      version,
+      hash,
+      etag,
+      createdAt: Date.now(),
+    });
+  }
   console.log(`writeFile ${filmeCsv}`);
   let csv = "";
   for (const f of filme) {
@@ -60,7 +75,14 @@ export async function updateFilmliste({
 }) {
   if (!skipDownload) {
     if (!test) {
-      await download({ force });
+      const { etag, buffer } = fs.existsSync(filmeXz)
+        ? { buffer: fs.readFileSync(filmeXz) }
+        : await download({ force });
+
+      if (!buffer) {
+        return;
+      }
+      uncompress({ etag, buffer });
     } else {
       console.log(`test mode`);
       const _filmeCsv = filmeCsv;
@@ -117,6 +139,22 @@ export function* parseFilme({ path = "", bytes = Buffer.alloc(0) }) {
       sender = s || sender;
       thema = t || thema;
       return `${counter++},"${sender}","${thema}","${rest.join('","')}`;
+    };
+  };
+  const mupperDuck = () => {
+    let thema_id = 0;
+    return async (line: string) => {
+      console.log(line);
+      line = line.replaceAll('\\"', '""'); // \"  -> ""
+      line = line.slice(1);
+      const [sender, thema, ...rest] = line.split('","');
+      if ((sender! + thema!).length > 0) {
+        thema_id = await getThemaId(sender!, thema!);
+      }
+      await con.runAndReadAll(
+        `insert into filme values ( ?, ?, ?, ?, ?, ? ? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )`,
+        [thema_id, ...rest]
+      );
     };
   };
   const m = mapper();

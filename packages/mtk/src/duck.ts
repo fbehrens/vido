@@ -11,10 +11,33 @@ export const con = await instance.connect();
 await con.run(
   `
   create sequence seq_thema_id;
+
   create table thema (
   id INTEGER PRIMARY KEY default nextval('seq_thema_id'),
   sender VARCHAR,
-  thema VARCHAR,
+  thema VARCHAR);
+
+  create table filme (
+  thema_id integer,
+  titel VARCHAR,
+  datum VARCHAR,
+  zeit VARCHAR,
+  dauer VARCHAR,
+  mb VARCHAR,
+  beschreibung VARCHAR,
+  url VARCHAR,
+  website VARCHAR,
+  captions VARCHAR,
+  urlRtmp VARCHAR,
+  urlLD VARCHAR,
+  urlRtmpLD VARCHAR,
+  urlHD VARCHAR,
+  urlRtmpHD VARCHAR,
+  datumL VARCHAR,
+  urlHistory VARCHAR,
+  geo VARCHAR,
+  neu VARCHAR,
+  FOREIGN KEY (thema_id) REFERENCES thema(id)
   )`
 );
 
