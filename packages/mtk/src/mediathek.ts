@@ -13,6 +13,46 @@ import { count, desc, sql } from "drizzle-orm";
 const fileDir = "temp/",
   filmeJson = fileDir + "filmliste.json";
 let filmeCsv = fileDir + "filmliste.csv";
+
+const download = async ({ force }: { force: boolean }) => {
+  const filmlisteXz = "https://liste.mediathekview.de/Filmliste-akt.xz";
+  const response = await fetch(filmlisteXz);
+  const result = await db_mediathek
+    .select()
+    .from(mediathek)
+    .orderBy(desc(mediathek.id))
+    .get();
+  const oldEtag = result?.etag || "";
+  const etag = response.headers.get("etag")!;
+  console.log({ etag, oldEtag });
+  if (etag === oldEtag) {
+    console.log("no update");
+    if (!force) return;
+  }
+  console.log(`download ${filmlisteXz} [etag=${etag}]`);
+  const buffer = new Uint8Array(await response.arrayBuffer());
+  console.log(`decompress xz`);
+  const bytes = (await decompress(buffer)) as Buffer<ArrayBuffer>;
+  //   await Deno.writeFile(filmeJson, bytes);
+  const filme = parseFilme({ bytes });
+  const { value: liste } = filme.next();
+  const [local, utc, nr, version, hash] = <string[]>liste;
+  await db_mediathek.insert(mediathek).values({
+    local,
+    utc,
+    nr,
+    version,
+    hash,
+    etag,
+    createdAt: Date.now(),
+  });
+  console.log(`writeFile ${filmeCsv}`);
+  let csv = "";
+  for (const f of filme) {
+    csv += f + "\n";
+  }
+  //   fs.writeFileSync(filmeCsv, csv);
+};
 export async function updateFilmliste({
   force = false,
   test = false,
@@ -20,43 +60,7 @@ export async function updateFilmliste({
 }) {
   if (!skipDownload) {
     if (!test) {
-      const filmlisteXz = "https://liste.mediathekview.de/Filmliste-akt.xz";
-      const response = await fetch(filmlisteXz);
-      const result = await db_mediathek
-        .select()
-        .from(mediathek)
-        .orderBy(desc(mediathek.id))
-        .get();
-      const oldEtag = result?.etag || "";
-      const etag = response.headers.get("etag")!;
-      console.log({ etag, oldEtag });
-      if (etag === oldEtag) {
-        console.log("no update");
-        if (!force) return;
-      }
-      console.log(`download ${filmlisteXz} [etag=${etag}]`);
-      const buffer = new Uint8Array(await response.arrayBuffer());
-      console.log(`decompress xz`);
-      const bytes = (await decompress(buffer)) as Buffer<ArrayBuffer>;
-      //   await Deno.writeFile(filmeJson, bytes);
-      const filme = parseFilme({ bytes });
-      const { value: liste } = filme.next();
-      const [local, utc, nr, version, hash] = <string[]>liste;
-      await db_mediathek.insert(mediathek).values({
-        local,
-        utc,
-        nr,
-        version,
-        hash,
-        etag,
-        createdAt: Date.now(),
-      });
-      console.log(`writeFile ${filmeCsv}`);
-      let csv = "";
-      for (const f of filme) {
-        csv += f + "\n";
-      }
-      fs.writeFileSync(filmeCsv, csv);
+      await download({ force });
     } else {
       console.log(`test mode`);
       const _filmeCsv = filmeCsv;
@@ -65,6 +69,7 @@ export async function updateFilmliste({
     }
   }
   // import
+  return;
   await db_mediathek.delete(filmsPrev);
   await db_mediathek
     .insert(filmsPrev)
@@ -105,6 +110,7 @@ export function* parseFilme({ path = "", bytes = Buffer.alloc(0) }) {
       sender = "",
       thema = "";
     return (line: string) => {
+      console.log(line);
       line = line.replaceAll('\\"', '""'); // \"  -> ""
       line = line.slice(1);
       const [s, t, ...rest] = line.split('","');
@@ -114,8 +120,13 @@ export function* parseFilme({ path = "", bytes = Buffer.alloc(0) }) {
     };
   };
   const m = mapper();
+  let index = 0;
   for (const f of filme) {
     yield m(f);
+    index++;
+    if (index > 3) {
+      break;
+    }
   }
 }
 

@@ -1,6 +1,7 @@
 node_modules
 *-wal
 *-shm
+*.wal
 
 packages/youtube-transcript/pagedata
 

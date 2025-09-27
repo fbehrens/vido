@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach } from "vitest";
+import { describe, test, expect, beforeEach, it } from "vitest";
 import { parseDate, updateFilmliste } from "./mediathek";
 
 describe("mediathek", async () => {

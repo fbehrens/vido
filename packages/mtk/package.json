@@ -22,6 +22,7 @@
         "typescript": "^5"
     },
     "dependencies": {
+        "@duckdb/node-api": "1.4.0-r.1",
         "@effect/ai": "^0.25.2",
         "@effect/ai-anthropic": "^0.15.1",
         "@effect/cli": "^0.69.0",
