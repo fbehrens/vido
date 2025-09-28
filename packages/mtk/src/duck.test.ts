@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { con, firstRowObject, getThemaId } from "./duck";
+import { duck, firstRowObject, getThemaId } from "./duck";
 
 const thema = ["zdf", "lanz"] as [string, string];
 describe("duck", () => {
@@ -8,7 +8,7 @@ describe("duck", () => {
   });
 
   it("get", async () => {
-    const row = await con.runAndReadAll(
+    const row = await duck.runAndReadAll(
       `insert into thema (sender, thema) values (?, ?) returning id`,
       thema
     );

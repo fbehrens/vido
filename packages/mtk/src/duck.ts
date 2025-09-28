@@ -4,51 +4,27 @@ const path = "../../db/duck.db";
 // console.log(duckdb.version());
 // console.log(duckdb.configurationOptionDescriptions());
 
-await fs.unlink(path);
+// await fs.unlink(path);
 const instance = await DuckDBInstance.fromCache(path);
-export const con = await instance.connect();
+export const duck = await instance.connect();
 
-await con.run(
-  `
-  -- CALL start_ui();
-
-  create sequence seq_thema_id;
-
-  create table thema (
-  id INTEGER PRIMARY KEY default nextval('seq_thema_id'),
-  sender VARCHAR,
-  thema VARCHAR);
-
-  create table filme (
-  thema_id integer,
-  titel VARCHAR,
-  datum VARCHAR,
-  zeit VARCHAR,
-  dauer VARCHAR,
-  mb VARCHAR,
-  beschreibung VARCHAR,
-  url VARCHAR,
-  website VARCHAR,
-  captions VARCHAR,
-  urlRtmp VARCHAR,
-  urlLD VARCHAR,
-  urlRtmpLD VARCHAR,
-  urlHD VARCHAR,
-  urlRtmpHD VARCHAR,
-  datumL VARCHAR,
-  urlHistory VARCHAR,
-  geo VARCHAR,
-  neu VARCHAR,
-  FOREIGN KEY (thema_id) REFERENCES thema(id)
-  )`
-);
+// await duck.run(
+//   `
+//   -- CALL start_ui();
+//   create sequence seq_thema_id;
+//   create table thema (
+//   id INTEGER PRIMARY KEY default nextval('seq_thema_id'),
+//   sender VARCHAR,
+//   thema VARCHAR);
+// `
+// );
 
 // optionally creates a record in table thema and returns its id
 export const getThemaId = async (
   sender: string,
   thema: string
 ): Promise<number> => {
-  let reader = await con.runAndReadAll(
+  let reader = await duck.runAndReadAll(
     `select id from thema where sender = ? and thema = ?`,
     [sender, thema]
   );
@@ -56,7 +32,7 @@ export const getThemaId = async (
   if (rows.length > 0) {
     return rows[0]!.id as number;
   }
-  reader = await con.runAndReadAll(
+  reader = await duck.runAndReadAll(
     `insert into thema (sender, thema) values (?, ?) returning id`,
     [sender, thema]
   );
@@ -64,6 +40,6 @@ export const getThemaId = async (
 };
 
 export const firstRowObject = async (s: string) => {
-  const reader = await con.runAndReadAll(s);
+  const reader = await duck.runAndReadAll(s);
   return reader.getRowObjects()[0];
 };

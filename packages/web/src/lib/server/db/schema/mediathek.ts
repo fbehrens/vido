@@ -16,7 +16,6 @@ export const mediathek = sqliteTable("mediathek", {
 export const films = sqliteTable(
   "films",
   {
-    id: integer().primaryKey(),
     sender: text().notNull(),
     thema: text().notNull(),
     titel: text().notNull(),
@@ -47,7 +46,6 @@ export const films = sqliteTable(
 );
 
 export const filmsPrev = sqliteTable("films_prev", {
-  id: integer().primaryKey(),
   sender: text(),
   thema: text(),
   titel: text(),
