@@ -10,6 +10,8 @@ export const con = await instance.connect();
 
 await con.run(
   `
+  -- CALL start_ui();
+
   create sequence seq_thema_id;
 
   create table thema (
