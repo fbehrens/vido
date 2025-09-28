@@ -9,6 +9,7 @@ import {
 } from "../../web/src/lib/server/db/schema/mediathek";
 import { count, desc, sql } from "drizzle-orm";
 import { getDuck } from "./getDuck";
+import { decompress } from "@napi-rs/lzma/xz";
 
 export const columns = [
   "Sender",
@@ -46,24 +47,26 @@ export const updateFilmliste = async ({ force }: { force: boolean }) => {
     .orderBy(desc(mediathek.id))
     .get();
   const oldEtag = result?.etag || "";
-  //   let { etag, buffer } = await download({ force, oldEtag });
-  //   if (!buffer) {
-  //     return;
-  //   }
-  //   console.log("decompress");
-  //   buffer = (await decompress(buffer!)) as Buffer<ArrayBuffer>;
+  let { etag, buffer } = await download({ force, oldEtag });
+  if (!buffer) {
+    return;
+  }
+  console.log(`decompress -> ${filmeJson}`);
+  buffer = (await decompress(buffer!)) as Buffer<ArrayBuffer>;
   //   let [buffer, etag] = [fs.readFileSync(filmeJson), undefined];
-  //   const { info, lines } = parseJson(buffer);
-  //   fs.writeFileSync(filmeCsv, lines.join("\n"));
-  //   if (etag) {
-  //     await db_mediathek.insert(mediathek).values({
-  //       ...info,
-  //       etag,
-  //       createdAt: Date.now(),
-  //     });
-  //   }
-  await csv2sqlite();
-  //   await csv2duck();
+  console.log(`parse -> ${filmeCsv}`);
+  const { info, lines } = parseJson(buffer);
+  console.log(`import ${lines.length} rows`);
+  fs.writeFileSync(filmeCsv, lines.join("\n"));
+  if (etag) {
+    await db_mediathek.insert(mediathek).values({
+      ...info,
+      etag,
+      createdAt: Date.now(),
+    });
+  }
+  //   await csv2sqlite();
+  await csv2duck();
 };
 
 const download = async ({
@@ -77,7 +80,9 @@ const download = async ({
   const etag = response.headers.get("etag")!;
   console.log(`download ${oldEtag} => ${etag}`);
   const buffer =
-    etag === oldEtag ? undefined : new Uint8Array(await response.arrayBuffer());
+    etag === oldEtag && !force
+      ? undefined
+      : new Uint8Array(await response.arrayBuffer());
   return { etag, buffer };
 };
 
@@ -97,36 +102,14 @@ const mapper = () => {
   };
 };
 
-export const parseJson2 = (text: string) => {
-  const regex = /"(\w+)":(\[.*?\])(?=[\,\}])/gs;
-  const result: Record<string, any[][]> = {};
-  for (const match of text.matchAll(regex)) {
-    const key = match[1]!;
-    const arr = JSON.parse(match[2]!);
-    if (!result[key]) result[key] = [];
-    result[key].push(arr);
-  }
-  const m = mapper();
-  return result as {
-    Filmliste: [string[], string[]];
-    X: string[][];
-  };
-};
-
-const parseJson = (buffer: Uint8Array) => {
-  console.log(`parseJson`);
+export const parseJson = (buffer: Uint8Array) => {
   let json = new TextDecoder("utf-8").decode(buffer);
-  if (json.charAt(json.length - 1) != "}") {
-    console.warn("Filmlist not ending with } (incomplete?) ");
-  }
   json = json.slice(14, -2);
   const [liste, _, ...filme] = json.split(/\],?"(?:X|Filmliste)":\[/);
   // Liste ["07.09.2024, 09:35","07.09.2024, 07:35","3","MSearch [Vers.: 3.1.238]","22ae3b493eb73e562ffdadd00b71a743"]
   // sender,thema,titel,datum,zeit,dauer,mb,beschreibung,url,website,captions,urlRtmp,urlLD,urlRtmpLD,urlHD,urlRtmpHD,datumL,urlHistory,geo,neu";
   const [local, utc, nr, version, hash] = JSON.parse(`[${liste}]`);
-
   const m = mapper();
-
   return {
     info: { local, utc, nr, version, hash },
     lines: filme.map(m),
@@ -146,7 +129,6 @@ const csv2sqlite = async () => {
   //     .select(db_mediathek.select().from(films));
   //   console.log("films -> films_prev");
   await db_mediathek.delete(films);
-
   const insertCommand = `sqlite3 ${dbPathMediathek} ".import --csv ${filmeCsv} films"`;
   console.log(`run ${insertCommand}`);
   await exec(insertCommand);

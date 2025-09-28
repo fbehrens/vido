@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import * as fs from "fs";
-import { columns, parseDate, parseJson2 } from "./mediathek";
+import { parseDate, parseJson } from "./mediathek";
 
 describe("mediathek", async () => {
   test("parseDate", () => {
@@ -9,25 +9,17 @@ describe("mediathek", async () => {
     );
   });
   test("parse", () => {
-    const text = fs.readFileSync("test/filmliste.txt", "utf-8");
-    const {
-      Filmliste: [info, actualColumns],
-      X,
-    } = parseJson2(text);
+    const buffer = fs.readFileSync("test/filmliste.txt");
+    const { info, lines } = parseJson(buffer);
     expect(info).toMatchInlineSnapshot(`
-      [
-        "27.09.2025, 21:25",
-        "27.09.2025, 19:25",
-        "3",
-        "MSearch [Vers.: 3.1.267]",
-        "f1907ae164ee8413c302dcf07f08627a",
-      ]
+      {
+        "hash": "f1907ae164ee8413c302dcf07f08627a",
+        "local": "27.09.2025, 21:25",
+        "nr": "3",
+        "utc": "27.09.2025, 19:25",
+        "version": "MSearch [Vers.: 3.1.267]",
+      }
     `);
-    expect(actualColumns).toStrictEqual(columns);
-    expect(X.length).toBe(4);
-    for (const row of X) {
-      expect(row.length).toBe(20);
-    }
-    expect(X[1]![0]).toBe("ard");
+    expect(lines.length).toBe(4);
   });
 });

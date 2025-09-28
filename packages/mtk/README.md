@@ -32,28 +32,6 @@ duckdb ../../db/duck.db
 .table
 DROP table filme;
 
-create table filme (
-  sender VARCHAR,
-  thema VARCHAR,
-  titel VARCHAR,
-  datum VARCHAR,
-  zeit VARCHAR,
-  dauer VARCHAR,
-  mb VARCHAR,
-  beschreibung VARCHAR,
-  url VARCHAR,
-  website VARCHAR,
-  captions VARCHAR,
-  urlRtmp VARCHAR,
-  urlLD VARCHAR,
-  urlRtmpLD VARCHAR,
-  urlHD VARCHAR,
-  urlRtmpHD VARCHAR,
-  datumL VARCHAR,
-  urlHistory VARCHAR,
-  geo VARCHAR,
-  neu VARCHAR,
-  );
 
 -- sender,thema,titel,datum,zeit,dauer,mb,beschreibung,url,website,captions,urlRtmp,urlLD,urlRtmpLD,urlHD,urlRtmpHD,datumL,urlHistory,geo,neu
 
