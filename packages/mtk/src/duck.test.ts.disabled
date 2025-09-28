@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { duck, firstRowObject, getThemaId } from "./duck";
+import { firstRowObject, getThemaId } from "./duck";
+import { getDuck } from "./getDuck";
 
+const duck = await getDuck();
 const thema = ["zdf", "lanz"] as [string, string];
 describe("duck", () => {
   it("firstrowObject", async () => {

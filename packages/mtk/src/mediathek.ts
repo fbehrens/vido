@@ -8,7 +8,30 @@ import {
   mediathek,
 } from "../../web/src/lib/server/db/schema/mediathek";
 import { count, desc, sql } from "drizzle-orm";
-import { duck } from "./duck";
+import { getDuck } from "./getDuck";
+
+export const columns = [
+  "Sender",
+  "Thema",
+  "Titel",
+  "Datum",
+  "Zeit",
+  "Dauer",
+  "Größe [MB]",
+  "Beschreibung",
+  "Url",
+  "Website",
+  "Url Untertitel",
+  "Url RTMP",
+  "Url Klein",
+  "Url RTMP Klein",
+  "Url HD",
+  "Url RTMP HD",
+  "DatumL",
+  "Url History",
+  "Geo",
+  "neu",
+];
 
 const fileDir = "temp/",
   filmlisteXz = "https://liste.mediathekview.de/Filmliste-akt.xz",
@@ -58,6 +81,38 @@ const download = async ({
   return { etag, buffer };
 };
 
+const mapper = () => {
+  let sender: string, thema: string;
+  return (line: string) => {
+    line = line.replaceAll('\\"', '""'); // \"  -> ""
+    line = line.slice(1);
+    const [s, t, ...rest] = line.split('","');
+    if (s) {
+      sender = s;
+    }
+    if (t) {
+      thema = t;
+    }
+    return `"${sender}","${thema}","${rest.join('","')}`;
+  };
+};
+
+export const parseJson2 = (text: string) => {
+  const regex = /"(\w+)":(\[.*?\])(?=[\,\}])/gs;
+  const result: Record<string, any[][]> = {};
+  for (const match of text.matchAll(regex)) {
+    const key = match[1]!;
+    const arr = JSON.parse(match[2]!);
+    if (!result[key]) result[key] = [];
+    result[key].push(arr);
+  }
+  const m = mapper();
+  return result as {
+    Filmliste: [string[], string[]];
+    X: string[][];
+  };
+};
+
 const parseJson = (buffer: Uint8Array) => {
   console.log(`parseJson`);
   let json = new TextDecoder("utf-8").decode(buffer);
@@ -70,21 +125,6 @@ const parseJson = (buffer: Uint8Array) => {
   // sender,thema,titel,datum,zeit,dauer,mb,beschreibung,url,website,captions,urlRtmp,urlLD,urlRtmpLD,urlHD,urlRtmpHD,datumL,urlHistory,geo,neu";
   const [local, utc, nr, version, hash] = JSON.parse(`[${liste}]`);
 
-  const mapper = () => {
-    let sender: string, thema: string;
-    return (line: string) => {
-      line = line.replaceAll('\\"', '""'); // \"  -> ""
-      line = line.slice(1);
-      const [s, t, ...rest] = line.split('","');
-      if (s) {
-        sender = s;
-      }
-      if (t) {
-        thema = t;
-      }
-      return `"${sender}","${thema}","${rest.join('","')}`;
-    };
-  };
   const m = mapper();
 
   return {
@@ -94,6 +134,7 @@ const parseJson = (buffer: Uint8Array) => {
 };
 
 const csv2duck = async () => {
+  const duck = await getDuck();
   duck.run(`delete from filme;
 insert into filme SELECT * FROM read_csv('${filmeCsv}');`);
 };

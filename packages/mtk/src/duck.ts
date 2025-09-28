@@ -1,13 +1,5 @@
-import { DuckDBInstance } from "@duckdb/node-api";
 import { promises as fs } from "fs";
-const path = "../../db/duck.db";
-// console.log(duckdb.version());
-// console.log(duckdb.configurationOptionDescriptions());
-
-// await fs.unlink(path);
-const instance = await DuckDBInstance.fromCache(path);
-export const duck = await instance.connect();
-
+import { getDuck } from "./getDuck";
 // await duck.run(
 //   `
 //   -- CALL start_ui();
@@ -20,6 +12,7 @@ export const duck = await instance.connect();
 // );
 
 // optionally creates a record in table thema and returns its id
+const duck = await getDuck();
 export const getThemaId = async (
   sender: string,
   thema: string
