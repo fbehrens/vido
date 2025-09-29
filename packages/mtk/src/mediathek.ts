@@ -121,7 +121,8 @@ export const parseJson = (buffer: Uint8Array) => {
 const csv2duck = async () => {
   const duck = await getDuck({});
   duck.run(`delete from filme;
-insert into filme SELECT * FROM read_csv('${filmeCsv}');`);
+insert into filme SELECT * FROM read_csv('${filmeCsv}');
+update filme set datum = datum[7:]||'-'||datum[4:5]||'-' ||datum[:2];`);
 };
 
 const csv2sqlite = async () => {
