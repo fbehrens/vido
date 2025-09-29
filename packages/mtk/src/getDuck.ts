@@ -4,7 +4,11 @@ export const path = "../../db/duck.db";
 // console.log(duckdb.version());
 // console.log(duckdb.configurationOptionDescriptions());
 // await fs.unlink(path);
-export const getDuck = async () => {
+export const getDuck = async ({ ui = false }: { ui?: boolean }) => {
   const instance = await DuckDBInstance.fromCache(path);
-  return await instance.connect();
+  const con = await instance.connect();
+  if (ui) {
+    await con.run("CALL start_ui()");
+  }
+  return con;
 };

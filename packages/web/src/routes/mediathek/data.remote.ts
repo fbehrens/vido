@@ -1,4 +1,5 @@
 import { query } from "$app/server";
+import { duck } from "$lib/server/db/duck";
 import { db_mediathek } from "$lib/server/db/mediathek";
 import { films } from "$lib/server/db/schema/mediathek";
 import { desc, sql } from "drizzle-orm";
@@ -7,27 +8,35 @@ import * as S from "effect/Schema";
 const GetFilmsParam = S.Struct({ search: S.String, limit: S.Number });
 type GetFilmsParam = S.Schema.Type<typeof GetFilmsParam>;
 
-const where_clause = (s: string) =>
-  sql`${films.sender} || ${films.thema} || ${films.titel} || ${films.beschreibung} like ${"%" + s + "%"} `;
+const where_clause = (s: string) => `where sender || thema || titel || beschreibung like '%${s}%' `;
 
-export const getFilms = query(S.standardSchemaV1(GetFilmsParam), async (param) => {
-  const data = await db_mediathek
-    .select({
-      id: films.id,
-      sender: films.sender,
-      thema: films.thema,
-      titel: films.titel,
-      beschreibung: films.beschreibung,
-      datum: films.datum,
-    })
-    .from(films)
-    .where(where_clause(param.search))
-    .orderBy(desc(films.datum))
-    .limit(param.limit);
+type FilmDuck = {
+  sender: string;
+  thema: string;
+  titel: string;
+  beschreibung: string;
+  datum: string;
+};
+export const getFilmsDuck = query(S.standardSchemaV1(GetFilmsParam), async (param) => {
+  const reader = await duck.runAndReadAll(`
+    from duck.main.filme
+    select
+      sender,
+      thema,
+      titel,
+      beschreibung,
+      datum,
+    ${where_clause(param.search)}
+    order by datum desc
+    limit ${param.limit};`);
+  const data = reader.getRowObjectsJS() as FilmDuck[];
   const count =
     data.length == param.limit
-      ? await db_mediathek.$count(films, where_clause(param.search))
+      ? (
+          await duck.runAndReadAll(
+            `from duck.main.filme select count(*) ${where_clause(param.search)}`,
+          )
+        ).getRows()[0]
       : data.length;
   return { data, count };
 });
-export type Film = Awaited<ReturnType<typeof getFilms>>["data"][number];

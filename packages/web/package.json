@@ -52,6 +52,7 @@
         "@types/node": "^24.3.0",
         "better-sqlite3": "^12.2.0",
         "cmd": "workspace:*",
+        "mtk": "workspace:*",
         "drizzle-orm": "^0.44.4",
         "effect": "^3.17.9",
         "imsc": "^1.1.5",

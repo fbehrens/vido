@@ -13,12 +13,12 @@
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
   import { Button } from "$lib/components/ui/button";
   import { columns } from "./columns";
-  import { getFilms } from "./data.remote";
+  import { getFilmsDuck } from "./data.remote";
   import { Input } from "$lib/components/ui/input";
   let search = $state("lanz");
   let limit = $state("1000");
   const param = $derived({ search, limit: Number(limit) });
-  const { data, count } = $derived(await getFilms(param));
+  const { data, count } = $derived(await getFilmsDuck(param));
 
   let sorting = $state<SortingState>([]);
   let columnFilters = $state<ColumnFiltersState>([]);
@@ -142,7 +142,7 @@
     </Table.Root>
   </div>
   <div class="flex items-center justify-end space-x-2 py-4">
-    <div class="flex-1 text-sm text-muted-foreground">
+    <div class="text-muted-foreground flex-1 text-sm">
       {table.getFilteredSelectedRowModel().rows.length} of{" "}
       {table.getFilteredRowModel().rows.length} row(s) selected.
     </div>
