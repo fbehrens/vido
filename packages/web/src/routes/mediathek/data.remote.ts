@@ -11,6 +11,7 @@ type GetFilmsParam = S.Schema.Type<typeof GetFilmsParam>;
 const where_clause = (s: string) => `where sender || thema || titel || beschreibung like '%${s}%' `;
 
 type FilmDuck = {
+  id: number;
   sender: string;
   thema: string;
   titel: string;
@@ -21,6 +22,7 @@ export const getFilmsDuck = query(S.standardSchemaV1(GetFilmsParam), async (para
   const reader = await duck.runAndReadAll(`
     from duck.main.filme
     select
+      id,
       sender,
       thema,
       titel,

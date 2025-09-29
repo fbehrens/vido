@@ -87,7 +87,9 @@ const download = async ({
 };
 
 const mapper = () => {
-  let sender: string, thema: string;
+  let sender: string,
+    thema: string,
+    id = 0;
   return (line: string) => {
     line = line.replaceAll('\\"', '""'); // \"  -> ""
     line = line.slice(1);
@@ -98,7 +100,7 @@ const mapper = () => {
     if (t) {
       thema = t;
     }
-    return `"${sender}","${thema}","${rest.join('","')}`;
+    return `${id++},"${sender}","${thema}","${rest.join('","')}`;
   };
 };
 
@@ -117,7 +119,7 @@ export const parseJson = (buffer: Uint8Array) => {
 };
 
 const csv2duck = async () => {
-  const duck = await getDuck();
+  const duck = await getDuck({});
   duck.run(`delete from filme;
 insert into filme SELECT * FROM read_csv('${filmeCsv}');`);
 };
