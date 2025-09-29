@@ -1,5 +1,10 @@
-import { updateFilmliste } from "./mediathek";
+import { csv2duck, updateFilmliste } from "./mediathek";
 const [_node, _viteNode, ...args] = process.argv;
-console.log("loads mediatheklist (-f)force)");
+console.log("loads filmliste (-f)orce) (-c)svOnly");
 const has = (arg: string) => args.includes(arg);
-await updateFilmliste({ force: has("-f") });
+
+if (has("-c")) {
+  await csv2duck();
+} else {
+  await updateFilmliste({ force: has("-f") });
+}

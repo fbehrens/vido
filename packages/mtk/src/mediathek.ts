@@ -11,28 +11,28 @@ import { count, desc, sql } from "drizzle-orm";
 import { getDuck } from "./getDuck";
 import { decompress } from "@napi-rs/lzma/xz";
 
-export const columns = [
-  "Sender",
-  "Thema",
-  "Titel",
-  "Datum",
-  "Zeit",
-  "Dauer",
-  "Größe [MB]",
-  "Beschreibung",
-  "Url",
-  "Website",
-  "Url Untertitel",
-  "Url RTMP",
-  "Url Klein",
-  "Url RTMP Klein",
-  "Url HD",
-  "Url RTMP HD",
-  "DatumL",
-  "Url History",
-  "Geo",
-  "neu",
-];
+export const columns = {
+  sender: "Sender",
+  thema: "Thema",
+  titel: "Titel",
+  datum: "Datum",
+  zeit: "Zeit",
+  dauer: "Dauer",
+  mb: "Größe [MB]",
+  beschreibung: "Beschreibung",
+  url: "Url",
+  website: "Website",
+  captions: "Url Untertitel",
+  urlRtmp: "Url RTMP",
+  urlLD: "Url Klein",
+  urlRtmpLD: "Url RTMP Klein",
+  urlHD: "Url HD",
+  urlRtmpHD: "Url RTMP HD",
+  datumL: "DatumL",
+  urlHistory: "Url History",
+  geo: "Geo",
+  neu: "neu",
+};
 
 const fileDir = "temp/",
   filmlisteXz = "https://liste.mediathekview.de/Filmliste-akt.xz",
@@ -118,7 +118,8 @@ export const parseJson = (buffer: Uint8Array) => {
   };
 };
 
-const csv2duck = async () => {
+export const csv2duck = async () => {
+  console.log("import csv");
   const duck = await getDuck({});
   duck.run(`delete from filme;
 insert into filme SELECT * FROM read_csv('${filmeCsv}');

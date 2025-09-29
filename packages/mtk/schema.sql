@@ -1,7 +1,7 @@
 -- filme schema
 drop table filme;
 create table filme (
-  id integer PRIMARY KEY,
+  id INTEGER PRIMARY KEY,
   sender VARCHAR,
   thema VARCHAR,
   titel VARCHAR,
