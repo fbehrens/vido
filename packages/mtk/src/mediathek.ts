@@ -1,12 +1,7 @@
 import "dotenv/config";
 import * as fs from "fs";
-import { exec } from "./util";
-import { db_mediathek, dbPathMediathek } from "./db";
-import {
-  films,
-  filmsPrev,
-  mediathek,
-} from "../../web/src/lib/server/db/schema/mediathek";
+import { db_mediathek } from "./db";
+import { mediathek } from "../../web/src/lib/server/db/schema/mediathek";
 import { count, desc, sql } from "drizzle-orm";
 import { getDuck } from "./getDuck";
 import { decompress } from "@napi-rs/lzma/xz";
@@ -42,19 +37,20 @@ const fileDir = "temp/",
   filmeCsv = fileDir + "filmliste.csv";
 
 export const updateFilmliste = async ({ force }: { force: boolean }) => {
-  const result = await db_mediathek
-    .select()
-    .from(mediathek)
-    .orderBy(desc(mediathek.id))
-    .get();
-  const oldEtag = result?.etag || "";
-  let { etag, buffer } = await download({ force, oldEtag });
-  if (!buffer) {
-    return;
-  }
-  console.log(`decompress -> ${filmeJson}`);
-  buffer = (await decompress(buffer!)) as Buffer<ArrayBuffer>;
-  //   let [buffer, etag] = [fs.readFileSync(filmeJson), undefined];
+  //   const result = await db_mediathek
+  //     .select()
+  //     .from(mediathek)
+  //     .orderBy(desc(mediathek.id))
+  //     .get();
+  //   const oldEtag = result?.etag || "";
+  //   let { etag, buffer } = await download({ force, oldEtag });
+  //   if (!buffer) {
+  //     return;
+  //   }
+  //   console.log(`decompress -> ${filmeJson}`);
+  //   buffer = (await decompress(buffer!)) as Buffer<ArrayBuffer>;
+  //   fs.writeFileSync(filmeJson, buffer);
+  let [buffer, etag] = [fs.readFileSync(filmeJson), undefined];
   console.log(`parse -> ${filmeCsv}`);
   const { info, lines } = parseJson(buffer);
   console.log(`import ${lines.length} rows`);
@@ -92,7 +88,7 @@ const mapper = () => {
     thema: string,
     id = 0;
   return (line: string) => {
-    line = line.replaceAll('\\"', '""'); // \"  -> ""
+    // line = line.replaceAll('\\"', '""'); // \"  -> ""
     line = line.slice(1);
 
     const [
@@ -124,7 +120,13 @@ const mapper = () => {
     if (t) {
       thema = t;
     }
-    return `${id++},"${sender}","${thema}","${titel}","${datum}","${zeit}","${dauer}",${mb},"${beschreibung}","${url}","${website}","${captions}","${urlRtmp}","${urlLD}","${urlRtmpLD}","${urlHD}","${urlRtmpHD}",${datumL},"${urlHistory}","${geo}","${neu}"`;
+    if (urlRtmpLD) {
+      throw new Error(`new field urlRtmpLD=${urlRtmpLD}`);
+    }
+    if (urlRtmpHD) {
+      throw new Error(`new field urlRtmpHD=${urlRtmpHD}`);
+    }
+    return `${id++},"${sender}","${thema}","${titel}","${datum}","${zeit}","${dauer}",${mb},"${beschreibung}","${url}","${website}","${captions}","${urlRtmp}","${urlLD}","${urlHD}",${datumL},"${urlHistory}","${geo}","${neu}`;
   };
 };
 
@@ -148,23 +150,6 @@ export const csv2duck = async () => {
   duck.run(`delete from filme;
 insert into filme SELECT * FROM read_csv('${filmeCsv}');
 update filme set datum = datum[7:]||'-'||datum[4:5]||'-' ||datum[:2];`);
-};
-
-const csv2sqlite = async () => {
-  //   await db_mediathek.delete(filmsPrev);
-  //   await db_mediathek
-  //     .insert(filmsPrev)
-  //     .select(db_mediathek.select().from(films));
-  //   console.log("films -> films_prev");
-  await db_mediathek.delete(films);
-  const insertCommand = `sqlite3 ${dbPathMediathek} ".import --csv ${filmeCsv} films"`;
-  console.log(`run ${insertCommand}`);
-  await exec(insertCommand);
-  //   await db_mediathek.update(films).set({
-  //     datum: sql`substr(datum, 7, 4) || '-' || substr(datum, 4, 2) || '-' || substr(datum, 1, 2)`,
-  //   }); // YYYY--MM-DD
-  const c = await db_mediathek.select({ count: count() }).from(films).get();
-  console.log(`imported ${c?.count} films`);
 };
 
 export function parseDate(s: string): Date {
