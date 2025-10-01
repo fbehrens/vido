@@ -1,8 +1,5 @@
 import { query } from "$app/server";
 import { duck } from "$lib/server/db/duck";
-import { db_mediathek } from "$lib/server/db/mediathek";
-import { films } from "$lib/server/db/schema/mediathek";
-import { desc, sql } from "drizzle-orm";
 import * as S from "effect/Schema";
 
 const GetFilmsParam = S.Struct({ search: S.String, limit: S.Number });
@@ -10,7 +7,7 @@ type GetFilmsParam = S.Schema.Type<typeof GetFilmsParam>;
 
 const where_clause = (s: string) => `where sender || thema || titel || beschreibung like '%${s}%' `;
 
-export type FilmDuck = {
+export type Film = {
   id: number;
   sender: string;
   thema: string;
@@ -31,7 +28,7 @@ export const getFilmsDuck = query(S.standardSchemaV1(GetFilmsParam), async (para
     ${where_clause(param.search)}
     order by datumzeit desc
     limit ${param.limit};`);
-  const data = reader.getRowObjectsJS() as FilmDuck[];
+  const data = reader.getRowObjectsJS() as Film[];
   const count =
     data.length == param.limit
       ? (

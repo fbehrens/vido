@@ -15,7 +15,7 @@
   import { columns } from "./columns";
   import { getFilmsDuck } from "./data.remote";
   import { Input } from "$lib/components/ui/input";
-  let search = $state("lanz");
+  let search = $state("Markus Lanz");
   let limit = $state("1000");
   const param = $derived({ search, limit: Number(limit) });
   const { data, count } = $derived(await getFilmsDuck(param));
