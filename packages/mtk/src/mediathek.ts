@@ -11,7 +11,7 @@ import { count, desc, sql } from "drizzle-orm";
 import { getDuck } from "./getDuck";
 import { decompress } from "@napi-rs/lzma/xz";
 
-export const columns = {
+export const columnMapping = {
   sender: "Sender",
   thema: "Thema",
   titel: "Titel",
@@ -33,6 +33,7 @@ export const columns = {
   geo: "Geo",
   neu: "neu",
 };
+const dbColumns = Object.keys(columnMapping);
 
 const fileDir = "temp/",
   filmlisteXz = "https://liste.mediathekview.de/Filmliste-akt.xz",
@@ -93,14 +94,37 @@ const mapper = () => {
   return (line: string) => {
     line = line.replaceAll('\\"', '""'); // \"  -> ""
     line = line.slice(1);
-    const [s, t, ...rest] = line.split('","');
+
+    const [
+      s,
+      t,
+      titel,
+      datum,
+      zeit,
+      dauer,
+      mb,
+      beschreibung,
+      url,
+      website,
+      captions,
+      urlRtmp,
+      urlLD,
+      urlRtmpLD,
+      urlHD,
+      urlRtmpHD,
+      datumL,
+      urlHistory,
+      geo,
+      neu,
+    ] = line.split('","');
+
     if (s) {
       sender = s;
     }
     if (t) {
       thema = t;
     }
-    return `${id++},"${sender}","${thema}","${rest.join('","')}`;
+    return `${id++},"${sender}","${thema}","${titel}","${datum}","${zeit}","${dauer}",${mb},"${beschreibung}","${url}","${website}","${captions}","${urlRtmp}","${urlLD}","${urlRtmpLD}","${urlHD}","${urlRtmpHD}",${datumL},"${urlHistory}","${geo}","${neu}"`;
   };
 };
 
