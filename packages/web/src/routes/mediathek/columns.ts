@@ -1,8 +1,13 @@
-import { renderComponent } from "$lib/components/ui/data-table/render-helpers";
-import type { ColumnDef } from "@tanstack/table-core";
+import { renderComponent, renderSnippet } from "$lib/components/ui/data-table/render-helpers";
+import type { ColumnDef, Row } from "@tanstack/table-core";
 import type { FilmDuck } from "./data.remote";
 import FilteredColumnHeader from "$lib/components/FilteredColumnHeader.svelte";
 import { Checkbox } from "$lib/components/ui/checkbox/index.js";
+import { createRawSnippet } from "svelte";
+
+const titelSnippet = createRawSnippet<[Row<FilmDuck>]>((o) => ({
+  render: () => `<a href="/mediathek/${o().getValue("id")}" >${o().getValue("titel")}</a>`,
+}));
 
 export const columns: ColumnDef<FilmDuck>[] = [
   {
@@ -38,6 +43,7 @@ export const columns: ColumnDef<FilmDuck>[] = [
     accessorKey: "titel",
     header: ({ column }) => renderComponent(FilteredColumnHeader, { column }),
     filterFn: "includesString", //Sensitive
+    cell: ({ row }) => renderSnippet(titelSnippet, row),
   },
   {
     accessorKey: "datumzeit",
