@@ -26,6 +26,7 @@
         "@types/better-sqlite3": "^7.6.13",
         "@types/lzma-native": "^4.0.4",
         "@types/tmp": "^0.2.6",
+        "@types/xml2js": "^0.4.14",
         "autoprefixer": "^10.4.21",
         "bits-ui": "2.9.1",
         "clsx": "^2.1.1",
@@ -59,7 +60,8 @@
         "openai": "^5.23.2",
         "readable-stream": "^4.7.0",
         "tailwind-merge": "^3.3.1",
-        "tmp": "^0.2.5"
+        "tmp": "^0.2.5",
+        "xml2js": "^0.6.2"
     },
     "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee"
 }

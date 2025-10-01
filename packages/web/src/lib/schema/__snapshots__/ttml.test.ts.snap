@@ -1,0 +1,46 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ttml > parse 1`] = `
+[
+  {
+    "end": 6.12,
+    "start": 4.2,
+    "style": "textWhite",
+    "text": "Diese Untertitel
+sind live produziert.",
+  },
+  {
+    "end": 5.44,
+    "start": 2.12,
+    "style": "textWhite",
+    "text": "Willkommen zu unserer Sendung.",
+  },
+  {
+    "end": 9.28,
+    "start": 5.56,
+    "style": "textWhite",
+    "text": "Die Welt redet über
+einen neuen Friedensplan für Gaza.",
+  },
+  {
+    "end": 12,
+    "start": 9.36,
+    "style": "textWhite",
+    "text": "Wir alle haben die Bilder
+aus Washington gesehen.",
+  },
+  {
+    "end": 16.44,
+    "start": 12.08,
+    "style": "textWhite",
+    "text": "Trump, der von
+einem historischen Tag sprach,",
+  },
+  {
+    "end": 4662.28,
+    "start": 4659.76,
+    "style": "textWhite",
+    "text": "Tschüss.",
+  },
+]
+`;
