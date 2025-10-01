@@ -1,10 +1,10 @@
 import { renderComponent } from "$lib/components/ui/data-table/render-helpers";
 import type { ColumnDef } from "@tanstack/table-core";
-import type { Film } from "./data.remote";
+import type { FilmDuck } from "./data.remote";
 import FilteredColumnHeader from "$lib/components/FilteredColumnHeader.svelte";
 import { Checkbox } from "$lib/components/ui/checkbox/index.js";
 
-export const columns: ColumnDef<Film>[] = [
+export const columns: ColumnDef<FilmDuck>[] = [
   {
     id: "select",
     header: ({ table }) =>
@@ -40,8 +40,12 @@ export const columns: ColumnDef<Film>[] = [
     filterFn: "includesString", //Sensitive
   },
   {
-    accessorKey: "datum",
+    accessorKey: "datumzeit",
     header: ({ column }) => renderComponent(FilteredColumnHeader, { column }),
+    cell: ({ getValue }) => {
+      const date = new Date(getValue() as string);
+      return date.toISOString().slice(0, 16).replace("T", " ");
+    },
   },
   {
     accessorKey: "beschreibung",

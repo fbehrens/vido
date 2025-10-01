@@ -30,27 +30,27 @@ export const columnMapping = {
 };
 const dbColumns = Object.keys(columnMapping);
 
-const fileDir = "temp/",
+export const fileDir = "temp/",
   filmlisteXz = "https://liste.mediathekview.de/Filmliste-akt.xz",
   filmeXz = fileDir + "Filmliste-akt.xz",
   filmeJson = fileDir + "filmliste.json",
   filmeCsv = fileDir + "filmliste.csv";
 
 export const updateFilmliste = async ({ force }: { force: boolean }) => {
-  //   const result = await db_mediathek
-  //     .select()
-  //     .from(mediathek)
-  //     .orderBy(desc(mediathek.id))
-  //     .get();
-  //   const oldEtag = result?.etag || "";
-  //   let { etag, buffer } = await download({ force, oldEtag });
-  //   if (!buffer) {
-  //     return;
-  //   }
-  //   console.log(`decompress -> ${filmeJson}`);
-  //   buffer = (await decompress(buffer!)) as Buffer<ArrayBuffer>;
+  const result = await db_mediathek
+    .select()
+    .from(mediathek)
+    .orderBy(desc(mediathek.id))
+    .get();
+  const oldEtag = result?.etag || "";
+  let { etag, buffer } = await download({ force, oldEtag });
+  if (!buffer) {
+    return;
+  }
+  console.log(`decompress -> ${filmeJson}`);
+  buffer = (await decompress(buffer!)) as Buffer<ArrayBuffer>;
   //   fs.writeFileSync(filmeJson, buffer);
-  let [buffer, etag] = [fs.readFileSync(filmeJson), undefined];
+  //   let [buffer, etag] = [fs.readFileSync(filmeJson), undefined];
   console.log(`parse -> ${filmeCsv}`);
   const { info, lines } = parseJson(buffer);
   console.log(`import ${lines.length} rows`);
@@ -88,9 +88,6 @@ const mapper = () => {
     thema: string,
     id = 0;
   return (line: string) => {
-    // line = line.replaceAll('\\"', '""'); // \"  -> ""
-    line = line.slice(1);
-
     const [
       s,
       t,
@@ -112,7 +109,7 @@ const mapper = () => {
       urlHistory,
       geo,
       neu,
-    ] = line.split('","');
+    ] = line.slice(1).replace(`\",","`, `\", ","`).split('","');
 
     if (s) {
       sender = s;
@@ -126,7 +123,21 @@ const mapper = () => {
     if (urlRtmpHD) {
       throw new Error(`new field urlRtmpHD=${urlRtmpHD}`);
     }
-    return `${id++},"${sender}","${thema}","${titel}","${datum}","${zeit}","${dauer}",${mb},"${beschreibung}","${url}","${website}","${captions}","${urlRtmp}","${urlLD}","${urlHD}",${datumL},"${urlHistory}","${geo}","${neu}`;
+    if (neu != `false"`) {
+      console.log({ neu });
+      throw new Error(`field neu is not false", =${neu}`);
+    }
+    const datumzeit = datum
+      ? datum!.slice(6) +
+        "-" +
+        datum!.slice(3, 5) +
+        "-" +
+        datum!.slice(0, 2) +
+        " " +
+        (zeit ? zeit : "00:00:00")
+      : "";
+
+    return `${id++},"${sender}","${thema}","${titel}","${datumzeit}","${dauer}",${mb},"${beschreibung}","${url}","${website}","${captions}","${urlRtmp}","${urlLD}","${urlHD}",${datumL},"${urlHistory}","${geo}"`;
   };
 };
 
@@ -149,7 +160,7 @@ export const csv2duck = async () => {
   const duck = await getDuck({});
   duck.run(`delete from filme;
 insert into filme SELECT * FROM read_csv('${filmeCsv}');
-update filme set datum = datum[7:]||'-'||datum[4:5]||'-' ||datum[:2];`);
+-- update filme set datum = datum[7:]||'-'||datum[4:5]||'-' ||datum[:2];`);
 };
 
 export function parseDate(s: string): Date {

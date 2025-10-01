@@ -10,13 +10,13 @@ type GetFilmsParam = S.Schema.Type<typeof GetFilmsParam>;
 
 const where_clause = (s: string) => `where sender || thema || titel || beschreibung like '%${s}%' `;
 
-type FilmDuck = {
+export type FilmDuck = {
   id: number;
   sender: string;
   thema: string;
   titel: string;
   beschreibung: string;
-  datum: string;
+  datumzeit: Date;
 };
 export const getFilmsDuck = query(S.standardSchemaV1(GetFilmsParam), async (param) => {
   const reader = await duck.runAndReadAll(`
@@ -27,9 +27,9 @@ export const getFilmsDuck = query(S.standardSchemaV1(GetFilmsParam), async (para
       thema,
       titel,
       beschreibung,
-      datum,
+      datumzeit,
     ${where_clause(param.search)}
-    order by datum desc
+    order by datumzeit desc
     limit ${param.limit};`);
   const data = reader.getRowObjectsJS() as FilmDuck[];
   const count =
