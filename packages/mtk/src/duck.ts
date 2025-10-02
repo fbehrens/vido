@@ -12,7 +12,7 @@ import { getDuck } from "./getDuck";
 // );
 
 // optionally creates a record in table thema and returns its id
-const duck = await getDuck();
+export const duck = await getDuck({});
 export const getThemaId = async (
   sender: string,
   thema: string

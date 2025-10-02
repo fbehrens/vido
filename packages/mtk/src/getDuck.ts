@@ -1,5 +1,5 @@
 import { DuckDBInstance } from "@duckdb/node-api";
-export const path = "../../db/duck.db";
+const path = "../../db/duck.db";
 
 // console.log(duckdb.version());
 // console.log(duckdb.configurationOptionDescriptions());

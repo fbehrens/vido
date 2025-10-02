@@ -1,9 +1,6 @@
 import "dotenv/config";
 import * as fs from "fs";
-import { db_mediathek } from "./db";
-import { mediathek } from "../../web/src/lib/server/db/schema/mediathek";
-import { count, desc, sql } from "drizzle-orm";
-import { getDuck } from "./getDuck";
+import { duck } from "./duck";
 import { decompress } from "@napi-rs/lzma/xz";
 
 export const columnMapping = {
@@ -37,12 +34,8 @@ export const fileDir = "temp/",
   filmeCsv = fileDir + "filmliste.csv";
 
 export const updateFilmliste = async ({ force }: { force: boolean }) => {
-  const result = await db_mediathek
-    .select()
-    .from(mediathek)
-    .orderBy(desc(mediathek.id))
-    .get();
-  const oldEtag = result?.etag || "";
+  const oldEtag = await lastEtag();
+  console.log({ oldEtag });
   let { etag, buffer } = await download({ force, oldEtag });
   if (!buffer) {
     return;
@@ -56,13 +49,11 @@ export const updateFilmliste = async ({ force }: { force: boolean }) => {
   console.log(`import ${lines.length} rows`);
   fs.writeFileSync(filmeCsv, lines.join("\n"));
   if (etag) {
-    await db_mediathek.insert(mediathek).values({
+    await insertInfo({
       ...info,
       etag,
-      createdAt: Date.now(),
     });
   }
-  //   await csv2sqlite();
   await csv2duck();
 };
 
@@ -124,8 +115,7 @@ const mapper = () => {
       throw new Error(`new field urlRtmpHD=${urlRtmpHD}`);
     }
     if (neu != `false"`) {
-      console.log({ neu });
-      throw new Error(`field neu is not false", =${neu}`);
+      console.warn(`neu is not false (${neu})`);
     }
     const datumzeit = datum
       ? datum!.slice(6) +
@@ -141,6 +131,13 @@ const mapper = () => {
   };
 };
 
+type FilmlisteInfo = {
+  local: string;
+  utc: string;
+  nr: string;
+  version: string;
+  hash: string;
+};
 export const parseJson = (buffer: Uint8Array) => {
   let json = new TextDecoder("utf-8").decode(buffer);
   json = json.slice(14, -2);
@@ -150,28 +147,43 @@ export const parseJson = (buffer: Uint8Array) => {
   const [local, utc, nr, version, hash] = JSON.parse(`[${liste}]`);
   const m = mapper();
   return {
-    info: { local, utc, nr, version, hash },
+    info: { local, utc, nr, version, hash } as FilmlisteInfo,
     lines: filme.map(m),
   };
 };
 
 export const csv2duck = async () => {
   console.log("import csv");
-  const duck = await getDuck({});
-  duck.run(`delete from filme;
-insert into filme SELECT * FROM read_csv('${filmeCsv}');
--- update filme set datum = datum[7:]||'-'||datum[4:5]||'-' ||datum[:2];`);
+  await duck.run(`
+    delete from filme;
+    insert into filme SELECT * FROM read_csv('${filmeCsv}');`);
 };
 
-export function parseDate(s: string): Date {
+const lastEtag = async () => {
+  const reader = await duck.runAndReadAll(
+    "from import select etag order by local desc limit 1"
+  );
+  const [r] = reader.getRows();
+  return r ? (r[0] as string) : "";
+};
+
+export const insertInfo = async (o: FilmlisteInfo & { etag: string }) => {
+  const u = {
+    ...o,
+    createdAt: new Date().toISOString(),
+    local: parseDate(o.local),
+    utc: parseDate(o.utc),
+  };
+  const reader = await duck.runAndReadAll(
+    "insert into import (createdAt, local, utc, nr, version, hash, etag) values ($createdAt, $local, $utc, $nr, $version, $hash, $etag)",
+    u
+  );
+  console.log(`import ${JSON.stringify(u)}`);
+};
+
+export function parseDate(s: string) {
   const [datePart, timePart] = s.split(", ");
   const [day, month, year] = datePart!.split(".");
   const [hours, minutes] = timePart!.split(":");
-  return new Date(
-    Number(year),
-    Number(month) - 1,
-    Number(day),
-    Number(hours),
-    Number(minutes)
-  );
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
