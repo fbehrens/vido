@@ -9,7 +9,7 @@ import {
 import * as fs from "fs";
 
 const [_node, _viteNode, ...args] = process.argv;
-console.log("loads filmliste (-f)orce) (-p)arseImport");
+console.log("loads filmliste -(f)orce, -(p)arseImport -(c)svimport");
 const has = (arg: string) => args.includes(`-${arg}`);
 
 if (has("p")) {

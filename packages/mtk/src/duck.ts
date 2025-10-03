@@ -1,4 +1,5 @@
 import { getDuck } from "./getDuck";
+import "dotenv/config";
 // await duck.run(
 //   `
 //   -- CALL start_ui();
@@ -11,7 +12,7 @@ import { getDuck } from "./getDuck";
 // );
 
 // optionally creates a record in table thema and returns its id
-export const duck = await getDuck({});
+export const duck = await getDuck({ path: process.env.MEDIATHEK_URL! });
 export const getThemaId = async (
   sender: string,
   thema: string
