@@ -1,25 +1,3 @@
--- filme schema
-drop table filme;
-create table filme (
-  id INTEGER PRIMARY KEY,
-  sender VARCHAR,
-  thema VARCHAR,
-  titel VARCHAR,
-  datum VARCHAR,
-  zeit VARCHAR,
-  dauer VARCHAR,
-  mb VARCHAR,
-  beschreibung VARCHAR,
-  url VARCHAR,
-  website VARCHAR,
-  captions VARCHAR,
-  urlRtmp VARCHAR,
-  urlLD VARCHAR,
-  urlRtmpLD VARCHAR,
-  urlHD VARCHAR,
-  urlRtmpHD VARCHAR,
-  datumL VARCHAR,
-  urlHistory VARCHAR,
-  geo VARCHAR,
-  neu VARCHAR,
-  );
+CREATE TABLE filme(id INTEGER PRIMARY KEY, sender VARCHAR, thema VARCHAR, titel VARCHAR, datumzeit TIMESTAMP, dauer VARCHAR, mb INTEGER, beschreibung VARCHAR, url VARCHAR, website VARCHAR, captions VARCHAR, urlRtmp VARCHAR, urlLD VARCHAR, urlHD VARCHAR, datumL BIGINT, urlHistory VARCHAR, geo VARCHAR);
+CREATE TABLE filme_1(id INTEGER, sender VARCHAR, thema VARCHAR, titel VARCHAR, datumzeit TIMESTAMP, dauer VARCHAR, mb INTEGER, beschreibung VARCHAR, url VARCHAR, website VARCHAR, captions VARCHAR, urlRtmp VARCHAR, urlLD VARCHAR, urlHD VARCHAR, datumL BIGINT, urlHistory VARCHAR, geo VARCHAR);
+CREATE TABLE IF NOT EXISTS "import"(createdAt TIMESTAMP, "local" TIMESTAMP, utc TIMESTAMP, nr VARCHAR, "version" VARCHAR, hash VARCHAR, etag VARCHAR, id INTEGER DEFAULT(nextval('import_sequence')) PRIMARY KEY);

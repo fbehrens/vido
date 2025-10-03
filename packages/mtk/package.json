@@ -4,6 +4,7 @@
     "type": "module",
     "private": true,
     "scripts": {
+        "schema": "duckdb ../../db/duck.db \".schema\" > schema.sql",
         "test": "vitest",
         "import": "pnpm exec tsx src/import.ts",
         "db:push": "drizzle-kit push",
