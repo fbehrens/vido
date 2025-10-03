@@ -1,4 +1,3 @@
-import { promises as fs } from "fs";
 import { getDuck } from "./getDuck";
 // await duck.run(
 //   `
