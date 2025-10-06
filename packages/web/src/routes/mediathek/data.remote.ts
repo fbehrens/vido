@@ -17,7 +17,7 @@ export type Film = {
 };
 export const getFilmsDuck = query(S.standardSchemaV1(GetFilmsParam), async (param) => {
   const reader = await duck.runAndReadAll(`
-    from duck.main.filme
+    from filme_v
     select
       id,
       sender,

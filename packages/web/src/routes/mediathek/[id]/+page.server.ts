@@ -22,7 +22,7 @@ export async function load({ params }) {
   const id = params.id;
 
   const reader = await duck.runAndReadAll(`
-      from duck.main.filme
+      from filme_v
       select
         *
       where id=${id}`);
@@ -30,6 +30,5 @@ export async function load({ params }) {
 
   const res = await fetch(film.captions);
   const captions = await res.text();
-
   return { film, captions };
 }

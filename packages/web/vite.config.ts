@@ -15,5 +15,7 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ["readable-stream"],
+    exclude: ["@duckdb/node-bindings"],
   },
+  ssr: { external: ["@duckdb/node-bindings"] },
 });

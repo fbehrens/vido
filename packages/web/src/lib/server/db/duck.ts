@@ -1,2 +1,4 @@
 import { getDuck } from "mtk/src/getDuck";
-export const duck = await getDuck({ ui: true });
+import { env } from "$env/dynamic/private";
+
+export const duck = await getDuck({ ui: true, path: env.MEDIATHEK_URL });
