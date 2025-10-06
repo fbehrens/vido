@@ -4,7 +4,7 @@
     "type": "module",
     "private": true,
     "scripts": {
-        "schema": "duckdb ../../db/duck.db \"COPY ( SELECT sql FROM ( SELECT 1 AS ord, sql, table_name AS name FROM duckdb_tables() WHERE schema_name NOT IN ('information_schema','pg_catalog') AND NOT temporary AND name NOT LIKE 'duckdb_%' AND name NOT LIKE 'sqlite_%' UNION ALL SELECT 2, sql, view_name FROM duckdb_views() WHERE schema_name NOT IN ('information_schema','pg_catalog') AND NOT temporary AND view_name NOT LIKE 'duckdb_%' AND view_name NOT LIKE 'sqlite_%' UNION ALL SELECT 3, sql, sequence_name FROM duckdb_sequences() WHERE schema_name NOT IN ('information_schema','pg_catalog') UNION ALL SELECT 4, sql, index_name FROM duckdb_indexes() WHERE schema_name NOT IN ('information_schema','pg_catalog') ) t ORDER BY ord, name ) TO 'schema.sql';\" > schema.sql",
+        "schema": "duckdb ../../db/duck.db \"COPY ( SELECT sql FROM schema_v) TO 'schema.sql' (HEADER false,QUOTE '');\"",
         "test": "vitest",
         "import": "pnpm exec tsx src/import.ts",
         "db:push": "drizzle-kit push",
