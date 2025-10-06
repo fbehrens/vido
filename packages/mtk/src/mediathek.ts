@@ -74,63 +74,6 @@ const download = async ({
   return { etag, buffer };
 };
 
-const mapper = () => {
-  let sender: string,
-    thema: string,
-    id = 0;
-  return (line: string) => {
-    const [
-      s,
-      t,
-      titel,
-      datum,
-      zeit,
-      dauer,
-      mb,
-      beschreibung,
-      url,
-      website,
-      captions,
-      urlRtmp,
-      urlLD,
-      urlRtmpLD,
-      urlHD,
-      urlRtmpHD,
-      datumL,
-      urlHistory,
-      geo,
-      neu,
-    ] = line.slice(1).replace(`\",","`, `\", ","`).split('","');
-
-    if (s) {
-      sender = s;
-    }
-    if (t) {
-      thema = t;
-    }
-    if (urlRtmpLD) {
-      throw new Error(`new field urlRtmpLD=${urlRtmpLD}`);
-    }
-    if (urlRtmpHD) {
-      throw new Error(`new field urlRtmpHD=${urlRtmpHD}`);
-    }
-    if (neu != `false"`) {
-      console.warn(`neu is not false (${neu})`);
-    }
-    const datumzeit = datum
-      ? datum!.slice(6) +
-        "-" +
-        datum!.slice(3, 5) +
-        "-" +
-        datum!.slice(0, 2) +
-        " " +
-        (zeit ? zeit : "00:00:00")
-      : "";
-
-    return `${id++},"${sender}","${thema}","${titel}","${datumzeit}","${dauer}",${mb},"${beschreibung}","${url}","${website}","${captions}","${urlRtmp}","${urlLD}","${urlHD}",${datumL},"${urlHistory}","${geo}"`;
-  };
-};
-
 type FilmlisteInfo = {
   local: string;
   utc: string;
@@ -145,18 +88,29 @@ export const parseJson = (buffer: Uint8Array) => {
   // Liste ["07.09.2024, 09:35","07.09.2024, 07:35","3","MSearch [Vers.: 3.1.238]","22ae3b493eb73e562ffdadd00b71a743"]
   // sender,thema,titel,datum,zeit,dauer,mb,beschreibung,url,website,captions,urlRtmp,urlLD,urlRtmpLD,urlHD,urlRtmpHD,datumL,urlHistory,geo,neu";
   const [local, utc, nr, version, hash] = JSON.parse(`[${liste}]`);
-  const m = mapper();
   return {
     info: { local, utc, nr, version, hash } as FilmlisteInfo,
-    lines: filme.map(m),
+    lines: [dbColumns.join(","), ...filme],
   };
 };
 
 export const csv2duck = async () => {
   console.log("import csv");
   await duck.run(`
+    -- drop table filme;
+    -- create table filme as select * FROM read_csv('${filmeCsv}',all_varchar=true);
     delete from filme;
-    insert into filme SELECT * FROM read_csv('${filmeCsv}');`);
+    insert into filme select * FROM read_csv('${filmeCsv}',all_varchar=true);
+
+    insert into urls (url,created_at) (
+        with t as (select distinct url from filme_v where id is null)
+        select *,now()"created_at" from t);
+
+    UPDATE urls u
+        SET deleted_at = NOW()
+        WHERE NOT EXISTS (
+            SELECT 1 FROM filme f WHERE f.url = u.url);
+    `);
 };
 
 const lastEtag = async () => {
